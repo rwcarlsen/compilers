@@ -1,23 +1,21 @@
 
-
 package rwccompiler;
 
 public class Sym {
 
-  public Sym(String type) {
+  private String type;
 
+  public Sym(String type) {
+    this.type = type;
   }
 
   public String getType() {
-    return "blank-type";
+    return this.type;
   }
 
   public String toString() {
     return "blank-string";
   }
 
-  public static void main(String[] args) {
-    System.out.println("Hello, World");
-  }
 }
 
