@@ -11,9 +11,9 @@ all: init
 	javac -sourcepath ${SRC_DIR} -classpath ${CLASSPATH}:${LIB_DIR}/${JUNIT_LIB} \
 		@${SRC_LIST} -d ${CLASSPATH}
 
-init: clean
+init:
 	
-	mkdir ${CLASSPATH}
+	mkdir -p ${CLASSPATH}
 
 clean:
 	
