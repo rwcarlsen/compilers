@@ -1,6 +1,6 @@
 
 CLASSPATH=classes
-JUNIT_LIB=junit.jar
+JUNIT_LIB=junit-4.10.jar
 SRC_DIR=src
 LIB_DIR=lib
 

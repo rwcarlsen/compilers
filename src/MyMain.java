@@ -1,5 +1,7 @@
 
 import rwccompiler.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 public class MyMain {
 
@@ -8,5 +10,7 @@ public class MyMain {
 
     Sym mysym = new Sym("generic-name");
     System.out.println(mysym);
+
   }
+
 }
