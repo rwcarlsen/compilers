@@ -4,4 +4,6 @@ test/rwctest/RobertTest.java
 
 src/rwccompiler/Sym.java
 src/rwccompiler/SymTab.java
+src/rwccompiler/DuplicateException.java
+src/rwccompiler/EmptySymTabException.java
 

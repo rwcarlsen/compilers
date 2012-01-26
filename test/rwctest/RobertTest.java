@@ -96,8 +96,7 @@ public class RobertTest extends Object {
     System.out.println(methodName.replace("test", "") + ": FAILED");
     for (int i = 0; i < this.tmpErrs.size(); i++) {
       setColor("reset");
-      System.out.println("    * expected 'true', received 'false'");
-      System.out.println("        detail:" + this.tmpErrs.get(i));
+      System.out.println("    * detail: " + this.tmpErrs.get(i));
 
       System.out.println("        stack-trace:");
       StackTraceElement[] trace = this.traces.get(i);
@@ -158,20 +157,19 @@ public class RobertTest extends Object {
   public void assertTrue(boolean val, String msg) {
     if (!val) {
       this.passed = false;
-      this.tmpErrs.add(msg);
+      this.tmpErrs.add("Expected 'true', received 'false'. " + msg);
 
       StackTraceElement[] elements = new Throwable().getStackTrace();
       this.traces.add(elements);
     }
   }
 
-  public void assertNoThrow(boolean val, String msg) {
-    if (!val) {
-      this.passed = false;
-      this.tmpErrs.add(msg);
+  public void fail(String msg) {
+    this.passed = false;
+    this.tmpErrs.add("Manual fail. " + msg);
 
-      StackTraceElement[] elements = new Throwable().getStackTrace();
-      this.traces.add(elements);
-    }
+    StackTraceElement[] elements = new Throwable().getStackTrace();
+    this.traces.add(elements);
   }
+
 }

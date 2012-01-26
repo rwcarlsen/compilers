@@ -1,41 +1,60 @@
 
-
 package rwccompiler;
 
 import java.util.*;
 
 public class SymTab {
 
-/*
-insert to front of list
-remove from front of list
-iterate over list
-access first element in list
-
-*/
   private List<Map<String, Sym>> table;
 
   public SymTab() {
-    this.table = new LinkedList<HashMap<String, Sym>>();
+    this.table = new LinkedList<Map<String, Sym>>();
 
-    HashMap<String, Sym> newMap = new HashMap<String, Sym>();
+    Map<String, Sym> newMap = new HashMap<String, Sym>();
     this.table.add(newMap);
+  }
+
+  public void removeMap() throws EmptySymTabException {
+    if (this.table.size() == 0) {
+      throw new EmptySymTabException();
+    }
+
+    this.table.remove(0);
+  }
+
+  public void addMap() {
+    Map<String, Sym> newMap = new HashMap<String, Sym>();
+    this.table.add(0, newMap);
   }
 
   public void insert(String name, Sym sym)
       throws DuplicateException, EmptySymTabException {
 
     if (this.table.size() == 0) {
-      throw EmptySymTabException;
+      throw new EmptySymTabException();
     }
     
-    map = table.get(0);
+    Map<String, Sym> map = table.get(0);
 
     if (map.containsKey(name)) {
-      throw DuplicateException;
+      throw new DuplicateException();
     }
     
     map.put(name, sym);
+  }
+
+  public Sym localLookup(String name) {
+    if (this.table.size() == 0) {
+      return null;
+    }
+
+    Map<String, Sym> map = table.get(0);
+
+    if (!map.containsKey(name)) {
+      return null;
+    }
+
+    return map.get(name);
   }
 
 }
