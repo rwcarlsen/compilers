@@ -9,21 +9,19 @@ public class SymTest extends RobertTest {
   }
 
   public void testDefaultConstructor() {
-    String msg;
-
-    msg = "one failed";
-    assertTrue(true, msg);
-    msg = "two failed";
-    assertTrue(false, msg);
-    msg = "three failed";
-    assertTrue(true, msg);
+    String name = "foopid";
+    Sym mysym = new Sym(name);
+    
+    String msg = "name=" + name + ", getType()=" + mysym.getType();
+    assertTrue(mysym.getType() == name, msg);
+    assertTrue(mysym.getType() == name, msg);
   }
 
   public void testGetType() {
-
+    assertTrue(false, "needs implementation");
   }
 
   public void testToString() {
-
+    assertTrue(false, "needs implementation");
   }
 }

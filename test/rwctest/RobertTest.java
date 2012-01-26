@@ -32,6 +32,7 @@ public class RobertTest extends Object {
   }
 
   private void runTests(String subname) {
+    System.out.print("\r\n");
 
     try {
       Object arglist[] = new Object[0];
@@ -103,6 +104,7 @@ public class RobertTest extends Object {
       System.out.print("All tests passed.\r\n");
     }
 
+    System.out.print("\r\n");
     System.out.print("\033[0m");
   }
 
@@ -114,13 +116,18 @@ public class RobertTest extends Object {
   private void printFailed(String methodName) {
     System.out.println("\033[1;31m" + methodName.replace("test", "") + ": FAILED");
     for (int i = 0; i < this.tmpErrs.size(); i++) {
-      System.out.println("\033[0m" +"    " + this.tmpErrs.get(i));
+      System.out.println("\033[0m");
+      System.out.println("    * expected 'true', received 'false'");
+      System.out.println("        detail:" + this.tmpErrs.get(i));
 
-      System.out.println("    stack-trace:");
-      for (StackTraceElement elem : this.traces.get(i)) {
-        System.out.println("        " + elem);
+      System.out.println("        stack-trace:");
+      StackTraceElement[] trace = this.traces.get(i);
+      for (int j = 1; j < trace.length; j++) {
+        System.out.println("            " + trace[j]);
       }
     }
+    System.out.print("\r\n");
+
     this.tmpErrs.clear();
     this.traces.clear();
   }
