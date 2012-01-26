@@ -164,4 +164,14 @@ public class RobertTest extends Object {
       this.traces.add(elements);
     }
   }
+
+  public void assertNoThrow(boolean val, String msg) {
+    if (!val) {
+      this.passed = false;
+      this.tmpErrs.add(msg);
+
+      StackTraceElement[] elements = new Throwable().getStackTrace();
+      this.traces.add(elements);
+    }
+  }
 }

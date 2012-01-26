@@ -14,8 +14,7 @@ public class Sym {
   }
 
   public String toString() {
-    return "blank-string";
+    return this.type;
   }
-
 }
 
