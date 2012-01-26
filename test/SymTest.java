@@ -12,7 +12,7 @@ public class SymTest extends RobertTest {
     String name = "foopid";
     Sym mysym = new Sym(name);
     
-    String msg = "name=" + name + ", getType()=" + mysym.getType();
+    String msg = "name:" + name + " != getType():" + mysym.getType();
     assertTrue(mysym.getType() == name, msg);
     assertTrue(mysym.getType() == name, msg);
   }
