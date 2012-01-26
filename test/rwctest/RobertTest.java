@@ -13,6 +13,7 @@ public class RobertTest extends Object {
   private boolean passed;
   
   private ArrayList<String> tmpErrs;
+  private ArrayList<StackTraceElement[]> traces;
 
   public RobertTest() {
     this.testCount = 0;
@@ -22,6 +23,7 @@ public class RobertTest extends Object {
     this.passed = true;
 
     this.tmpErrs = new ArrayList<String>();
+    this.traces = new ArrayList<StackTraceElement[]>();
   }
 
   public static void go(String subname) {
@@ -49,11 +51,11 @@ public class RobertTest extends Object {
           m.setAccessible(true);
           m.invoke(t, arglist);
           if (t.getPassed()) {
-            printPassed(mname);
+            t.printPassed(mname);
             this.passCount += 1;
           } else {
+            t.printFailed(mname);
             this.failCount += 1;
-            printFailed(mname);
           }
         } catch (InvocationTargetException x) {
           Throwable cause = x.getCause();
@@ -65,26 +67,71 @@ public class RobertTest extends Object {
       System.out.println(err);
       err.printStackTrace();
     }
+    printFinal();
   }
 
-  public boolean getPassed() {return this.passed;}
+  private boolean getPassed() {return this.passed;}
 
-  protected void assertTrue(boolean val, String msg) {
-    if (!val) {
-      this.passed = false;
-      tmpErrs.add(msg);
+  private void printFinal() {
+    int noRunCount = this.testCount - this.passCount - this.failCount;
+
+    System.out.print("\033[1;33m");
+    System.out.println("\r\nSummary:");
+
+    if (noRunCount > 0) {
+      System.out.print("\033[1;31m");
+      System.out.print("    ");
+      System.out.print(noRunCount);
+      System.out.print(" tests failed to run.\r\n");
     }
+
+    if (this.failCount > 0) {
+      System.out.print("\033[1;31m");
+      System.out.print("    ");
+      System.out.print(this.failCount);
+      System.out.print(" tests failed.\r\n");
+    } 
+
+    System.out.print("\033[1;32m");
+    System.out.print("    ");
+    System.out.print(this.passCount);
+    System.out.print(" tests passed.\r\n");
+
+    if (this.failCount == 0 && noRunCount == 0) {
+      System.out.print("\033[1;32m");
+      System.out.print("    ");
+      System.out.print("All tests passed.\r\n");
+    }
+
+    System.out.print("\033[0m");
   }
 
   private void printPassed(String methodName) {
     System.out.println("\033[1;32m" + methodName.replace("test", "") + ": PASSED");
+    System.out.print("\033[0m");
   }
 
   private void printFailed(String methodName) {
-    System.out.println("\033[31m" + methodName.replace("test", "") + ": FAILED");
-    for (String err : this.tmpErrs) {
-      System.out.println(err);
+    System.out.println("\033[1;31m" + methodName.replace("test", "") + ": FAILED");
+    for (int i = 0; i < this.tmpErrs.size(); i++) {
+      System.out.println("\033[0m" +"    " + this.tmpErrs.get(i));
+
+      System.out.println("    stack-trace:");
+      for (StackTraceElement elem : this.traces.get(i)) {
+        System.out.println("        " + elem);
+      }
     }
-    tmpErrs.clear();
+    this.tmpErrs.clear();
+    this.traces.clear();
+  }
+
+  public void assertTrue(boolean val, String msg) {
+    if (!val) {
+      this.passed = false;
+      this.tmpErrs.add(msg);
+
+      StackTraceElement[] elements = new Throwable().getStackTrace();
+      this.traces.add(elements);
+    }
   }
 }
