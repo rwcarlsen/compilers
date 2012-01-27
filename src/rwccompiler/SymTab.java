@@ -57,5 +57,9 @@ public class SymTab {
     return map.get(name);
   }
 
+  public Sym globalLookup(String name) {
+    return null;
+  }
+
 }
 

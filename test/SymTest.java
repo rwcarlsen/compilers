@@ -16,7 +16,7 @@ public class SymTest extends RobertTest {
   private String name2;
   private Sym sym2;
 
-  private String msgBadRetrieve, msgNull;
+  private String msgNull;
 
   /**
    * initialize the test fixture
@@ -32,7 +32,6 @@ public class SymTest extends RobertTest {
     this.name2 = "foopid";
     this.sym2 = new Sym(this.type2);
 
-    this.msgBadRetrieve = "symbol '" + name2 + "' was not retrieved successfully.";
     this.msgNull = "Expected null and received something else.";
   }
 
@@ -52,16 +51,12 @@ public class SymTest extends RobertTest {
    * Sym class def constructor sets type correctly.
    */
   public void testSym_constructor() {
-    String msg;
     
-    msg = "name:" + this.type1 + " != getType():" + this.sym1.getType();
-    assertTrue(this.sym1.getType() == this.type1, msg);
-
-    msg = "name:" + this.type2 + " != getType():" + this.sym2.getType();
-    assertTrue(this.sym2.getType() == this.type2, msg);
+    assertEQ(this.sym1.getType(), this.type1, "");
+    assertEQ(this.sym2.getType(), this.type2, "");
 
     // repeat to be sure this method doesn't modify the object's type
-    assertTrue(this.sym1.getType() == this.type1, msg);
+    assertEQ(this.sym1.getType(), this.type1, "");
   }
 
   /**
@@ -69,11 +64,10 @@ public class SymTest extends RobertTest {
    */
   public void testSym_toString() {
     
-    String msg = "name:" + this.type2 + " != getType():" + this.sym2.getType();
-    assertTrue(this.sym2.toString() == this.type2, msg);
+    assertEQ(this.sym2.toString(), this.type2, "");
 
     // repeat to be sure this method doesn't modify the object's type
-    assertTrue(this.sym2.toString() == this.type2, msg);
+    assertEQ(this.sym2.toString(), this.type2, "");
   }
 
 //---------------------------------------------------------------------------//
@@ -173,7 +167,7 @@ public class SymTest extends RobertTest {
     String msg;
 
     // test for null returns
-    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+    assertEQ(this.tab.localLookup(name1), null, this.msgNull);
 
     try {
       this.tab.removeMap();
@@ -181,7 +175,7 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+    assertEQ(this.tab.localLookup(name1), null, this.msgNull);
 
     this.tab.addMap();
 
@@ -192,7 +186,7 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.localLookup(name2) == sym2, this.msgBadRetrieve);
+    assertEQ(this.tab.localLookup(name2), sym2, "");
 
     // test that addMap allows us to reinsert same symbol w/o being duplic
     this.tab.addMap();
@@ -213,17 +207,16 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.localLookup(name1) == sym1, this.msgBadRetrieve);
+    assertEQ(this.tab.localLookup(name1), sym1, "");
   }
 
 //---------------------------------------------------------------------------//
 
   public void testSymTab_globalLookup() {
-    String msgExists;
-    msgExists = "symbol '" + name2 + "' should not exists but does.";
+    String msgExists = "Symbol should not exists but does.";
 
     // test for null returns
-    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+    assertEQ(this.tab.localLookup(name1), null, this.msgNull);
 
     try {
       this.tab.removeMap();
@@ -231,7 +224,7 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+    assertEQ(this.tab.localLookup(name1), null, this.msgNull);
 
     // test for non-null retrieval
     this.tab.addMap();
@@ -243,9 +236,9 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.globalLookup(name1) == this.sym1, this.msgBadRetrieve);
-    assertTrue(this.tab.globalLookup(name2) == this.sym2, this.msgBadRetrieve);
-    assertTrue(this.tab.globalLookup("qwerty") == null, this.msgExists);
+    assertEQ(this.tab.globalLookup(name1), this.sym1, "");
+    assertEQ(this.tab.globalLookup(name2), this.sym2, "");
+    assertEQ(this.tab.globalLookup("qwerty"), null, msgExists);
 
     try {
       this.tab.removeMap();
@@ -253,8 +246,8 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertTrue(this.tab.globalLookup(name1) == this.sym1, this.msgBadRetrieve);
-    assertTrue(this.tab.globalLookup(name2) == null, this.msgExists);
+    assertEQ(this.tab.globalLookup(name1), this.sym1, "");
+    assertEQ(this.tab.globalLookup(name2), null, msgExists);
   }
 
 //---------------------------------------------------------------------------//

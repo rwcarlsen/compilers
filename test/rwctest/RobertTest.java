@@ -73,8 +73,12 @@ public class RobertTest extends Object {
           }
         } catch (InvocationTargetException x) {
           Throwable cause = x.getCause();
-          System.out.format("invocation of %s failed: %s%n",
+          setColor("red");
+          System.out.format("Invocation of %s failed: %s%n",
               mname, cause.getMessage());
+          for (StackTraceElement elem : x.getStackTrace()) {
+            System.out.println("    " + elem);
+          }
         }
       }
     } catch (Exception err) {
@@ -158,6 +162,20 @@ public class RobertTest extends Object {
     if (!val) {
       this.passed = false;
       this.tmpErrs.add("Expected 'true', received 'false'. " + msg);
+
+      StackTraceElement[] elements = new Throwable().getStackTrace();
+      this.traces.add(elements);
+    }
+  }
+
+  public void assertEQ(Object obj1, Object obj2, String msg) {
+    if (obj1 != obj2) {
+      this.passed = false;
+    try {
+      this.tmpErrs.add("'" + obj1 + "' != '" + obj2 + "'. " + msg);
+    } catch (Exception err) {
+      this.tmpErrs.add("Objects are not the same. " + msg);
+    }
 
       StackTraceElement[] elements = new Throwable().getStackTrace();
       this.traces.add(elements);
