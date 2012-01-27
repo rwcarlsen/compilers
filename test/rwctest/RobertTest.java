@@ -54,6 +54,7 @@ public class RobertTest extends Object {
 
       Method[] allMethods = c.getDeclaredMethods();
       for (Method m : allMethods) {
+        setColor("reset");
         t = (RobertTest)c.newInstance();
         String mname = m.getName();
         if (!mname.startsWith("test")) {
@@ -76,6 +77,7 @@ public class RobertTest extends Object {
           setColor("red");
           System.out.format("Invocation of %s failed: %s%n",
               mname, cause.getMessage());
+          setColor("reset");
           for (StackTraceElement elem : x.getStackTrace()) {
             System.out.println("    " + elem);
           }
@@ -119,6 +121,11 @@ public class RobertTest extends Object {
 
     setColor("yellow");
     System.out.println("\r\nSummary:");
+
+    setColor("reset");
+    System.out.print("    ");
+    System.out.print(testCount);
+    System.out.print(" tests total.\r\n");
 
     if (noRunCount > 0) {
       setColor("red");
@@ -171,11 +178,7 @@ public class RobertTest extends Object {
   public void assertEQ(Object obj1, Object obj2, String msg) {
     if (obj1 != obj2) {
       this.passed = false;
-    try {
       this.tmpErrs.add("'" + obj1 + "' != '" + obj2 + "'. " + msg);
-    } catch (Exception err) {
-      this.tmpErrs.add("Objects are not the same. " + msg);
-    }
 
       StackTraceElement[] elements = new Throwable().getStackTrace();
       this.traces.add(elements);
