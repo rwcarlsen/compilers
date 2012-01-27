@@ -76,11 +76,11 @@ public class SymTest extends RobertTest {
 //---------------------------------------------------------------------------//
 
   public void testSymTab_removeMap() {
+    String msg;
 
     try {
       this.tab.removeMap();
     } catch (EmptySymTabException err) {
-      String msg;
       msg = "Initialized SymTab does not contain an "; 
       msg += "empty hashmap in symbol table list.";
       fail(msg);
@@ -88,13 +88,14 @@ public class SymTest extends RobertTest {
 
     try {
       this.tab.removeMap();
-      String msg;
       msg = "Initialized SymTab contains too many";
       msg += " hashmaps in the symbol table."; 
-      msg += "  Or removeMap is not actually removing maps."; 
+      msg += " Or removeMap is not actually removing maps."; 
       fail(msg);
     } catch (EmptySymTabException err) { }
   }
+
+//---------------------------------------------------------------------------//
 
   public void testSymTab_addMap() {
     int nAdded = 3;
@@ -109,7 +110,7 @@ public class SymTest extends RobertTest {
         this.tab.removeMap();
       }
     } catch (EmptySymTabException err) {
-      msg = "addMap failed properly add a map to the symbol table."; 
+      msg = "addMap failed to properly add maps to the symbol table."; 
       fail(msg);
     }
 
@@ -121,38 +122,35 @@ public class SymTest extends RobertTest {
     } catch (EmptySymTabException err) { }
   }
 
+//---------------------------------------------------------------------------//
+
   public void testSymTab_insert() {
     String msg;
 
     try {
-      this.tab.insert(this.name1, this.sym1);
-      this.tab.insert(this.name2, this.sym2);
-    } catch (DuplicateException err) {
-      msg = "Unexpected duplicates found for: ";
-      msg += "this.name1=" + this.name1 + ", this.name2=" + this.name2;
-      fail(msg);
-    } catch (EmptySymTabException err) {
-      msg = "Symbol table is empty, and it shouldn't be.";
-      fail(msg);
-    }
+      // insert 2 symbols into table
+      try {
+        this.tab.insert(this.name1, this.sym1);
+        this.tab.insert(this.name2, this.sym2);
+      } catch (DuplicateException err) {
+        msg = "Unexpected duplicates found for: ";
+        msg += "this.name1=" + this.name1 + ", this.name2=" + this.name2;
+        fail(msg);
+      }
 
-    try {
-      this.tab.insert(this.name2, this.sym2);
-      msg = "Duplicate expected, but not found for: ";
-      msg += "this.name2=" + this.name2;
-      fail(msg);
-    } catch (DuplicateException err) {
-    } catch (EmptySymTabException err) {
-      msg = "Symbol table is empty, and it shouldn't be.";
-      fail(msg);
-    }
+      // attempt a duplicate symbol insertion into table
+      try {
+        this.tab.insert(this.name2, this.sym2);
+        msg = "Duplicate expected, but not found for: ";
+        msg += "this.name2=" + this.name2;
+        fail(msg);
+      } catch (DuplicateException err) { }
 
-    try {
       this.tab.removeMap();
     } catch (EmptySymTabException err) {
-      msg = "Symbol table is empty, and it shouldn't be.";
-      fail(msg);
+      fail("Symbol table is empty.");
     }
+
     try {
       this.tab.insert(this.name1, this.sym1);
       msg = "Expected EmptySymTabException when inserting";
@@ -160,14 +158,17 @@ public class SymTest extends RobertTest {
       fail(msg);
     } catch (EmptySymTabException err) {
     } catch (DuplicateException err) {
-      msg = "Received DuplicateException but expected EmptySymTabException.";
-      fail(msg);
+      fail("Received DuplicateException instead of EmptySymTabException");
     }
   }
 
+//---------------------------------------------------------------------------//
+
   public void testSymTab_localLookup() {
     String msg;
+    Sym sym = new Sym("qwerty");
 
+    // test for null returns
     try {
       msg = "Expected null with non-existing key.";
       assertTrue(this.tab.localLookup(name1) == null, msg);
@@ -178,40 +179,61 @@ public class SymTest extends RobertTest {
 
     try {
       this.tab.removeMap();
-      this.tab.removeMap();
-      msg = "Symbol table should be empty.";
-      fail(msg);
-    } catch (EmptySymTabException err) {
-    } catch (Exception err) { }
-
-    try {
-      msg = "Expected null with empty symbol table.";
-      assertTrue(this.tab.localLookup(name1) == null, msg);
     } catch (Exception err) {
-      msg = err.getMessage();
-      fail(msg);
+      fail(err.getMessage());
     }
+
+    sym = this.tab.localLookup(name1);
+
+    msg = "Expected null with empty symbol table.";
+    assertTrue(sym == null, msg);
 
     this.tab.addMap();
-    try {
-      this.tab.insert(name2, sym2);
-    } catch (Exception err) {
-      msg = err.getMessage();
-      fail(msg);
-    }
 
     try {
-      msg = "symbol '" + name2 + "' was not retrieved successfully.";
-      assertTrue(this.tab.localLookup(name2) == sym2, msg);
+      this.tab.insert(name1, sym1);
+      this.tab.insert(name2, sym2);
     } catch (Exception err) {
-      msg = err.getMessage();
-      fail(msg);
+      fail(err.getMessage());
     }
+
+    sym = this.tab.localLookup(name2);
+
+    msg = "symbol '" + name2 + "' was not retrieved successfully.";
+    assertTrue(sym == sym2, msg);
+
+    // test that addMap allows us to reinsert same symbol w/o being duplic
+    this.tab.addMap();
+
+    try {
+      this.tab.insert(name2, sym2);
+    } catch (DuplicateException err) {
+      fail("Something is wrong with the way addMap and localLookup work.");
+    } catch (Exception err) {
+      fail(err.getMessage());
+    }
+
+    // test the insertions in first hashmap (pushed to second slot) indeed
+    // do return to their proper first slot in the hashmap list of symbols
+    try {
+      this.tab.removeMap();
+    } catch (Exception err) {
+      fail(err.getMessage());
+    }
+
+    sym = this.tab.localLookup(name1);
+
+    msg = "symbol '" + name1 + "' was not retrieved successfully.";
+    assertTrue(sym == sym1, msg);
   }
+
+//---------------------------------------------------------------------------//
 
   public void testSymTab_globalLookup() {
 
   }
+
+//---------------------------------------------------------------------------//
 
   public void testSymTab_print() {
 
