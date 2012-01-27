@@ -16,6 +16,8 @@ public class SymTest extends RobertTest {
   private String name2;
   private Sym sym2;
 
+  private String msgBadRetrieve, msgNull;
+
   /**
    * initialize the test fixture
    */
@@ -29,6 +31,9 @@ public class SymTest extends RobertTest {
     this.type2 = "elephant";
     this.name2 = "foopid";
     this.sym2 = new Sym(this.type2);
+
+    this.msgBadRetrieve = "symbol '" + name2 + "' was not retrieved successfully.";
+    this.msgNull = "Expected null and received something else.";
   }
 
   /**
@@ -166,16 +171,9 @@ public class SymTest extends RobertTest {
 
   public void testSymTab_localLookup() {
     String msg;
-    Sym sym = new Sym("qwerty");
 
     // test for null returns
-    try {
-      msg = "Expected null with non-existing key.";
-      assertTrue(this.tab.localLookup(name1) == null, msg);
-    } catch (Exception err) {
-      msg = err.getMessage();
-      fail(msg);
-    }
+    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
 
     try {
       this.tab.removeMap();
@@ -183,10 +181,7 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    sym = this.tab.localLookup(name1);
-
-    msg = "Expected null with empty symbol table.";
-    assertTrue(sym == null, msg);
+    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
 
     this.tab.addMap();
 
@@ -197,10 +192,7 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    sym = this.tab.localLookup(name2);
-
-    msg = "symbol '" + name2 + "' was not retrieved successfully.";
-    assertTrue(sym == sym2, msg);
+    assertTrue(this.tab.localLookup(name2) == sym2, this.msgBadRetrieve);
 
     // test that addMap allows us to reinsert same symbol w/o being duplic
     this.tab.addMap();
@@ -221,16 +213,48 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    sym = this.tab.localLookup(name1);
-
-    msg = "symbol '" + name1 + "' was not retrieved successfully.";
-    assertTrue(sym == sym1, msg);
+    assertTrue(this.tab.localLookup(name1) == sym1, this.msgBadRetrieve);
   }
 
 //---------------------------------------------------------------------------//
 
   public void testSymTab_globalLookup() {
+    String msgExists;
+    msgExists = "symbol '" + name2 + "' should not exists but does.";
 
+    // test for null returns
+    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+
+    try {
+      this.tab.removeMap();
+    } catch (Exception err) {
+      fail(err.getMessage());
+    }
+
+    assertTrue(this.tab.localLookup(name1) == null, this.msgNull);
+
+    // test for non-null retrieval
+    this.tab.addMap();
+    try {
+      this.tab.insert(name1, this.sym1);
+      this.tab.addMap();
+      this.tab.insert(name2, this.sym2);
+    } catch (Exception err) {
+      fail(err.getMessage());
+    }
+
+    assertTrue(this.tab.globalLookup(name1) == this.sym1, this.msgBadRetrieve);
+    assertTrue(this.tab.globalLookup(name2) == this.sym2, this.msgBadRetrieve);
+    assertTrue(this.tab.globalLookup("qwerty") == null, this.msgExists);
+
+    try {
+      this.tab.removeMap();
+    } catch (Exception err) {
+      fail(err.getMessage());
+    }
+
+    assertTrue(this.tab.globalLookup(name1) == this.sym1, this.msgBadRetrieve);
+    assertTrue(this.tab.globalLookup(name2) == null, this.msgExists);
   }
 
 //---------------------------------------------------------------------------//
