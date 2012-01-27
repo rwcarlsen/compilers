@@ -1,5 +1,7 @@
 
 import java.util.*;
+import java.io.PrintStream;
+import java.io.OutputStream;
 
 import rwccompiler.*;
 import rwctest.*;
@@ -253,6 +255,33 @@ public class SymTest extends RobertTest {
 //---------------------------------------------------------------------------//
 
   public void testSymTab_print() {
+    PrintStream original = new PrintStream(System.out);
+
+    OutputStream myStream = new OutputStream() {  
+      private String text;
+
+      @Override  
+        public String toString() {return this.text;}
+
+      @Override  
+        public void write(final int b) {  
+          text += String.valueOf((char) b);  
+        }  
+
+      @Override  
+        public void write(byte[] b, int off, int len) {  
+          text += new String(b, off, len);
+        }  
+
+      @Override  
+        public void write(byte[] b) {  
+          write(b, 0, b.length);  
+        }  
+    };
+
+    System.setOut(new PrintStream(myStream, true));
+    this.tab.print();
+    System.setOut(original);
 
   }
 }

@@ -49,16 +49,30 @@ public class SymTab {
     }
 
     Map<String, Sym> map = table.get(0);
-
     if (!map.containsKey(name)) {
       return null;
     }
-
     return map.get(name);
   }
 
   public Sym globalLookup(String name) {
+    if (this.table.size() == 0) {
+      return null;
+    }
+
+    for (Map<String, Sym> map : this.table) {
+      if (map.containsKey(name)) {
+        return map.get(name);
+      }
+    }
     return null;
+  }
+
+  public void print() {
+    System.out.print("\nSYMBOL TABLE\n");
+    for (Map<String, Sym> map : this.table) {
+      System.out.println(map.toString());
+    }
   }
 
 }
