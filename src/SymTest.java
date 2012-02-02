@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import rwccompiler.*;
 import rwctest.*;
 
+/**
+ * Test fixture and tests
+ */
 public class SymTest extends RobertTest {
 
   private SymTab tab;
@@ -38,7 +41,7 @@ public class SymTest extends RobertTest {
   }
 
   /**
-   * initiate and run all tests in this file
+   * initiate and run all tests in this fixture/class
    */
   public static void main(String[] args) {
 
@@ -76,6 +79,9 @@ public class SymTest extends RobertTest {
 //-------------------------- SymTab tests -----------------------------------//
 //---------------------------------------------------------------------------//
 
+  /**
+   * Map removal throws at appropriate times
+   */
   public void testSymTab_removeMap() {
     String msg;
 
@@ -96,8 +102,9 @@ public class SymTest extends RobertTest {
     } catch (EmptySymTabException err) { }
   }
 
-//---------------------------------------------------------------------------//
-
+  /**
+   * Map addition inserts 1 map at front of linked list
+   */
   public void testSymTab_addMap() {
     int nAdded = 3;
     String msg;
@@ -123,8 +130,12 @@ public class SymTest extends RobertTest {
     } catch (EmptySymTabException err) { }
   }
 
-//---------------------------------------------------------------------------//
-
+  /**
+   * Symbols are inserted properly into first map in list.
+   * 
+   * Checks that [Duplicate/EmptySymTab]Exception are thrown appropriately.
+   * 
+   */
   public void testSymTab_insert() {
     String msg;
 
@@ -163,8 +174,13 @@ public class SymTest extends RobertTest {
     }
   }
 
-//---------------------------------------------------------------------------//
-
+  /** Local symbol retrieval returns symbols/null appropriately.
+   *
+   * Checks that retrieved symbols are the same as corresponding inserted ones.
+   * Confirms null is returned for cases of empty map list and symbol not
+   * found.  Also confirms that addMap 'resets' the Map queue so the same
+   * symbol can again be inserted.
+   */
   public void testSymTab_localLookup() {
     String msg;
 
@@ -212,8 +228,14 @@ public class SymTest extends RobertTest {
     assertEQ(this.tab.localLookup(name1), sym1, "");
   }
 
-//---------------------------------------------------------------------------//
-
+  /** Global symbol retrieval returns symbols/null appropriately.
+   *
+   * Checks that retrieved symbols are the same as corresponding inserted ones.
+   * Confirms null is returned for cases of empty map list and symbol not
+   * found.  Also confirms that addMap has no effect on global symbol
+   * searching.  Confirms removeMap on a to-be-searched for symbol results in a
+   * null return.
+   */
   public void testSymTab_globalLookup() {
     String msgExists = "Symbol should not exists but does.";
 
@@ -252,8 +274,9 @@ public class SymTest extends RobertTest {
     assertEQ(this.tab.globalLookup(name2), null, msgExists);
   }
 
-//---------------------------------------------------------------------------//
-
+  /**
+   * Allows for a visual check of the SymTab print to stdout.
+   */
   public void testSymTab_print() {
     this.tab.print();
   }
