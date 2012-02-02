@@ -65,7 +65,7 @@ public class RobertTest extends Object {
         try {
           m.setAccessible(true);
           m.invoke(t, arglist);
-          if (t.getPassed()) {
+          if (t.passed) {
             t.printPassed(mname);
             this.passCount += 1;
           } else {
@@ -89,8 +89,6 @@ public class RobertTest extends Object {
     }
     printFinal();
   }
-
-  private boolean getPassed() {return this.passed;}
 
   private void printPassed(String methodName) {
     setColor("green");
