@@ -1,16 +1,22 @@
 
-FLAGS=-Xlint:unchecked
+MAIN=SymTest.java
 
 CLASSPATH=classes
 SRC_DIR=src
 LIB_DIR=lib
+DOC_DIR=doc
 
-MAIN=SymTest.java
+TEST_SUITE=rwctest
+COMPILER_SUITE=rwccompiler
 
-all: init ${MAIN}
+FLAGS=-Xlint:unchecked
+
+###############################################################
+
+all: init ${MAIN} doc
 	
 
-${MAIN}: 
+${MAIN}:
 	
 	javac -sourcepath ${SRC_DIR} -classpath ${CLASSPATH}:${LIB_DIR} \
 				-d ${CLASSPATH} ${FLAGS} ${SRC_DIR}/${MAIN}
@@ -22,4 +28,9 @@ init:
 clean:
 	
 	rm -Rf ${CLASSPATH}
+	rm -Rf ${DOC_DIR}
+
+doc:
+	
+	javadoc -sourcepath ${SRC_DIR} -d ${DOC_DIR} ${TEST_SUITE} ${COMPILER_SUITE} ${SRC_DIR}/${MAIN}
 
