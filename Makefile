@@ -13,7 +13,10 @@ FLAGS=-Xlint:unchecked
 
 ###############################################################
 
-all: init ${MAIN} doc
+program: init ${MAIN}
+	
+
+all: program doc
 	
 
 ${MAIN}:
