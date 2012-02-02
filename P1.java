@@ -3,8 +3,6 @@ import java.util.*;
 import java.io.PrintStream;
 import java.io.OutputStream;
 
-import rwccompiler.*;
-import rwctest.*;
 
 /**
  * Test fixture and tests

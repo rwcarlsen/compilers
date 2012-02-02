@@ -1,5 +1,4 @@
 
-package rwccompiler;
 
 import java.util.*;
 

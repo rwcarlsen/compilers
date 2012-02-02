@@ -1,5 +1,4 @@
 
-package rwccompiler;
 
 /** Symbol class used in compiler symbol table. */
 public class Sym {

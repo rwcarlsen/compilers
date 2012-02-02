@@ -1,5 +1,4 @@
 
-package rwctest;
 
 import java.lang.reflect.*;
 import java.util.*;
