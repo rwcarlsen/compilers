@@ -9,7 +9,7 @@ import rwctest.*;
 /**
  * Test fixture and tests
  */
-public class SymTest extends RobertTest {
+public class P1 extends RobertTest {
 
   private SymTab tab;
 
@@ -26,7 +26,7 @@ public class SymTest extends RobertTest {
   /**
    * initialize the test fixture
    */
-  public SymTest() {
+  public P1() {
     this.tab = new SymTab();
 
     this.name1 = "";
@@ -45,7 +45,7 @@ public class SymTest extends RobertTest {
    */
   public static void main(String[] args) {
 
-    RobertTest.go("SymTest");
+    RobertTest.go("P1");
   }
 
 //---------------------------------------------------------------------------//
