@@ -4,6 +4,15 @@ package rwctest;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * Superclass for test fixtures providing easy pass/fail tracking and
+ * assertion functionality.
+ * 
+ * Each test method written by a subclass is run inside its own clean instance
+ * of its fixture class (each test is independent). The main method of the
+ * subclass-fixture runs the tests in it by invoking the static 'RobertTest.go'
+ * method.
+ */
 public class RobertTest extends Object {
 
   private static Map<String, String> colors;
@@ -17,6 +26,8 @@ public class RobertTest extends Object {
   private ArrayList<String> tmpErrs;
   private ArrayList<StackTraceElement[]> traces;
 
+
+  /** initialize pass/fail counts and error/traces lists. */
   public RobertTest() {
     this.testCount = 0;
     this.failCount = 0;
@@ -28,6 +39,11 @@ public class RobertTest extends Object {
     this.traces = new ArrayList<StackTraceElement[]>();
   }
 
+  /** Used to initiate testing on the specified class.
+   * 
+   * @param subname class name of the RobertTest subclass fixture
+   * 
+   */
   public static void go(String subname) {
     colors = new HashMap<String, String>();
     colors.put("reset", "0");
@@ -44,6 +60,7 @@ public class RobertTest extends Object {
     test.runTests(subname);
   }
 
+  /** invokes each test method in the specified class in its own sandbox */
   private void runTests(String subname) {
     System.out.print("\r\n");
 
@@ -90,11 +107,15 @@ public class RobertTest extends Object {
     printFinal();
   }
 
+  /** Prints a passed message for the given test.*/
   private void printPassed(String methodName) {
     setColor("green");
     System.out.println(methodName.replace("test", "") + ": PASSED");
   }
 
+  /** Prints a failed message for the given test including
+   * a detail message (if specified) and a stack trace.
+   */
   private void printFailed(String methodName) {
     setColor("red");
     System.out.println(methodName.replace("test", "") + ": FAILED");
@@ -114,6 +135,7 @@ public class RobertTest extends Object {
     this.traces.clear();
   }
 
+  /** Prints summary statistics for the test fixture and its tests. */
   private void printFinal() {
     int noRunCount = this.testCount - this.passCount - this.failCount;
 
@@ -154,6 +176,7 @@ public class RobertTest extends Object {
     setColor("reset");
   }
 
+  /** Changes terminal text color using ascii escape sequences.*/
   private static void setColor(String color) {
     String attrib = "1;";
     if (color == "reset") {
@@ -163,6 +186,11 @@ public class RobertTest extends Object {
     System.out.print("\033[" + attrib + colors.get(color) + "m");
   }
 
+  /** Assert the passed boolean val/expression is true.
+   *
+   * An entire test fails (not the entire fixture) if any single assertion fails.
+   * The test method will continue normal execution even if the assertion fails.
+   */
   public void assertTrue(boolean val, String msg) {
     if (!val) {
       this.passed = false;
@@ -173,6 +201,13 @@ public class RobertTest extends Object {
     }
   }
 
+  /** Assert the passed boolean val/expression is true.
+   *
+   * Provides more detailed output than 'assertTrue' by printing the two values
+   * if they are not equal.
+   * An entire test fails (not the entire fixture) if any single assertion fails.
+   * The test method will continue normal execution even if the assertion fails.
+   */
   public void assertEQ(Object obj1, Object obj2, String msg) {
     if (obj1 != obj2) {
       this.passed = false;
@@ -183,6 +218,9 @@ public class RobertTest extends Object {
     }
   }
 
+  /** Manually force an individual test to fail by invoking anywhere
+   *  in the test method.
+   */
   public void fail(String msg) {
     this.passed = false;
     this.tmpErrs.add("Manual fail. " + msg);
