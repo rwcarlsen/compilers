@@ -1,6 +1,7 @@
 
-test/SymTest.java
-test/rwctest/RobertTest.java
+src/SymTest.java
+
+src/rwctest/RobertTest.java
 
 src/rwccompiler/Sym.java
 src/rwccompiler/SymTab.java
