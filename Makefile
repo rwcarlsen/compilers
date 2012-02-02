@@ -5,12 +5,15 @@ CLASSPATH=classes
 SRC_DIR=src
 LIB_DIR=lib
 
-SRC_LIST=src-list.txt
+MAIN=SymTest.java
 
-all: init
+all: init ${MAIN}
+	
+
+${MAIN}: 
 	
 	javac -sourcepath ${SRC_DIR} -classpath ${CLASSPATH}:${LIB_DIR} \
-        @${SRC_LIST} -d ${CLASSPATH} ${FLAGS}
+				-d ${CLASSPATH} ${FLAGS} ${SRC_DIR}/${MAIN}
 
 init:
 	
