@@ -21,6 +21,8 @@ public class SymTest extends RobertTest {
   private String name2;
   private Sym sym2;
 
+  private Sym nullsym;
+
   private String msgNull;
 
   /**
@@ -36,6 +38,8 @@ public class SymTest extends RobertTest {
     this.type2 = "elephant";
     this.name2 = "foopid";
     this.sym2 = new Sym(this.type2);
+
+    this.nullsym = new Sym(null);
 
     this.msgNull = "Expected null and received something else.";
   }
@@ -59,6 +63,7 @@ public class SymTest extends RobertTest {
     
     assertEQ(this.sym1.getType(), this.type1, "");
     assertEQ(this.sym2.getType(), this.type2, "");
+    assertEQ(this.nullsym.getType(), null, "");
 
     // repeat to be sure this method doesn't modify the object's type
     assertEQ(this.sym1.getType(), this.type1, "");
@@ -140,10 +145,11 @@ public class SymTest extends RobertTest {
     String msg;
 
     try {
-      // insert 2 symbols into table
+      // insert 3 symbols into table
       try {
         this.tab.insert(this.name1, this.sym1);
         this.tab.insert(this.name2, this.sym2);
+        this.tab.insert(null, this.nullsym);
       } catch (DuplicateException err) {
         msg = "Unexpected duplicates found for: ";
         msg += "this.name1=" + this.name1 + ", this.name2=" + this.name2;
@@ -198,8 +204,9 @@ public class SymTest extends RobertTest {
     this.tab.addMap();
 
     try {
-      this.tab.insert(name1, sym1);
-      this.tab.insert(name2, sym2);
+      this.tab.insert(name1, this.sym1);
+      this.tab.insert(name2, this.sym2);
+      this.tab.insert(null, this.nullsym);
     } catch (Exception err) {
       fail(err.getMessage());
     }
@@ -210,7 +217,8 @@ public class SymTest extends RobertTest {
     this.tab.addMap();
 
     try {
-      this.tab.insert(name2, sym2);
+      this.tab.insert(name1, this.sym1);
+      this.tab.insert(null, this.nullsym);
     } catch (DuplicateException err) {
       fail("Something is wrong with the way addMap and localLookup work.");
     } catch (Exception err) {
@@ -225,7 +233,9 @@ public class SymTest extends RobertTest {
       fail(err.getMessage());
     }
 
-    assertEQ(this.tab.localLookup(name1), sym1, "");
+    assertEQ(this.tab.localLookup(name1), this.sym1, "");
+    assertEQ(this.tab.localLookup(name2), this.sym2, "");
+    assertEQ(this.tab.localLookup(null), this.nullsym, "");
   }
 
   /** Global symbol retrieval returns symbols/null appropriately.
@@ -256,12 +266,14 @@ public class SymTest extends RobertTest {
       this.tab.insert(name1, this.sym1);
       this.tab.addMap();
       this.tab.insert(name2, this.sym2);
+      this.tab.insert(null, this.nullsym);
     } catch (Exception err) {
       fail(err.getMessage());
     }
 
     assertEQ(this.tab.globalLookup(name1), this.sym1, "");
     assertEQ(this.tab.globalLookup(name2), this.sym2, "");
+    assertEQ(this.tab.globalLookup(null), this.nullsym, "");
     assertEQ(this.tab.globalLookup("qwerty"), null, msgExists);
 
     try {
@@ -272,6 +284,7 @@ public class SymTest extends RobertTest {
 
     assertEQ(this.tab.globalLookup(name1), this.sym1, "");
     assertEQ(this.tab.globalLookup(name2), null, msgExists);
+    assertEQ(this.tab.globalLookup(null), null, msgExists);
   }
 
   /**
