@@ -1,5 +1,5 @@
 
-MAIN=SymTest.java
+MAIN=SymTest
 
 CLASSPATH=classes
 SRC_DIR=src
@@ -13,16 +13,19 @@ FLAGS=-Xlint:unchecked
 
 ###############################################################
 
-program: init ${MAIN}
+program: init main
 	
 
 all: program doc
 	
 
-${MAIN}:
+main:
 	
 	javac -sourcepath ${SRC_DIR} -classpath ${CLASSPATH}:${LIB_DIR} \
-				-d ${CLASSPATH} ${FLAGS} ${SRC_DIR}/${MAIN}
+				-d ${CLASSPATH} ${FLAGS} ${SRC_DIR}/${MAIN}.java
+
+	java -cp ${CLASSPATH} ${MAIN}
+
 
 init:
 	
@@ -35,5 +38,4 @@ clean:
 
 doc:
 	
-	javadoc -sourcepath ${SRC_DIR} -d ${DOC_DIR} ${TEST_SUITE} ${COMPILER_SUITE} ${SRC_DIR}/${MAIN}
-
+	javadoc -sourcepath ${SRC_DIR} -d ${DOC_DIR} ${TEST_SUITE} ${COMPILER_SUITE} ${SRC_DIR}/${MAIN}.java 
