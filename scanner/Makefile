@@ -12,7 +12,10 @@
 
 # define the java compiler to be used and the flags
 JC = javac
-FLAGS = -g
+JR = java
+CLASSDIR=classes
+CLASSPATH=lib
+FLAGS = -g -d ${CLASSDIR} -classpath ${CLASSPATH}
 
 P2.class: P2.java Yylex.class sym.class
 	$(JC) $(FLAGS) P2.java
@@ -20,14 +23,20 @@ P2.class: P2.java Yylex.class sym.class
 Yylex.class: Little.jlex.java Errors.class sym.class
 	$(JC) $(FLAGS) Little.jlex.java
 
-Little.jlex.java: Little.jlex sym.class
-	java JLex.Main Little.jlex
+Little.jlex.java: JLex.Main Little.jlex sym.class
+	${JR} -classpath ${CLASSDIR} JLex.Main Little.jlex
+
+JLex.Main: JLex/Main.java
+	${JC} ${FLAGS} JLex/Main.java
 
 sym.class: sym.java
 	$(JC) $(FLAGS) sym.java
 
 Errors.class: Errors.java
 	$(JC) $(FLAGS) Errors.java
+
+run:
+	$(JR) -classpath $(CLASSDIR) P2
 
 ###
 # clean up
