@@ -14,20 +14,17 @@
 JC = javac
 JR = java
 CLASSDIR=classes
-CLASSPATH=lib/*:lib
+CLASSPATH=${CLASSDIR}:lib/*:lib
 FLAGS = -g -d ${CLASSDIR} -classpath ${CLASSPATH}
 
 P2.class: P2.java Yylex.class sym.class
 	$(JC) $(FLAGS) P2.java
 
-Yylex.class: Little.jlex.java Errors.class sym.class
-	$(JC) $(FLAGS) Little.jlex.java
+Yylex.class: Little.lex.java Errors.class sym.class
+	$(JC) $(FLAGS) Little.lex.java
 
-Little.jlex.java: JLex.Main Little.jlex sym.class
-	${JR} -classpath ${CLASSDIR} JLex.Main Little.jlex
-
-JLex.Main: JLex/Main.java
-	${JC} ${FLAGS} JLex/Main.java
+Little.lex.java: Little.lex sym.class
+	${JR} -classpath ${CLASSPATH} JLex.Main Little.lex
 
 sym.class: sym.java
 	$(JC) $(FLAGS) sym.java
@@ -39,7 +36,7 @@ init:
 	mkdir -p classes
 
 run:
-	$(JR) -classpath $(CLASSDIR) P2
+	$(JR) -classpath $(CLASSPATH) P2
 
 testrun:
 	$(JC)  -d class-files -classpath classes:lib/*:class-files P2.java
@@ -50,4 +47,4 @@ testrun:
 ###
 
 clean:
-	rm -f *~ *.class Little.jlex.java
+	rm -f *~ *.class Little.lex.java

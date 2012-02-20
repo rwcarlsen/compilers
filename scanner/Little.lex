@@ -66,8 +66,12 @@ class CharNum {
 }
 %%
 
-DIGIT=		[0-9]
-WHITESPACE=	[\ \t]
+ALPHA=[A-Za-z]
+DIGIT=[0-9]
+NONEWLINE_WHITESPACE=[\ \t]
+WHITESPACE=[\n\ \t]
+STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
+COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
 // The next 3 lines are included so that we can use the generated scanner
 // with java CUP (the Java parser generator)
