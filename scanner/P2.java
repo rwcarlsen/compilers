@@ -11,7 +11,12 @@ class P2 {
     public static void main(String[] args) throws IOException // may be thrown by yylex
     {
 	// test all tokens
-	testAllTokens("goodInTokens");
+	testAllTokens("keywordTokens");
+	testAllTokens("commentTokens");
+	testAllTokens("stringLitTokens");
+	testAllTokens("numLitTokens");
+	testAllTokens("shortTokens");
+	testAllTokens("idTokens");
 	testAllTokens("badInTokens");
 	CharNum.num = 1;
 	
