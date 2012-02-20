@@ -14,7 +14,7 @@
 JC = javac
 JR = java
 CLASSDIR=classes
-CLASSPATH=${CLASSDIR}:lib/*:lib
+CLASSPATH=${CLASSDIR}:.:lib/*:lib
 FLAGS = -g -d ${CLASSDIR} -classpath ${CLASSPATH}
 
 P2.class: P2.java Yylex.class sym.class
