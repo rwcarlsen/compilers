@@ -11,7 +11,8 @@ class P2 {
     public static void main(String[] args) throws IOException // may be thrown by yylex
     {
 	// test all tokens
-	testAllTokens();
+	testAllTokens("goodInTokens");
+	testAllTokens("badInTokens");
 	CharNum.num = 1;
 	
 	// ADD CALLS TO OTHER TEST METHODS HERE
@@ -27,18 +28,18 @@ class P2 {
     // if the input file contains all tokens, one per line, we can verify
     // correctness of the scanner by comparing the input and output files
     // **********************************************************************
-    private static void testAllTokens() throws IOException {
+    private static void testAllTokens(String inFileName) throws IOException {
 	// open input and output files
 	FileReader inFile = null;
 	PrintWriter outFile = null;
 	try {
-	    inFile = new FileReader("inTokens");
-	    outFile = new PrintWriter(new FileWriter("inTokens.out"));
+	    inFile = new FileReader(inFileName);
+	    outFile = new PrintWriter(new FileWriter(inFileName + ".out"));
 	} catch (FileNotFoundException ex) {
-	    System.err.println("File inTokens not found.");
+	    System.err.println("File " + inFileName + " not found.");
 	    System.exit(-1);
 	} catch (IOException ex) {
-	    System.err.println("inTokens.out cannot be opened.");
+	    System.err.println(inFileName + ".out cannot be opened.");
 	    System.exit(-1);
 	}
 
