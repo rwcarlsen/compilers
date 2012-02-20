@@ -13,10 +13,7 @@ public class P2 extends RobertTest {
   public static void main(String[] args) throws IOException // may be thrown by yylex
   {
     RobertTest.go("P2");
-    // ADD CALLS TO OTHER TEST METHODS HERE
   }
-
-  public P2() {}
 
   public void testGoodShortTokens() {
     String singles = "{}(),=;+-*/!<>&";
@@ -38,7 +35,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected single token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
       assertTrue(single.equals(results.get(0)), results.get(0) + " != " + single);
     }
 
@@ -55,7 +53,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected single token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
       assertTrue(doub.equals(results.get(0)), results.get(0) + " != " + doub);
     }
   }
@@ -101,7 +100,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected single token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
       assertTrue(currID.equals(results.get(0)), results.get(0) + " != " + currID);
     }
   }
@@ -134,7 +134,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected single token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
       assertTrue(currLit.equals(results.get(0)), results.get(0) + " != " + currLit);
     }
   }

@@ -39,8 +39,6 @@ run:
 	$(JR) -classpath $(CLASSPATH) P2
 
 testrun:
-	rm -f allTokens
-	cat *Tokens >> allTokens
 	$(JC)  -d class-files -classpath ${CLASSPATH}:class-files P2.java
 	$(JR)  -classpath ${CLASSPATH}:class-files P2
 
