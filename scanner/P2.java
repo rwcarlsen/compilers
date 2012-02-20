@@ -140,6 +140,72 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testGoodDoubleLit() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
+    Double lhs, rhs;
+
+    lits.add("0.0");
+    lits.add("0.0");
+    lits.add("123.123");
+    lits.add("123456789.123456789");
+
+    lits.add(".0");
+    lits.add("0.");
+    lits.add("123.");
+    lits.add(".123");
+    lits.add(".0123");
+
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = tokenTest(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 1, 
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
+      lhs = new Double(results.get(0));
+      rhs = new Double(currLit);
+      assertTrue(lhs.compareTo(rhs) == 0, lhs.toString() + " != " + rhs.toString());
+    }
+  }
+
+  public void testGoodIntLit() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
+    Integer lhs, rhs;
+
+    lits.add("0");
+    lits.add("1");
+    lits.add("123");
+    lits.add((new Integer(Integer.MAX_VALUE)).toString());
+    System.out.println((new Integer(Integer.MAX_VALUE)).toString());
+    lits.add("2147483646");
+    lits.add("2147483647");
+
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = tokenTest(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 1, 
+        "Expected 1 token returned but got " + results.size() + " tokens.");
+      if (results.size() != 1) {continue;}
+      lhs = new Integer(results.get(0));
+      rhs = new Integer(currLit);
+      System.out.println(rhs);
+      assertTrue(lhs.compareTo(rhs) == 0, lhs.toString() + " != " + rhs.toString());
+    }
+  }
+
   // **********************************************************************
   // tokenTest
   //
@@ -151,6 +217,7 @@ public class P2 extends RobertTest {
   // correctness of the scanner by comparing the input and output files
   // **********************************************************************
   private static ArrayList<String> tokenTest(Reader inFile) throws IOException {
+    CharNum.num = 1;
     // open input and output files
     PrintWriter outFile = null;
     ArrayList<String> lexemes = new ArrayList<String>();
