@@ -15,7 +15,7 @@ class TokenVal {
  // constructor
     TokenVal(int l, int c) {
         linenum = l;
-	charnum = c;
+  charnum = c;
     }
 }
 
@@ -25,7 +25,7 @@ class IntLitTokenVal extends TokenVal {
  // constructor
     IntLitTokenVal(int l, int c, int val) {
         super(l,c);
-	intVal = val;
+  intVal = val;
     }
 }
 
@@ -35,7 +35,7 @@ class DblLitTokenVal extends TokenVal {
  // constructor
     DblLitTokenVal(int l, int c, double val) {
         super(l,c);
-	dblVal = val;
+  dblVal = val;
     }
 }
 
@@ -45,7 +45,7 @@ class IdTokenVal extends TokenVal {
  // constructor
     IdTokenVal(int l, int c, String val) {
         super(l,c);
-	idVal = val;
+  idVal = val;
     }
 }
 
@@ -55,7 +55,7 @@ class StrLitTokenVal extends TokenVal {
  // constructor
     StrLitTokenVal(int l, int c, String val) {
         super(l,c);
-	strVal = val;
+  strVal = val;
     }
 }
 
@@ -90,25 +90,25 @@ return new Symbol(sym.EOF);
 %%
 
 {DIGIT}+   {// NOTE: the following computation of the integer value does NOT
-	    //       check for overflow.  This must be changed.
-	    int val = (new Integer(yytext())).intValue();
-	    Symbol S = new Symbol(sym.INTLITERAL,
-			          new IntLitTokenVal(yyline+1, CharNum.num, val)
-				 );
-	    CharNum.num += yytext().length();
-	    return S;
-	   }
+      //       check for overflow.  This must be changed.
+      int val = (new Integer(yytext())).intValue();
+      Symbol S = new Symbol(sym.INTLITERAL,
+                new IntLitTokenVal(yyline+1, CharNum.num, val)
+         );
+      CharNum.num += yytext().length();
+      return S;
+     }
 
-\n	   {CharNum.num = 1;}
+\n     {CharNum.num = 1;}
 
 {WHITESPACE}+  {CharNum.num += yytext().length();}
 
-"+"	   {Symbol S = new Symbol(sym.PLUS, new TokenVal(yyline+1, CharNum.num));
-	    CharNum.num++;
-	    return S;
-	   }
-	    
-.	   {Errors.fatal(yyline+1, CharNum.num,
-			 "ignoring illegal character: " + yytext());
-	    CharNum.num++;
-	   }
+"+"     {Symbol S = new Symbol(sym.PLUS, new TokenVal(yyline+1, CharNum.num));
+      CharNum.num++;
+      return S;
+     }
+      
+.     {Errors.fatal(yyline+1, CharNum.num,
+       "ignoring illegal character: " + yytext());
+      CharNum.num++;
+     }
