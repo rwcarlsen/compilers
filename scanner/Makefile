@@ -14,7 +14,7 @@
 JC = javac
 JR = java
 CLASSDIR=classes
-CLASSPATH=lib
+CLASSPATH=lib/*:lib
 FLAGS = -g -d ${CLASSDIR} -classpath ${CLASSPATH}
 
 P2.class: P2.java Yylex.class sym.class
@@ -35,8 +35,15 @@ sym.class: sym.java
 Errors.class: Errors.java
 	$(JC) $(FLAGS) Errors.java
 
+init:
+	mkdir -p classes
+
 run:
 	$(JR) -classpath $(CLASSDIR) P2
+
+testrun:
+	$(JC)  -d class-files -classpath classes:lib/*:class-files P2.java
+	$(JR)  -classpath class-files:lib P2
 
 ###
 # clean up
