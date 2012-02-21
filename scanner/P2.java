@@ -114,6 +114,46 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testKeywords() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<Symbol> tokens;
+    ArrayList<String> keywords = new ArrayList<String>();
+
+    keywords.add("int");
+    keywords.add("void");
+    keywords.add("double");
+    keywords.add("if");
+    keywords.add("else");
+    keywords.add("while");
+    keywords.add("return");
+    keywords.add("scanf");
+    keywords.add("printf");
+
+    Integer lhs, rhs;
+    for (String currKeyword : keywords) {
+      results = new ArrayList<String>();
+      tokens = new ArrayList<Symbol>();
+      reader = new StringReader(currKeyword);
+      reader2 = new StringReader(currKeyword + "cheese");
+      try {
+        results = makeLexemes(reader);
+        tokens = makeTokens(reader2);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 1, 
+        "Expected 1 token returned for '" + currKeyword + "' but got " + results.size() + " tokens: "
+        + results.toString());
+      if (results.size() != 1) {continue;}
+      assertTrue(currKeyword.equals(results.get(0)), currKeyword + " != " + results.get(0));
+
+      lhs = new Integer(currKeyword.length() + 1);
+      rhs = new Integer(((TokenVal)(tokens.get(1).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString());
+    }
+  }
+
   public void testGoodStringLit() {
     StringReader reader;
     ArrayList<String> results;
