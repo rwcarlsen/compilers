@@ -10,8 +10,7 @@ import java_cup.runtime.*;  // defines Symbol
 import rwctest.*;
 
 public class P2 extends RobertTest {
-  public static void main(String[] args) throws IOException // may be thrown by yylex
-  {
+  public static void main(String[] args) { // may be thrown by yylex
     RobertTest.go("P2");
   }
 
@@ -35,7 +34,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(single.equals(results.get(0)), results.get(0) + " != " + single);
     }
@@ -53,7 +53,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(doub.equals(results.get(0)), doub + " != " + results.get(0));
     }
@@ -91,6 +92,12 @@ public class P2 extends RobertTest {
     identifiers.add("abc__123");
     identifiers.add("abc__123_");
 
+    String lit = "";
+    for (int i = 0; i < 10; i++) {
+      lit += "aaaaaaaaaaaaaaa";
+    }
+    identifiers.add(lit);
+
     for (String currID : identifiers) {
       results = new ArrayList<String>();
       reader = new StringReader(currID);
@@ -100,7 +107,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned for '" + currID + "' but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(currID.equals(results.get(0)), currID + " != " + results.get(0));
     }
@@ -125,6 +133,12 @@ public class P2 extends RobertTest {
     lits.add("\"%d\"");
     lits.add("\"%f\"");
 
+    String lit = "\"";
+    for (int i = 0; i < 10; i++) {
+      lit += "aaaaaaaaaaaaaaa";
+    }
+    lits.add(lit + "\"");
+
     for (String currLit : lits) {
       results = new ArrayList<String>();
       reader = new StringReader(currLit);
@@ -134,7 +148,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned for " + currLit + " but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(currLit.equals(results.get(0)), currLit + " != " + results.get(0));
     }
@@ -166,7 +181,8 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
       rhs = new Double(results.get(0));
       lhs = new Double(currLit);
@@ -209,6 +225,99 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testIllegalChars() {
+    String singles = "`~@#$%^[]\\:'.?";
+    StringReader reader;
+    ArrayList<String> results;
+    String single;
+
+    for (int i = 0; i < singles.length(); i++) {
+      results = new ArrayList<String>();
+      single = singles.substring(i);
+      if (i + 1 < singles.length()) {
+        single = singles.substring(i, i + 1);
+      }
+      reader = new StringReader(single);
+      try {
+        results = tokenTest(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 0, 
+        "Expected 0 tokens returned but got " + results.size() + " tokens: "
+        + results.toString());
+    }
+  }
+
+  public void testLineCount() {
+    String text = "hello();\nif(i=1;i<10;i++)\n{\n  x = y + 3;\n  return x;\n}";
+    StringReader reader = new StringReader(text);
+    ArrayList<String> results = new ArrayList<String>();
+
+    ArrayList<String> expected = new ArrayList<String>();;
+    expected.add("hello");
+    expected.add("(");
+    expected.add(")");
+    expected.add(";");
+    expected.add("if");
+    expected.add("i");
+    expected.add("=");
+    expected.add("1");
+    expected.add(";");
+    expected.add("i");
+    expected.add("<");
+    expected.add("10");
+    expected.add(";");
+    expected.add("i");
+    expected.add("++");
+    expected.add(")");
+    expected.add("{");
+    expected.add("x");
+    expected.add("=");
+    expected.add("y");
+    expected.add("+");
+    expected.add("3");
+    expected.add(";");
+    expected.add("return");
+    expected.add("x");
+    expected.add(";");
+    expected.add("}");
+
+    try {
+      results = tokenTest(reader);
+    } catch (IOException err) {
+      fail("");
+    }
+    assertTrue(results.size() == expected.size(), 
+      "Expected " + expected.size() + " tokens returned but got " + results.size() + " tokens: "
+      + results.toString());
+
+  }
+
+  public void testCharCount() {
+
+  }
+
+  public void testFormatTokens() {
+
+  }
+
+  public void testComments() {
+
+  }
+
+  public void testBadStringLits() {
+
+  }
+
+  public void testBadDoubleLits() {
+
+  }
+
+  public void testBadIntLits() {
+
+  }
+
   // **********************************************************************
   // tokenTest
   //
@@ -234,165 +343,137 @@ public class P2 extends RobertTest {
     // create and call the scanner
     Yylex scanner = new Yylex(inFile);
     Symbol token = scanner.next_token();
+    String text;
     while (token.sym != sym.EOF) {
-      switch (token.sym) {
-        case sym.INT:
-          outFile.println("int");
-          lexemes.add("int");
-          break;
-        case sym.DBL:
-          outFile.println("double");
-          lexemes.add("double");
-          break;
-        case sym.VOID:
-          outFile.println("void");
-          lexemes.add("void");
-          break;
-        case sym.IF:
-          outFile.println("if");
-          lexemes.add("if");
-          break;
-        case sym.ELSE:
-          outFile.println("else");
-          lexemes.add("else");
-          break;
-        case sym.WHILE:
-          outFile.println("while");
-          lexemes.add("while");
-          break;
-        case sym.RETURN:
-          outFile.println("return");
-          lexemes.add("return");
-          break;
-        case sym.SCANF:
-          outFile.println("scanf");
-          lexemes.add("scanf");
-          break;
-        case sym.PRINTF:
-          outFile.println("printf");
-          lexemes.add("printf");
-          break;
-        case sym.ID:
-          outFile.println(((IdTokenVal)token.value).idVal);
-          lexemes.add(((IdTokenVal)token.value).idVal);
-          break;
-        case sym.INTLITERAL:
-          outFile.println(((IntLitTokenVal)token.value).intVal);
-          lexemes.add(Integer.toString(((IntLitTokenVal)token.value).intVal));
-          break;
-        case sym.DBLLITERAL:
-          outFile.println(((DblLitTokenVal)token.value).dblVal);
-          lexemes.add(Double.toString(((DblLitTokenVal)token.value).dblVal));
-          break;
-        case sym.STRINGLITERAL:
-          outFile.println(((StrLitTokenVal)token.value).strVal);
-          lexemes.add(((StrLitTokenVal)token.value).strVal);
-          break;
-        case sym.LCURLY:
-          outFile.println("{");
-          lexemes.add("{");
-          break;
-        case sym.RCURLY:
-          outFile.println("}");
-          lexemes.add("}");
-          break;
-        case sym.LPAREN:
-          outFile.println("(");
-          lexemes.add("(");
-          break;
-        case sym.RPAREN:
-          outFile.println(")");
-          lexemes.add(")");
-          break;
-        case sym.COMMA:
-          outFile.println(",");
-          lexemes.add(",");
-          break;
-        case sym.ASSIGN:
-          outFile.println("=");
-          lexemes.add("=");
-          break;
-        case sym.SEMICOLON:
-          outFile.println(";");
-          lexemes.add(";");
-          break;
-        case sym.PLUS:
-          outFile.println("+");
-          lexemes.add("+");
-          break;
-        case sym.MINUS:
-          outFile.println("-");
-          lexemes.add("-");
-          break;
-        case sym.STAR:
-          outFile.println("*");
-          lexemes.add("*");
-          break;
-        case sym.DIVIDE:
-          outFile.println("/");
-          lexemes.add("/");
-          break;
-        case sym.PLUSPLUS:
-          outFile.println("++");
-          lexemes.add("++");
-          break;
-        case sym.MINUSMINUS:
-          outFile.println("--");
-          lexemes.add("--");
-          break;
-        case sym.NOT:
-          outFile.println("!");
-          lexemes.add("!");
-          break;
-        case sym.AND:
-          outFile.println("&&");
-          lexemes.add("&&");
-          break;
-        case sym.OR:
-          outFile.println("||");
-          lexemes.add("||");
-          break;
-        case sym.EQUALS:
-          outFile.println("==");
-          lexemes.add("==");
-          break;
-        case sym.NOTEQUALS:
-          outFile.println("!=");
-          lexemes.add("!=");
-          break;
-        case sym.LESS:
-          outFile.println("<");
-          lexemes.add("<");
-          break;
-        case sym.GREATER:
-          outFile.println(">");
-          lexemes.add(">");
-          break;
-        case sym.LESSEQ:
-          outFile.println("<=");
-          lexemes.add("<=");
-          break;
-        case sym.GREATEREQ:
-          outFile.println(">=");
-          lexemes.add(">=");
-          break;
-        case sym.AMPERSAND:
-          outFile.println("&");
-          lexemes.add("&");
-          break;
-        case sym.INT_FORMAT:
-          outFile.println("\"%d\"");
-          lexemes.add("\"%d\"");
-          break;
-        case sym.DBL_FORMAT:
-          outFile.println("\"%f\"");
-          lexemes.add("\"%f\"");
-          break;
-      }
+      text = stringForToken(token);
+      lexemes.add(text);
+      outFile.println(text);
 
       token = scanner.next_token();
     }
     outFile.close();
     return lexemes;
+  }
+
+  private static String stringForToken(Symbol token) {
+    String lexeme = "";
+    switch (token.sym) {
+      case sym.INT:
+        lexeme = "int";
+        break;
+      case sym.DBL:
+        lexeme = "double";
+        break;
+      case sym.VOID:
+        lexeme = "void";
+        break;
+      case sym.IF:
+        lexeme = "if";
+        break;
+      case sym.ELSE:
+        lexeme = "else";
+        break;
+      case sym.WHILE:
+        lexeme = "while";
+        break;
+      case sym.RETURN:
+        lexeme = "return";
+        break;
+      case sym.SCANF:
+        lexeme = "scanf";
+        break;
+      case sym.PRINTF:
+        lexeme = "printf";
+        break;
+      case sym.ID:
+        lexeme = ((IdTokenVal)token.value).idVal;
+        break;
+      case sym.INTLITERAL:
+        lexeme = Integer.toString(((IntLitTokenVal)token.value).intVal);
+        break;
+      case sym.DBLLITERAL:
+        lexeme = Double.toString(((DblLitTokenVal)token.value).dblVal);
+        break;
+      case sym.STRINGLITERAL:
+        lexeme = ((StrLitTokenVal)token.value).strVal;
+        break;
+      case sym.LCURLY:
+        lexeme = "{";
+        break;
+      case sym.RCURLY:
+        lexeme = "}";
+        break;
+      case sym.LPAREN:
+        lexeme = "(";
+        break;
+      case sym.RPAREN:
+        lexeme = ")";
+        break;
+      case sym.COMMA:
+        lexeme = ",";
+        break;
+      case sym.ASSIGN:
+        lexeme = "=";
+        break;
+      case sym.SEMICOLON:
+        lexeme = ";";
+        break;
+      case sym.PLUS:
+        lexeme = "+";
+        break;
+      case sym.MINUS:
+        lexeme = "-";
+        break;
+      case sym.STAR:
+        lexeme = "*";
+        break;
+      case sym.DIVIDE:
+        lexeme = "/";
+        break;
+      case sym.PLUSPLUS:
+        lexeme = "++";
+        break;
+      case sym.MINUSMINUS:
+        lexeme = "--";
+        break;
+      case sym.NOT:
+        lexeme = "!";
+        break;
+      case sym.AND:
+        lexeme = "&&";
+        break;
+      case sym.OR:
+        lexeme = "||";
+        break;
+      case sym.EQUALS:
+        lexeme = "==";
+        break;
+      case sym.NOTEQUALS:
+        lexeme = "!=";
+        break;
+      case sym.LESS:
+        lexeme = "<";
+        break;
+      case sym.GREATER:
+        lexeme = ">";
+        break;
+      case sym.LESSEQ:
+        lexeme = "<=";
+        break;
+      case sym.GREATEREQ:
+        lexeme = ">=";
+        break;
+      case sym.AMPERSAND:
+        lexeme = "&";
+        break;
+      case sym.INT_FORMAT:
+        lexeme = "\"%d\"";
+        break;
+      case sym.DBL_FORMAT:
+        lexeme = "\"%f\"";
+        break;
+    }
+
+    return lexeme;
   }
 }
