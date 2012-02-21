@@ -1,4 +1,5 @@
 classes
 *.swp
+*.swo
 doc
 *.out
