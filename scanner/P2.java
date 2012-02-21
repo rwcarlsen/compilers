@@ -199,7 +199,7 @@ public class P2 extends RobertTest {
     lits.add("0");
     lits.add("1");
     int tot = 1;
-    for (int i = 0; i < 31; i++) {
+    for (int i = 0; i < 30; i++) {
       tot *= 2;
       lits.add((new Integer(tot)).toString());
     }
@@ -484,6 +484,118 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testDoubleLitCharCount() {
+    ArrayList<String> textList = new ArrayList<String>();
+    textList.add("1234.+cheese");
+    textList.add(".1234+cheese");
+    textList.add("12.34+cheese");
+
+    ArrayList<Integer> expected = new ArrayList<Integer>();
+    expected.add(new Integer(1));
+    expected.add(new Integer(6));
+    expected.add(new Integer(7));
+
+    for (String currText : textList) {
+      StringReader reader = new StringReader(currText);
+      ArrayList<Symbol> results = new ArrayList<Symbol>();
+
+      try {
+        results = makeTokens(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == expected.size(), 
+        "Expected " + expected.size() + " tokens returned but got " +
+        results.size() + " tokens.");
+      Integer lhs, rhs;
+      for (int i = 0; i < expected.size(); i++) {
+        lhs = expected.get(i);
+        rhs = new Integer(((TokenVal)(results.get(i).value)).charnum);
+        assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+            + " for token " + (new Integer(i + 1)).toString() + ": " + stringForToken(results.get(i)));
+      }
+    }
+  }
+
+  public void testIntLitCharCount() {
+    String currText = "1234567+cheese";
+
+    ArrayList<Integer> expected = new ArrayList<Integer>();
+    expected.add(new Integer(1));
+    expected.add(new Integer(8));
+    expected.add(new Integer(9));
+
+    StringReader reader = new StringReader(currText);
+    ArrayList<Symbol> results = new ArrayList<Symbol>();
+
+    try {
+      results = makeTokens(reader);
+    } catch (IOException err) {
+      fail("");
+    }
+    assertTrue(results.size() == expected.size(), 
+      "Expected " + expected.size() + " tokens returned but got " +
+      results.size() + " tokens.");
+    Integer lhs, rhs;
+    for (int i = 0; i < expected.size(); i++) {
+      lhs = expected.get(i);
+      rhs = new Integer(((TokenVal)(results.get(i).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+          + " for token " + (new Integer(i + 1)).toString() + ": " + stringForToken(results.get(i)));
+    }
+  }
+
+  public void testShortTokenCharCount() {
+    String singles = "{}(),=;+-*/!<>&";
+    String doubles = "++--&&||==!=<=>=";
+    StringReader reader;
+    ArrayList<Symbol> results;
+    String doub, single;
+    Integer lhs, rhs;
+
+    for (int i = 0; i < singles.length(); i++) {
+      results = new ArrayList<Symbol>();
+      single = singles.substring(i);
+      if (i + 1 < singles.length()) {
+        single = singles.substring(i, i + 1);
+      }
+      reader = new StringReader(single + "cheese");
+      try {
+        results = makeTokens(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 2, 
+        "Expected 2 tokens returned but got " + results.size() + " tokens: "
+        + results.toString());
+      if (results.size() != 2) {continue;}
+      lhs = new Integer(2);
+      rhs = new Integer(((TokenVal)(results.get(1).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString());
+    }
+
+    for (int i = 0; i < doubles.length(); i += 2) {
+      results = new ArrayList<Symbol>();
+      doub = doubles.substring(i);
+      if (i + 2 < doubles.length()) {
+        doub = doubles.substring(i, i + 2);
+      }
+      reader = new StringReader(doub + "cheese");
+      try {
+        results = makeTokens(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 2, 
+        "Expected 2 tokens returned but got " + results.size() + " tokens: "
+        + results.toString());
+      if (results.size() != 2) {continue;}
+      lhs = new Integer(3);
+      rhs = new Integer(((TokenVal)(results.get(1).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString());
+    }
+  }
+
   public void DISABLED_testMultilineCharCount() {
     ArrayList<Integer> expected = makeFragCharNums();
     String text = makeCodeFrag();
@@ -534,11 +646,117 @@ public class P2 extends RobertTest {
     }
   }
 
-  public void testComments() {
+  public void testGoodComments() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
 
+    // test comment by itself
+    lits.add("/* hello */");
+    lits.add("/*hello*/");
+    lits.add("/*/* hello */*/");
+
+    lits.add("/* \nhello */");
+    lits.add("/*hello\n*/");
+    lits.add("/*\nhello\n*/");
+    lits.add("/*\n   hello\n*/");
+
+    lits.add("   /*hello*/");
+    lits.add("/*hello*/   ");
+
+    
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 0, 
+        "Expected 0 tokens for '" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+    }
+
+    // test comment with tokens before/after
+    lits = new ArrayList<String>();
+    lits.add("/*hello*/myid");
+    lits.add("/*hello*/\nmyid");
+    lits.add("/*hello*/\n myid");
+
+    lits.add("myid/*hello*/");
+    lits.add("myid\n/*hello*/");
+    lits.add("myid \n/*hello*/");
+
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 1, 
+        "Expected 1 token for '" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+      if (results.size() != 1) {continue;}
+      assertTrue(results.get(0).equals("myid"), "myid != " + results.get(0));
+    }
+  }
+
+  public void testBadComments() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
+
+    lits.add("/* hello");
+    lits.add("/* hello\n");
+    lits.add("/* /* hello");
+    lits.add("/* /* hello\n");
+    lits.add("/* /* foo */ hello");
+    lits.add("/* /* foo */ hello\n");
+
+    int count = 1;
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      //assertTrue(results.size() == 1, 
+      //  "Expected 1 token for lit" + (new Integer(count++)).toString() +
+      //  "='" + currLit + "' but got " + results.size() + " tokens: "
+      //  + results.toString());
+    }
   }
 
   public void testBadStringLits() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
+
+    lits.add("\"bad");
+    lits.add("\"bad\n");
+    lits.add("\"bad\\a\"");
+    lits.add("\"bad\\ \"");
+    lits.add("\"very-bad\\ ");
+
+    int count = 1;
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 0, 
+        "Expected 0 tokens for lit" + (new Integer(count++)).toString() +
+        "='" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+    }
 
   }
 
