@@ -55,7 +55,7 @@ public class P2 extends RobertTest {
       assertTrue(results.size() == 1, 
         "Expected 1 token returned but got " + results.size() + " tokens.");
       if (results.size() != 1) {continue;}
-      assertTrue(doub.equals(results.get(0)), results.get(0) + " != " + doub);
+      assertTrue(doub.equals(results.get(0)), doub + " != " + results.get(0));
     }
   }
 
@@ -102,7 +102,7 @@ public class P2 extends RobertTest {
       assertTrue(results.size() == 1, 
         "Expected 1 token returned but got " + results.size() + " tokens.");
       if (results.size() != 1) {continue;}
-      assertTrue(currID.equals(results.get(0)), results.get(0) + " != " + currID);
+      assertTrue(currID.equals(results.get(0)), currID + " != " + results.get(0));
     }
   }
 
@@ -136,7 +136,7 @@ public class P2 extends RobertTest {
       assertTrue(results.size() == 1, 
         "Expected 1 token returned but got " + results.size() + " tokens.");
       if (results.size() != 1) {continue;}
-      assertTrue(currLit.equals(results.get(0)), results.get(0) + " != " + currLit);
+      assertTrue(currLit.equals(results.get(0)), currLit + " != " + results.get(0));
     }
   }
 
@@ -168,8 +168,8 @@ public class P2 extends RobertTest {
       assertTrue(results.size() == 1, 
         "Expected 1 token returned but got " + results.size() + " tokens.");
       if (results.size() != 1) {continue;}
-      lhs = new Double(results.get(0));
-      rhs = new Double(currLit);
+      rhs = new Double(results.get(0));
+      lhs = new Double(currLit);
       assertTrue(lhs.compareTo(rhs) == 0, lhs.toString() + " != " + rhs.toString());
     }
   }
@@ -182,11 +182,13 @@ public class P2 extends RobertTest {
 
     lits.add("0");
     lits.add("1");
-    lits.add("123");
+    int tot = 1;
+    for (int i = 0; i < 31; i++) {
+      tot *= 2;
+      lits.add((new Integer(tot - 1)).toString());
+    }
+    lits.add((new Integer(Integer.MAX_VALUE - 1)).toString());
     lits.add((new Integer(Integer.MAX_VALUE)).toString());
-    System.out.println((new Integer(Integer.MAX_VALUE)).toString());
-    lits.add("2147483646");
-    lits.add("2147483647");
 
     for (String currLit : lits) {
       results = new ArrayList<String>();
@@ -197,11 +199,12 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens.");
+        "Expected 1 token returned but got " + results.size() + " tokens: "
+        + results.toString());
       if (results.size() != 1) {continue;}
-      lhs = new Integer(results.get(0));
-      rhs = new Integer(currLit);
-      System.out.println(rhs);
+      rhs = new Integer(results.get(0));
+      lhs = new Integer(currLit);
+      //System.out.println("orig=" + lhs + ", lexed=" + rhs);
       assertTrue(lhs.compareTo(rhs) == 0, lhs.toString() + " != " + rhs.toString());
     }
   }
