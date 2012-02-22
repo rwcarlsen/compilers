@@ -80,6 +80,7 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 ILLEGAL_CHAR=[`~@#\$%^':\?\\\]\[\.]
 ID_TEXT=({ALPHA}|_)({ALPHA}|_|{DIGIT})*
 DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)
+BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
 
 %implements java_cup.runtime.Scanner
 %function next_token
@@ -349,6 +350,10 @@ DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)
             new DblLitTokenVal(yyline+1, CharNum.num, val));
   CharNum.num += yytext().length();
   return S;
+}
+<YYINITIAL> {BAD_DBL_TEXT} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring badly formatted double literal");
 }
 <YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
   //       check for overflow.  This must be changed.

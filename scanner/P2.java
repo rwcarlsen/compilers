@@ -534,6 +534,58 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testLineBreakCharCount() {
+    ArrayList<Integer> expected = new ArrayList<Integer>();
+    String text = "foo+\"hello\"\nbar";
+    expected.add(new Integer(1));
+    expected.add(new Integer(4));
+    expected.add(new Integer(5));
+    expected.add(new Integer(1));
+
+    StringReader reader = new StringReader(text);
+    ArrayList<Symbol> results = new ArrayList<Symbol>();
+
+    try {
+      results = makeTokens(reader);
+    } catch (IOException err) {
+      fail("");
+    }
+    assertTrue(results.size() == expected.size(), 
+      "Expected " + expected.size() + " tokens returned but got " +
+      results.size() + " tokens.");
+    Integer lhs, rhs;
+    for (int i = 0; i < expected.size(); i++) {
+      lhs = expected.get(i);
+      rhs = new Integer(((TokenVal)(results.get(i).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+          + " for token " + (new Integer(i + 1)).toString() + ": " + stringForToken(results.get(i)));
+    }
+
+    expected = new ArrayList<Integer>();
+    text = "foo+\"hello\nbar";
+    expected.add(new Integer(1));
+    expected.add(new Integer(4));
+    expected.add(new Integer(1));
+
+    reader = new StringReader(text);
+    results = new ArrayList<Symbol>();
+
+    try {
+      results = makeTokens(reader);
+    } catch (IOException err) {
+      fail("");
+    }
+    assertTrue(results.size() == expected.size(), 
+      "Expected " + expected.size() + " tokens returned but got " +
+      results.size() + " tokens.");
+    for (int i = 0; i < expected.size(); i++) {
+      lhs = expected.get(i);
+      rhs = new Integer(((TokenVal)(results.get(i).value)).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+          + " for token " + (new Integer(i + 1)).toString() + ": " + stringForToken(results.get(i)));
+    }
+  }
+
   public void testDoubleLitCharCount() {
     ArrayList<String> textList = new ArrayList<String>();
     textList.add("1234.+cheese");
@@ -775,10 +827,10 @@ public class P2 extends RobertTest {
       } catch (IOException err) {
         fail("");
       }
-      //assertTrue(results.size() == 1, 
-      //  "Expected 1 token for lit" + (new Integer(count++)).toString() +
-      //  "='" + currLit + "' but got " + results.size() + " tokens: "
-      //  + results.toString());
+      assertTrue(results.size() == 0, 
+        "Expected 0 tokens for lit" + (new Integer(count++)).toString() +
+        "='" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
     }
   }
 
@@ -811,7 +863,27 @@ public class P2 extends RobertTest {
   }
 
   public void testBadDoubleLits() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
 
+    lits.add("123.456.789");
+    lits.add("123.456.");
+    lits.add(".123.456");
+    lits.add("123..");
+    lits.add("..123");
+    lits.add("123..456");
+
+    int count = 1;
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+    }
   }
 
   public void testBadIntLits() {
