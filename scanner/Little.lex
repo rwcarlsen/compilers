@@ -72,8 +72,8 @@ class CharNum {
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-NONNEWLINE_WHITE_SPACE_CHAR=[\ \t\b\012]
-WHITE_SPACE_CHAR=[\n\ \t\b\012]
+NONNEWLINE_WHITE_SPACE_CHAR=[\ \t]
+WHITE_SPACE_CHAR=[\n\ \t]
 STRING_TEXT=([^\n\"\\]|\\[\\nt\"'])*
 BAD_STRING_TEXT=([^\n\"\\]|\\[^nt])*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
@@ -407,6 +407,12 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
        "ignoring unterminated string literal with bad escaped character");
 } 
 
+<YYINITIAL> {ILLEGAL_CHAR} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring illegal character: " + yytext());
+  CharNum.num++;
+}
+
 <YYINITIAL> "/*" { yybegin(COMMENT); comment_count += 1; }
 
 <COMMENT> "/*" { comment_count += 1; }
@@ -417,12 +423,6 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   }
 }
 <COMMENT> {COMMENT_TEXT} { }
-
-<YYINITIAL> {ILLEGAL_CHAR} {
-  Errors.fatal(yyline + 1, CharNum.num,
-       "ignoring illegal character: " + yytext());
-  CharNum.num++;
-}
 
 <COMMENT> . {
   Errors.fatal(yyline + 1, CharNum.num,
