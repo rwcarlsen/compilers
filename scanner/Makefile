@@ -39,8 +39,8 @@ run:
 	$(JR) -classpath $(CLASSPATH) P2
 
 testrun:
-	$(JC)  -d class-files -classpath ${CLASSPATH}:class-files P2.java
-	$(JR)  -classpath ${CLASSPATH}:class-files P2
+	$(JC)  -d class-files -classpath .:../src:lib/*:lib:class-files P2.java
+	$(JR)  -classpath .:../src:lib/*:lib:class-files P2
 
 ###
 # clean up
