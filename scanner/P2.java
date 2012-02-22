@@ -20,6 +20,8 @@ public class P2 extends RobertTest {
     StringReader reader;
     ArrayList<String> results;
     String doub, single;
+    single = "";
+    doub = "";
 
     for (int i = 0; i < singles.length(); i++) {
       results = new ArrayList<String>();
@@ -34,7 +36,7 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens: "
+        "Expected 1 token returned for '" + single + "' but got " + results.size() + " tokens: "
         + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(single.equals(results.get(0)), results.get(0) + " != " + single);
@@ -53,7 +55,7 @@ public class P2 extends RobertTest {
         fail("");
       }
       assertTrue(results.size() == 1, 
-        "Expected 1 token returned but got " + results.size() + " tokens: "
+        "Expected 1 token returned for '" + single + "' but got " + results.size() + " tokens: "
         + results.toString());
       if (results.size() != 1) {continue;}
       assertTrue(doub.equals(results.get(0)), doub + " != " + results.get(0));
@@ -91,6 +93,9 @@ public class P2 extends RobertTest {
     identifiers.add("_abc_123");
     identifiers.add("abc__123");
     identifiers.add("abc__123_");
+
+    identifiers.add("ifelse");
+    identifiers.add("voidreturn");
 
     String lit = "";
     for (int i = 0; i < 10; i++) {
@@ -353,7 +358,6 @@ public class P2 extends RobertTest {
     chars.add(new Integer(13));
     chars.add(new Integer(14));
     chars.add(new Integer(15));
-    chars.add(new Integer(16));
     chars.add(new Integer(17));
     chars.add(new Integer(2));
     chars.add(new Integer(3));
@@ -362,9 +366,10 @@ public class P2 extends RobertTest {
     chars.add(new Integer(9));
     chars.add(new Integer(11));
     chars.add(new Integer(12));
-    chars.add(new Integer(5));
-    chars.add(new Integer(12));
+    chars.add(new Integer(3));
+    chars.add(new Integer(10));
     chars.add(new Integer(18));
+    chars.add(new Integer(1));
 
     return chars;
   }
@@ -641,7 +646,7 @@ public class P2 extends RobertTest {
     }
   }
 
-  public void DISABLED_testMultilineCharCount() {
+  public void testMultilineCharCount() {
     ArrayList<Integer> expected = makeFragCharNums();
     String text = makeCodeFrag();
 
@@ -749,7 +754,7 @@ public class P2 extends RobertTest {
     }
   }
 
-  public void testBadComments() {
+  public void DISABLED_testBadComments() {
     StringReader reader;
     ArrayList<String> results;
     ArrayList<String> lits = new ArrayList<String>();
