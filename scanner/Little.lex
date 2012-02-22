@@ -74,7 +74,8 @@ ALPHA=[A-Za-z]
 DIGIT=[0-9]
 NONNEWLINE_WHITE_SPACE_CHAR=[\ \t\b\012]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
-STRING_TEXT=(\\\"|[^\n\"]|\\n\\t)*
+STRING_TEXT=([^\n\"\\]|\\[nt\"])*
+BAD_STRING_TEXT=([^\n\"\\]|\\[^nt])*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 ILLEGAL_CHAR=[`~@#\$%^':\?\\\]\[\.]
 ID_TEXT=({ALPHA}|_)({ALPHA}|_|{DIGIT})*
@@ -86,6 +87,7 @@ DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)
 %state COMMENT
 
 %eofval{
+CharNum.num = 1;
 return new Symbol(sym.EOF);
 %eofval}
 
@@ -93,7 +95,12 @@ return new Symbol(sym.EOF);
 
 %%
 
-<YYINITIAL,COMMENT> [\n] {
+<YYINITIAL> \n {
+  System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
+  CharNum.num = 1;
+}
+<COMMENT> \n {
+  System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbb");
   CharNum.num = 1;
 }
 
@@ -348,12 +355,22 @@ return new Symbol(sym.EOF);
   CharNum.num += yytext().length();
   return S;
 }
-<YYINITIAL> \"{STRING_TEXT}\" {
-  Symbol S = new Symbol(sym.STRINGLITERAL,
-            new StrLitTokenVal(yyline + 1, CharNum.num, yytext()));
+<YYINITIAL> \"%d\" {
+  Symbol S = new Symbol(sym.INT_FORMAT,
+            new TokenVal(yyline + 1, CharNum.num));
   CharNum.num += yytext().length();
 	return S;
 }
+<YYINITIAL> \"%f\" {
+  Symbol S = new Symbol(sym.DBL_FORMAT,
+            new TokenVal(yyline + 1, CharNum.num));
+  CharNum.num += yytext().length();
+	return S;
+}
+<YYINITIAL> \"{BAD_STRING_TEXT} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring string literal with bad escaped character");
+} 
 <YYINITIAL> \"{STRING_TEXT} {
   Errors.fatal(yyline + 1, CharNum.num,
        "ignoring unterminated string literal");
