@@ -367,6 +367,12 @@ return new Symbol(sym.EOF);
   CharNum.num += yytext().length();
 	return S;
 }
+<YYINITIAL> \"{STRING_TEXT}\" {
+  Symbol S = new Symbol(sym.STRINGLITERAL,
+            new StrLitTokenVal(yyline + 1, CharNum.num, yytext()));
+  CharNum.num += yytext().length();
+	return S;
+} 
 <YYINITIAL> \"{BAD_STRING_TEXT} {
   Errors.fatal(yyline + 1, CharNum.num,
        "ignoring string literal with bad escaped character");
