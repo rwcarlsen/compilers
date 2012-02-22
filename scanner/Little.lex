@@ -349,7 +349,20 @@ return new Symbol(sym.EOF);
 }
 <YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
   //       check for overflow.  This must be changed.
-  int val = (new Integer(yytext())).intValue();
+  int val;
+  String maxString = String.valueOf(Integer.MAX_VALUE);
+  int maxFirstDigit = (new Integer(maxString.substring(0,1))).intValue();
+  int firstDigit = (new Integer(yytext().substring(0,1))).intValue();
+  if (yytext().length() > maxString.length()) {
+    val = Integer.MAX_VALUE;
+  } else if (yytext().length() == maxString.length() && firstDigit > maxFirstDigit) {
+    val = Integer.MAX_VALUE;
+  } else if ((new Long(yytext())).longValue() > (long)Integer.MAX_VALUE) {
+    val = Integer.MAX_VALUE;
+  } else {
+    val = (new Integer(yytext())).intValue();
+  }
+
   Symbol S = new Symbol(sym.INTLITERAL,
             new IntLitTokenVal(yyline+1, CharNum.num, val));
   CharNum.num += yytext().length();
@@ -399,8 +412,8 @@ return new Symbol(sym.EOF);
   CharNum.num++;
 }
 
-<YYINITIAL,COMMENT> . {
-  //Errors.fatal(yyline + 1, CharNum.num,
-  //         "unmatched input");
+<COMMENT> . {
+  Errors.fatal(yyline + 1, CharNum.num,
+           "unmatched input");
 }
 
