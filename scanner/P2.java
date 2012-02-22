@@ -115,7 +115,7 @@ public class P2 extends RobertTest {
   }
 
   public void testKeywords() {
-    StringReader reader;
+    StringReader reader, reader2;
     ArrayList<String> results;
     ArrayList<Symbol> tokens;
     ArrayList<String> keywords = new ArrayList<String>();
@@ -135,7 +135,7 @@ public class P2 extends RobertTest {
       results = new ArrayList<String>();
       tokens = new ArrayList<Symbol>();
       reader = new StringReader(currKeyword);
-      reader2 = new StringReader(currKeyword + "cheese");
+      reader2 = new StringReader(currKeyword + " cheese");
       try {
         results = makeLexemes(reader);
         tokens = makeTokens(reader2);
@@ -148,7 +148,12 @@ public class P2 extends RobertTest {
       if (results.size() != 1) {continue;}
       assertTrue(currKeyword.equals(results.get(0)), currKeyword + " != " + results.get(0));
 
-      lhs = new Integer(currKeyword.length() + 1);
+      assertTrue(tokens.size() == 2, 
+        "Expected 2 tokens returned for '" + currKeyword + "' but got " +
+        tokens.size() + " tokens: "
+        + tokens.toString());
+      if (tokens.size() != 2) {continue;}
+      lhs = new Integer(currKeyword.length() + 2);
       rhs = new Integer(((TokenVal)(tokens.get(1).value)).charnum);
       assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString());
     }
