@@ -754,7 +754,7 @@ public class P2 extends RobertTest {
     }
   }
 
-  public void DISABLED_testBadComments() {
+  public void testBadComments() {
     StringReader reader;
     ArrayList<String> results;
     ArrayList<String> lits = new ArrayList<String>();

@@ -87,8 +87,11 @@ DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)
 %state COMMENT
 
 %eofval{
-CharNum.num = 1;
-return new Symbol(sym.EOF);
+  CharNum.num = 1;
+  if (comment_count > 0) {
+    Errors.fatal(yyline + 1, CharNum.num, "unterminated comment");
+  }
+  return new Symbol(sym.EOF);
 %eofval}
 
 %line
@@ -386,13 +389,17 @@ return new Symbol(sym.EOF);
   CharNum.num += yytext().length();
 	return S;
 } 
-<YYINITIAL> \"{BAD_STRING_TEXT} {
+<YYINITIAL> \"{BAD_STRING_TEXT}\" {
   Errors.fatal(yyline + 1, CharNum.num,
        "ignoring string literal with bad escaped character");
 } 
 <YYINITIAL> \"{STRING_TEXT} {
   Errors.fatal(yyline + 1, CharNum.num,
        "ignoring unterminated string literal");
+} 
+<YYINITIAL> \"{BAD_STRING_TEXT} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring unterminated string literal with bad escaped character");
 } 
 
 <YYINITIAL> "/*" { yybegin(COMMENT); comment_count += 1; }
