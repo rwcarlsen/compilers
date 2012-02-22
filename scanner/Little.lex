@@ -66,56 +66,47 @@ class CharNum {
 }
 %%
 
+%{
+  private int comment_count = 0;
+%} 
+
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
 NONNEWLINE_WHITE_SPACE_CHAR=[\ \t\b\012]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
+ILLEGAL_CHAR=[`~@#$%^':\.\?\\\]\[]
 
-// The next 3 lines are included so that we can use the generated scanner
-// with java CUP (the Java parser generator)
 %implements java_cup.runtime.Scanner
 %function next_token
 %type java_cup.runtime.Symbol
+%state COMMENT
 
-// Tell JLex what to do on end-of-file
 %eofval{
 return new Symbol(sym.EOF);
 %eofval}
 
-// Turn on line counting
 %line
 
 %%
 
-{DIGIT}+   {// NOTE: the following computation of the integer value does NOT
-      //       check for overflow.  This must be changed.
-      int val = (new Integer(yytext())).intValue();
-      Symbol S = new Symbol(sym.INTLITERAL,
-                new IntLitTokenVal(yyline+1, CharNum.num, val)
-         );
-      CharNum.num += yytext().length();
-      return S;
-     }
+<YYINITIAL> \n {CharNum.num = 1;}
 
-\n     {CharNum.num = 1;}
+<YYINITIAL,COMMENT> . {
+  //Errors.fatal(yyline + 1, CharNum.num,
+  //         "unmatched input");
+}
 
-{WHITESPACE}+  {CharNum.num += yytext().length();}
+<YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ {
+  CharNum.num += yytext().length();
+}
 
-"+"     {Symbol S = new Symbol(sym.PLUS, new TokenVal(yyline+1, CharNum.num));
-      CharNum.num++;
-      return S;
-     }
-      
-"."     {Errors.fatal(yyline+1, CharNum.num,
+<YYINITIAL> {ILLEGAL_CHAR} {
+  Errors.fatal(yyline + 1, CharNum.num,
        "ignoring illegal character: " + yytext());
-      CharNum.num++;
-     }
-
-/////////////////////////////////////////////////////////
-////////////// keyword tokens ///////////////////////////
-/////////////////////////////////////////////////////////
+  CharNum.num++;
+}
 
 <YYINITIAL> "int"  { 
   Symbol S = new Symbol(sym.INT,
@@ -123,7 +114,7 @@ return new Symbol(sym.EOF);
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 
 <YYINITIAL> "void"  {
   Symbol S = new Symbol(sym.VOID,
@@ -131,28 +122,28 @@ return new Symbol(sym.EOF);
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "double"  {
-  Symbol S = new Symbol(sym.DOUBLE,
+  Symbol S = new Symbol(sym.DBL,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "if"  {
   Symbol S = new Symbol(sym.IF,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "else"  {
   Symbol S = new Symbol(sym.ELSE,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "while"  {
   Symbol S = new Symbol(sym.WHILE,
             new TokenVal(yyline + 1, CharNum.num));
@@ -166,225 +157,218 @@ return new Symbol(sym.EOF);
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "scanf"  {
   Symbol S = new Symbol(sym.SCANF,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "printf"  {
   Symbol S = new Symbol(sym.PRINTF,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
-
-/////////////////////////////////////////////////////////
-////////////// one and two char tokens //////////////////
-/////////////////////////////////////////////////////////
+}
 
 <YYINITIAL> "{" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.LCURLY,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "}" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.RCURLY,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "(" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.LPAREN,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> ")" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.RPAREN,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "," {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.COMMA,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "=" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.ASSIGN,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> ";" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.SEMICOLON,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "+" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.PLUS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "-" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.MINUS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "*" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.STAR,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "/" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.DIVIDE,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "++" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.PLUSPLUS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "--" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.MINUSMINUS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "!" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.NOT,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "&&"  {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.AND,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "||"  {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.OR,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "==" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.EQUALS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "!=" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.NOTEQUALS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "<"  {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.LESS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> ">"  {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.GREATER,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "<=" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.LESSEQ,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> ">=" {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.GREATEREQ,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 <YYINITIAL> "&"  {
-  Symbol S = new Symbol(sym.PRINTF,
+  Symbol S = new Symbol(sym.AMPERSAND,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
   }
 
+<YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
+      //       check for overflow.  This must be changed.
+      int val = (new Integer(yytext())).intValue();
+      Symbol S = new Symbol(sym.INTLITERAL,
+                new IntLitTokenVal(yyline+1, CharNum.num, val)
+         );
+      CharNum.num += yytext().length();
+      return S;
+}
 
-<YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ { }
+<YYINITIAL> \"{STRING_TEXT}\" {
+  Symbol S = new Symbol(sym.STRINGLITERAL,
+            new StrLitTokenVal(yyline + 1, CharNum.num, yytext()));
 
-<YYINITIAL,COMMENT> \n { }
+  CharNum.num += yytext().length();
+	return S;
+}
+<YYINITIAL> \"{STRING_TEXT} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring unterminated string literal");
+} 
 
-<YYINITIAL> "/*" { yybegin(COMMENT); comment_count = comment_count + 1; }
+<YYINITIAL,COMMENT> \n {
+  CharNum.num = 1;
+}
 
-<COMMENT> "/*" { comment_count = comment_count + 1; }
+<YYINITIAL> "/*" { yybegin(COMMENT); comment_count += 1; }
+
+<COMMENT> "/*" { comment_count += 1; }
 <COMMENT> "*/" { 
-	comment_count = comment_count - 1; 
-	Utility.assertion(comment_count >= 0);
+	comment_count -= 1; 
 	if (comment_count == 0) {
-    		yybegin(YYINITIAL);
-	}
+    yybegin(YYINITIAL); 
+  }
 }
 <COMMENT> {COMMENT_TEXT} { }
 
-<YYINITIAL> \"{STRING_TEXT}\" {
-	String str =  yytext().substring(1,yytext().length() - 1);
-	
-	Utility.assertion(str.length() == yytext().length() - 2);
-	return (new Yytoken(40,str,yyline,yychar,yychar + str.length()));
-}
-<YYINITIAL> \"{STRING_TEXT} {
-	String str =  yytext().substring(1,yytext().length());
-
-	Utility.error(Utility.E_UNCLOSEDSTR);
-	Utility.assertion(str.length() == yytext().length() - 1);
-	return (new Yytoken(41,str,yyline,yychar,yychar + str.length()));
-} 
-<YYINITIAL> {DIGIT}+ { 
-	return (new Yytoken(42,yytext(),yyline,yychar,yychar + yytext().length()));
-}	
-<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {
-	return (new Yytoken(43,yytext(),yyline,yychar,yychar + yytext().length()));
-}	
-<YYINITIAL,COMMENT> . {
-        System.out.println("Illegal character: <" + yytext() + ">");
-	Utility.error(Utility.E_UNMATCHED);
-}
