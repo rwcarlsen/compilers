@@ -74,9 +74,11 @@ ALPHA=[A-Za-z]
 DIGIT=[0-9]
 NONNEWLINE_WHITE_SPACE_CHAR=[\ \t\b\012]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
-STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
+STRING_TEXT=(\\\"|[^\n\"]|\\n\\t)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
-ILLEGAL_CHAR=[`~@#$%^':\.\?\\\]\[]
+ILLEGAL_CHAR=[`~@#\$%^':\?\\\]\[\.]
+ID_TEXT=({ALPHA}|_)({ALPHA}|_|{DIGIT})*
+DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)
 
 %implements java_cup.runtime.Scanner
 %function next_token
@@ -91,21 +93,12 @@ return new Symbol(sym.EOF);
 
 %%
 
-<YYINITIAL> \n {CharNum.num = 1;}
-
-<YYINITIAL,COMMENT> . {
-  //Errors.fatal(yyline + 1, CharNum.num,
-  //         "unmatched input");
+<YYINITIAL,COMMENT> [\n] {
+  CharNum.num = 1;
 }
 
 <YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ {
   CharNum.num += yytext().length();
-}
-
-<YYINITIAL> {ILLEGAL_CHAR} {
-  Errors.fatal(yyline + 1, CharNum.num,
-       "ignoring illegal character: " + yytext());
-  CharNum.num++;
 }
 
 <YYINITIAL> "int"  { 
@@ -298,57 +291,66 @@ return new Symbol(sym.EOF);
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "<"  {
   Symbol S = new Symbol(sym.LESS,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> ">"  {
   Symbol S = new Symbol(sym.GREATER,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "<=" {
   Symbol S = new Symbol(sym.LESSEQ,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> ">=" {
   Symbol S = new Symbol(sym.GREATEREQ,
             new TokenVal(yyline + 1, CharNum.num));
 
   CharNum.num += yytext().length();
   return S;
-  }
+}
 <YYINITIAL> "&"  {
   Symbol S = new Symbol(sym.AMPERSAND,
-            new TokenVal(yyline + 1, CharNum.num));
-
+            new TokenVal(yyline + 1, CharNum.num)); 
   CharNum.num += yytext().length();
   return S;
-  }
-
-<YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
-      //       check for overflow.  This must be changed.
-      int val = (new Integer(yytext())).intValue();
-      Symbol S = new Symbol(sym.INTLITERAL,
-                new IntLitTokenVal(yyline+1, CharNum.num, val)
-         );
-      CharNum.num += yytext().length();
-      return S;
 }
 
+<YYINITIAL> {ID_TEXT} {
+  Symbol S = new Symbol(sym.ID,
+            new IdTokenVal(yyline + 1, CharNum.num, yytext()));
+  CharNum.num += yytext().length();
+	return S;
+}
+<YYINITIAL> {DBL_TEXT} {
+  double val = (new Double(yytext())).doubleValue();
+  Symbol S = new Symbol(sym.DBLLITERAL,
+            new DblLitTokenVal(yyline+1, CharNum.num, val));
+  CharNum.num += yytext().length();
+  return S;
+}
+<YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
+  //       check for overflow.  This must be changed.
+  int val = (new Integer(yytext())).intValue();
+  Symbol S = new Symbol(sym.INTLITERAL,
+            new IntLitTokenVal(yyline+1, CharNum.num, val));
+  CharNum.num += yytext().length();
+  return S;
+}
 <YYINITIAL> \"{STRING_TEXT}\" {
   Symbol S = new Symbol(sym.STRINGLITERAL,
             new StrLitTokenVal(yyline + 1, CharNum.num, yytext()));
-
   CharNum.num += yytext().length();
 	return S;
 }
@@ -356,10 +358,6 @@ return new Symbol(sym.EOF);
   Errors.fatal(yyline + 1, CharNum.num,
        "ignoring unterminated string literal");
 } 
-
-<YYINITIAL,COMMENT> \n {
-  CharNum.num = 1;
-}
 
 <YYINITIAL> "/*" { yybegin(COMMENT); comment_count += 1; }
 
@@ -371,4 +369,15 @@ return new Symbol(sym.EOF);
   }
 }
 <COMMENT> {COMMENT_TEXT} { }
+
+<YYINITIAL> {ILLEGAL_CHAR} {
+  Errors.fatal(yyline + 1, CharNum.num,
+       "ignoring illegal character: " + yytext());
+  CharNum.num++;
+}
+
+<YYINITIAL,COMMENT> . {
+  //Errors.fatal(yyline + 1, CharNum.num,
+  //         "unmatched input");
+}
 
