@@ -68,8 +68,8 @@ class CharNum {
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-NONEWLINE_WHITESPACE=[\ \t]
-WHITESPACE=[\n\ \t]
+NONNEWLINE_WHITE_SPACE_CHAR=[\ \t\b\012]
+WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
@@ -108,7 +108,283 @@ return new Symbol(sym.EOF);
       return S;
      }
       
-.     {Errors.fatal(yyline+1, CharNum.num,
+"."     {Errors.fatal(yyline+1, CharNum.num,
        "ignoring illegal character: " + yytext());
       CharNum.num++;
      }
+
+/////////////////////////////////////////////////////////
+////////////// keyword tokens ///////////////////////////
+/////////////////////////////////////////////////////////
+
+<YYINITIAL> "int"  { 
+  Symbol S = new Symbol(sym.INT,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+
+<YYINITIAL> "void"  {
+  Symbol S = new Symbol(sym.VOID,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "double"  {
+  Symbol S = new Symbol(sym.DOUBLE,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "if"  {
+  Symbol S = new Symbol(sym.IF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "else"  {
+  Symbol S = new Symbol(sym.ELSE,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "while"  {
+  Symbol S = new Symbol(sym.WHILE,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "return"  {
+  Symbol S = new Symbol(sym.RETURN,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "scanf"  {
+  Symbol S = new Symbol(sym.SCANF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "printf"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+
+/////////////////////////////////////////////////////////
+////////////// one and two char tokens //////////////////
+/////////////////////////////////////////////////////////
+
+<YYINITIAL> "{" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "}" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "(" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> ")" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "," {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "=" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> ";" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "+" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "-" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "*" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "/" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "++" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "--" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "!" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "&&"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "||"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "==" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "!=" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "<"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> ">"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "<=" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> ">=" {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+<YYINITIAL> "&"  {
+  Symbol S = new Symbol(sym.PRINTF,
+            new TokenVal(yyline + 1, CharNum.num));
+
+  CharNum.num += yytext().length();
+  return S;
+  }
+
+
+<YYINITIAL> {NONNEWLINE_WHITE_SPACE_CHAR}+ { }
+
+<YYINITIAL,COMMENT> \n { }
+
+<YYINITIAL> "/*" { yybegin(COMMENT); comment_count = comment_count + 1; }
+
+<COMMENT> "/*" { comment_count = comment_count + 1; }
+<COMMENT> "*/" { 
+	comment_count = comment_count - 1; 
+	Utility.assertion(comment_count >= 0);
+	if (comment_count == 0) {
+    		yybegin(YYINITIAL);
+	}
+}
+<COMMENT> {COMMENT_TEXT} { }
+
+<YYINITIAL> \"{STRING_TEXT}\" {
+	String str =  yytext().substring(1,yytext().length() - 1);
+	
+	Utility.assertion(str.length() == yytext().length() - 2);
+	return (new Yytoken(40,str,yyline,yychar,yychar + str.length()));
+}
+<YYINITIAL> \"{STRING_TEXT} {
+	String str =  yytext().substring(1,yytext().length());
+
+	Utility.error(Utility.E_UNCLOSEDSTR);
+	Utility.assertion(str.length() == yytext().length() - 1);
+	return (new Yytoken(41,str,yyline,yychar,yychar + str.length()));
+} 
+<YYINITIAL> {DIGIT}+ { 
+	return (new Yytoken(42,yytext(),yyline,yychar,yychar + yytext().length()));
+}	
+<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {
+	return (new Yytoken(43,yytext(),yyline,yychar,yychar + yytext().length()));
+}	
+<YYINITIAL,COMMENT> . {
+        System.out.println("Illegal character: <" + yytext() + ">");
+	Utility.error(Utility.E_UNMATCHED);
+}
