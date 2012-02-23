@@ -11,6 +11,11 @@ import rwctest.*;
 
 public class P2 extends RobertTest {
   public static void main(String[] args) { // may be thrown by yylex
+    try {
+      scanInputFile("inTokens");
+    } catch (IOException err) {
+      System.err.println("scannin failed for inTokens.");
+    }
     RobertTest.go("P2");
   }
 
@@ -982,6 +987,34 @@ public class P2 extends RobertTest {
       //System.out.println("orig=" + lhs + ", lexed=" + rhs);
       assertTrue(max.compareTo(rhs) == 0, maxVal + " != " + rhs.toString());
     }
+  }
+
+  private static void scanInputFile(String inFileName) throws IOException {
+    // open input and output files
+    FileReader inFile = null;
+    PrintWriter outFile = null;
+    try {
+        inFile = new FileReader(inFileName);
+        outFile = new PrintWriter(new FileWriter(inFileName + ".out"));
+    } catch (FileNotFoundException ex) {
+        System.err.println("File " + inFileName + " not found.");
+        return;
+    } catch (IOException ex) {
+        System.err.println(inFileName + ".out cannot be opened.");
+        return;
+    }
+
+    // create and call the scanner
+    Yylex scanner = new Yylex(inFile);
+    Symbol token = scanner.next_token();
+    String text;
+    while (token.sym != sym.EOF) {
+      text = stringForToken(token);
+      outFile.println(text);
+
+      token = scanner.next_token();
+    }
+    outFile.close();
   }
 
   // **********************************************************************
