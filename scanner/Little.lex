@@ -100,11 +100,6 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
 %%
 
 <YYINITIAL> \n {
-  System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
-  CharNum.num = 1;
-}
-<COMMENT> \n {
-  System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbb");
   CharNum.num = 1;
 }
 
@@ -413,18 +408,33 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   CharNum.num++;
 }
 
-<YYINITIAL> "/*" { yybegin(COMMENT); comment_count += 1; }
+<YYINITIAL> "/*" {
+  CharNum.num += yytext().length();
+  yybegin(COMMENT); comment_count += 1;
+}
 
-<COMMENT> "/*" { comment_count += 1; }
+<COMMENT> "/*" {
+  CharNum.num += yytext().length();
+  comment_count += 1;
+}
 <COMMENT> "*/" { 
 	comment_count -= 1; 
+  CharNum.num += yytext().length();
 	if (comment_count == 0) {
     yybegin(YYINITIAL); 
   }
 }
-<COMMENT> {COMMENT_TEXT} { }
+<COMMENT> {COMMENT_TEXT} {
+  CharNum.num += yytext().length();
+}
+
+<COMMENT> \n {
+  System.out.println("I matched a newline in a comment!");
+  CharNum.num = 1;
+}
 
 <COMMENT> . {
+  CharNum.num += yytext().length();
   Errors.fatal(yyline + 1, CharNum.num,
            "unmatched input");
 }
