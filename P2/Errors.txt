@@ -1,0 +1,6 @@
+&                 /* is tokenized to AND instead of AMPERSAND */
+_abcd             /* the starting underscore is ignored as illegal */
+""                /* ignored as an illegal string literal */
+1073741824        /* flagged as too big for an integer - except it isn't too big */
+return "hello";   /* char count for the terminating semicolon doesn't include the length of the string literal */
+/* foo */ bar     /* char count for the 'bar' identifier doesn't include the comment length */
