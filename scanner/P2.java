@@ -748,6 +748,74 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testCommentCharCount() {
+    Integer lhs, rhs;
+    StringReader reader;
+    ArrayList<Symbol> results;
+    ArrayList<String> lits = new ArrayList<String>();
+    ArrayList<Integer> charCounts = new ArrayList<Integer>();
+    int count;
+
+    // test comment by itself
+    lits.add("/*hello*/ foo");
+    lits.add("/*\nhello*/ foo");
+    lits.add("/*hello\n*/ foo");
+    lits.add("/*hello*/ /*hello*/ foo");
+
+    charCounts.add(new Integer(11));
+    charCounts.add(new Integer(9));
+    charCounts.add(new Integer(4));
+    charCounts.add(new Integer(21));
+
+    count = 0;
+    for (String currLit : lits) {
+      results = new ArrayList<Symbol>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeTokens(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 1, 
+        "Expected 1 token for '" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+      if  (results.size() != 1) {continue;}
+      lhs = charCounts.get(count);
+      rhs = new Integer(((TokenVal)results.get(0).value).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+          + " for token " + (new Integer(count + 1)).toString() + ": " + stringForToken(results.get(0)));
+      count++;
+    }
+
+    charCounts = new ArrayList<Integer>();
+    charCounts.add(new Integer(15));
+    charCounts.add(new Integer(4));
+    
+    lits = new ArrayList<String>();
+    lits.add("bar /*hello*/ foo");
+    lits.add("foo /*hello\n*/ foo");
+
+    count = 0;
+    for (String currLit : lits) {
+      results = new ArrayList<Symbol>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeTokens(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 2, 
+        "Expected 2 tokens for '" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+      if  (results.size() != 2) {continue;}
+      lhs = charCounts.get(count);
+      rhs = new Integer(((TokenVal)results.get(1).value).charnum);
+      assertTrue(lhs.equals(rhs), lhs.toString() + " != " + rhs.toString()
+          + " for token " + (new Integer(count + 1)).toString() + ": " + stringForToken(results.get(1)));
+      count++;
+    }
+  }
+
   public void testGoodComments() {
     StringReader reader;
     ArrayList<String> results;
