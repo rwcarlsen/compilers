@@ -358,10 +358,16 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   int firstDigit = (new Integer(yytext().substring(0,1))).intValue();
   if (yytext().length() > maxString.length()) {
     val = Integer.MAX_VALUE;
+    Errors.warn(yyline + 1, CharNum.num,
+      "integer literal too large; using max value");
   } else if (yytext().length() == maxString.length() && firstDigit > maxFirstDigit) {
     val = Integer.MAX_VALUE;
+    Errors.warn(yyline + 1, CharNum.num,
+      "integer literal too large; using max value");
   } else if ((new Long(yytext())).longValue() > (long)Integer.MAX_VALUE) {
     val = Integer.MAX_VALUE;
+    Errors.warn(yyline + 1, CharNum.num,
+      "integer literal too large; using max value");
   } else {
     val = (new Integer(yytext())).intValue();
   }
@@ -429,7 +435,6 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
 }
 
 <COMMENT> \n {
-  System.out.println("I matched a newline in a comment!");
   CharNum.num = 1;
 }
 

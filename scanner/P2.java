@@ -1030,14 +1030,7 @@ public class P2 extends RobertTest {
   private static ArrayList<String> makeLexemes(Reader inFile) throws IOException {
     CharNum.num = 1;
     // open input and output files
-    PrintWriter outFile = null;
     ArrayList<String> lexemes = new ArrayList<String>();
-    try {
-      outFile = new PrintWriter(new FileWriter("tokens.out"));
-    } catch (IOException ex) {
-      System.err.println("tokens.out cannot be opened.");
-      System.exit(-1);
-    }
 
     // create and call the scanner
     Yylex scanner = new Yylex(inFile);
@@ -1046,11 +1039,9 @@ public class P2 extends RobertTest {
     while (token.sym != sym.EOF) {
       text = stringForToken(token);
       lexemes.add(text);
-      outFile.println(text);
 
       token = scanner.next_token();
     }
-    outFile.close();
     return lexemes;
   }
 
