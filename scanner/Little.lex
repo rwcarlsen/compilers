@@ -438,7 +438,7 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   CharNum.num = 1;
 }
 
-<COMMENT> . {
+<YYINITIAL,COMMENT> . {
   CharNum.num += yytext().length();
   Errors.fatal(yyline + 1, CharNum.num,
            "unmatched input");

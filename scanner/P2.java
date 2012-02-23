@@ -101,6 +101,9 @@ public class P2 extends RobertTest {
 
     identifiers.add("ifelse");
     identifiers.add("voidreturn");
+    identifiers.add("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    identifiers.add("abcdefghijklmnopqrstuvwxyz");
+    identifiers.add("a0123456789");
 
     String lit = "";
     for (int i = 0; i < 10; i++) {
