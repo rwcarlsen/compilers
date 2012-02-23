@@ -44,7 +44,7 @@ public class P2 extends RobertTest {
         "Expected 1 token returned for '" + single + "' but got " + results.size() + " tokens: "
         + results.toString());
       if (results.size() != 1) {continue;}
-      assertTrue(single.equals(results.get(0)), results.get(0) + " != " + single);
+      assertTrue(single.equals(results.get(0)),  single + " != " + results.get(0));
     }
 
     for (int i = 0; i < doubles.length(); i += 2) {

@@ -1,4 +1,4 @@
-&&                /* is tokenized to AMPERSAND instead of AND */
+&                 /* is tokenized to AND instead of AMPERSAND */
 _abcd             /* the starting underscore is ignored as illegal */
 ""                /* ignored as an illegal string literal */
 1073741824        /* flagged as too big for an integer - except it isn't too big */
