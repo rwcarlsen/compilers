@@ -346,10 +346,6 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   CharNum.num += yytext().length();
   return S;
 }
-<YYINITIAL> {BAD_DBL_TEXT} {
-  Errors.fatal(yyline + 1, CharNum.num,
-       "ignoring badly formatted double literal");
-}
 <YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
   //       check for overflow.  This must be changed.
   int val;
@@ -439,8 +435,8 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
 }
 
 <YYINITIAL,COMMENT> . {
-  CharNum.num += yytext().length();
   Errors.fatal(yyline + 1, CharNum.num,
-           "unmatched input");
+       "ignoring illegal character: " + yytext());
+  CharNum.num++;
 }
 

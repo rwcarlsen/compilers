@@ -13,7 +13,7 @@
 # define the java compiler to be used and the flags
 JC = javac
 JR = java
-CLASSPATH=.:*.jar
+CLASSPATH=.:JLex.jar:java_cup.jar
 FLAGS = -g -classpath ${CLASSPATH}
 
 P2.class: P2.java Yylex.class sym.class
