@@ -38,13 +38,9 @@ init:
 run:
 	$(JR) -classpath $(CLASSPATH) P2
 
-testrun:
-	$(JC)  -d class-files -classpath .:../src:lib/*:lib:class-files P2.java
-	$(JR)  -classpath .:../src:lib/*:lib:class-files P2
-
 ###
 # clean up
 ###
 
 clean:
-	rm -f *~ *.class Little.lex.java
+	rm -Rf *~ Little.lex.java ${CLASSDIR}
