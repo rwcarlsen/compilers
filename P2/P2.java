@@ -991,6 +991,73 @@ public class P2 extends RobertTest {
     }
   }
 
+  public void testConjunctions() {
+    StringReader reader;
+    ArrayList<String> results;
+    ArrayList<String> lits = new ArrayList<String>();
+
+    lits.add("1goodbye");
+    lits.add("1else");
+    lits.add("1=");
+    lits.add("1==");
+    lits.add("1\"hello\"");
+
+    lits.add("1.goodbye");
+    lits.add("1.1.1");
+    lits.add("1.else");
+    lits.add("1.=");
+    lits.add("1.==");
+    lits.add("1.\"hello\"");
+
+    lits.add("goodbye\"hello\"");
+    lits.add("goodbye.123");
+    lits.add("goodbye=");
+    lits.add("goodbye==");
+
+    lits.add("else\"hello\"");
+    lits.add("else.1");
+    lits.add("else1.1");
+    lits.add("else=");
+    lits.add("else==");
+
+    lits.add("=123");
+    lits.add("=123.");
+    lits.add("=goodbye");
+    lits.add("=else");
+    lits.add("===");
+    lits.add("=\"hello\"");
+
+    lits.add("==123");
+    lits.add("==123.");
+    lits.add("==goodbye");
+    lits.add("==else");
+    lits.add("====");
+    lits.add("==\"hello\"");
+
+    lits.add("\"hello\"123");
+    lits.add("\"hello\".123");
+    lits.add("\"hello\"goodbye");
+    lits.add("\"hello\"else");
+    lits.add("\"hello\"=");
+    lits.add("\"hello\"==");
+    lits.add("\"hello\"\"hello\"");
+
+    int count = 0;
+    for (String currLit : lits) {
+      results = new ArrayList<String>();
+      reader = new StringReader(currLit);
+      try {
+        results = makeLexemes(reader);
+      } catch (IOException err) {
+        fail("");
+      }
+      assertTrue(results.size() == 2, 
+        "Expected 2 tokens for lit" + (new Integer(count++)).toString() +
+        "='" + currLit + "' but got " + results.size() + " tokens: "
+        + results.toString());
+    }
+  }
+
   private static void scanInputFile(String inFileName) throws IOException {
     // open input and output files
     FileReader inFile = null;
