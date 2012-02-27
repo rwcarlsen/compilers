@@ -346,10 +346,6 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   CharNum.num += yytext().length();
   return S;
 }
-<YYINITIAL> {BAD_DBL_TEXT} {
-  Errors.fatal(yyline + 1, CharNum.num,
-       "ignoring badly formatted double literal");
-}
 <YYINITIAL> {DIGIT}+ {// NOTE: the following computation of the integer value does NOT
   //       check for overflow.  This must be changed.
   int val;
@@ -357,17 +353,17 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
   int maxFirstDigit = (new Integer(maxString.substring(0,1))).intValue();
   int firstDigit = (new Integer(yytext().substring(0,1))).intValue();
   if (yytext().length() > maxString.length()) {
-    val = Integer.MAX_VALUE;
     Errors.warn(yyline + 1, CharNum.num,
       "integer literal too large; using max value");
+    val = Integer.MAX_VALUE;
   } else if (yytext().length() == maxString.length() && firstDigit > maxFirstDigit) {
-    val = Integer.MAX_VALUE;
     Errors.warn(yyline + 1, CharNum.num,
       "integer literal too large; using max value");
+    val = Integer.MAX_VALUE;
   } else if ((new Long(yytext())).longValue() > (long)Integer.MAX_VALUE) {
-    val = Integer.MAX_VALUE;
     Errors.warn(yyline + 1, CharNum.num,
       "integer literal too large; using max value");
+    val = Integer.MAX_VALUE;
   } else {
     val = (new Integer(yytext())).intValue();
   }
@@ -439,8 +435,8 @@ BAD_DBL_TEXT=({DIGIT}+\.{DIGIT}*|\.{DIGIT}+)\.
 }
 
 <YYINITIAL,COMMENT> . {
-  CharNum.num += yytext().length();
   Errors.fatal(yyline + 1, CharNum.num,
-           "unmatched input");
+       "ignoring illegal character: " + yytext());
+  CharNum.num++;
 }
 
