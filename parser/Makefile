@@ -7,7 +7,12 @@
 #
 ###
 
-JC = javac
+CP = lib:lib/java_cup.jar:lib/JLex.jar:.
+
+FLAGS = -classpath ${CP}
+
+JC = javac ${FLAGS}
+JR = java ${FLAGS}
 
 P3.class: P3.java parser.class Yylex.class ASTnode.class
 	$(JC) -g P3.java
@@ -16,7 +21,7 @@ parser.class: parser.java ASTnode.class Yylex.class Errors.class
 	$(JC) parser.java
 
 parser.java: Little.cup
-	java java_cup.Main < Little.cup
+	${JR} java_cup.Main < Little.cup
 
 Yylex.class: Little.jlex.java sym.class Errors.class
 	$(JC) Little.jlex.java
@@ -25,13 +30,13 @@ ASTnode.class: ast.java
 	$(JC) -g ast.java
 
 Little.jlex.java: Little.jlex sym.class
-	java JLex.Main Little.jlex
+	${JR} JLex.Main Little.jlex
 
 sym.class: sym.java
 	$(JC) -g sym.java
 
 sym.java: Little.cup
-	java java_cup.Main < Little.cup
+	${JR} java_cup.Main < Little.cup
 
 Errors.class: Errors.java
 	$(JC) Errors.java
@@ -41,3 +46,9 @@ Errors.class: Errors.java
 ###
 clean:
 	rm -f *~ *.class parser.java Little.jlex.java sym.java
+
+###
+# run provided parser
+###
+test:
+	java -classpath testclass:${CP} P3 test.Little test.out

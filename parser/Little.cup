@@ -78,6 +78,21 @@ non terminal VarDeclNode      varDecl;
 non terminal TypeNode	      type;
 non terminal IdNode	      id;
 
+non terminal VarDecleListNode  varDeclList ;
+non terminal FnDeclNode        fnDecl      ;
+non terminal FormalsNode       formals     ;
+non terminal FormalsListNode   formalsList ;
+non terminal FormalDeclNode    formalDecl  ;
+non terminal FnBodyNode        fnBody      ;
+non terminal StmtListNode      stmtList    ;
+non terminal StmtNode          stmt        ;
+non terminal FncallNode        fncall      ;
+non terminal ExpNode           exp         ;
+non terminal AssignExpNode     assign_exp  ;
+non terminal TermNode          term        ;
+non terminal ActualListNode    actualList  ;
+
+
 /* NOTE: Add precedence and associativity declarations here */
 
 start with program;

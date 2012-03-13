@@ -1,2 +1,26 @@
-int x;
-int y;
+/* program, declList */
+
+  /* varDecl, type, id */
+    int foo;
+    double bar;
+
+  /* fnDecl */
+    int myfunc1() {}
+    double myfunc1() {}
+
+    /* formalsList, formals */
+      void myfunc2(int foo, double bar, void boo) {}
+
+    /* fnBody */
+      double myfunc3() {
+        /* varDeclList */
+        double a;
+        double b;
+        double c;
+
+        /* stmtList */
+        a = 1;
+        a = b;
+        a = b + a;
+      }
+
