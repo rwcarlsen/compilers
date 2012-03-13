@@ -1,0 +1,107 @@
+/**********************************************************************
+ Grammar for Little programs
+ **********************************************************************/
+program		::= declList
+		;
+
+declList 	::= declList decl
+		| /* epsilon */
+		;
+
+decl		::= varDecl
+		| fnDecl
+		;
+
+varDeclList 	::= varDeclList varDecl
+		| /* epsilon */
+		;
+
+varDecl		::= type id SEMICOLON
+		;
+
+fnDecl		::= type id formals fnBody
+		;
+
+formals		::= LPAREN RPAREN
+		| LPAREN formalsList RPAREN
+		;
+
+formalsList	::= formalDecl
+		| formalDecl COMMA formalsList
+		;
+
+formalDecl	::= type id
+		;
+
+fnBody		::= LCURLY varDeclList stmtList RCURLY
+		;
+
+stmtList	::= stmtList stmt
+		| /* epsilon */
+		;
+
+stmt		::= assign_exp SEMICOLON
+		| PLUSPLUS id SEMICOLON
+		| MINUSMINUS id SEMICOLON
+		| id PLUSPLUS SEMICOLON
+		| id MINUSMINUS SEMICOLON
+	        | SCANF LPAREN INT_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
+	        | SCANF LPAREN DBL_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
+		| PRINTF LPAREN INT_FORMAT COMMA exp RPAREN SEMICOLON
+		| PRINTF LPAREN DBL_FORMAT COMMA exp RPAREN SEMICOLON
+		| PRINTF LPAREN STRINGLITERAL RPAREN SEMICOLON
+	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
+	        | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+		| RETURN exp SEMICOLON
+		| RETURN SEMICOLON
+		| fncall SEMICOLON
+		;
+
+fncall		::=  id LPAREN RPAREN   // fn call with no args
+	        | id LPAREN actualList RPAREN  // with args
+		;
+
+exp		::= assign_exp
+		| exp PLUS exp
+	        | exp MINUS exp
+	        | exp STAR exp
+	        | exp DIVIDE exp
+	        | NOT exp
+	        | exp AND exp
+	        | exp OR exp
+		| exp EQUALS exp
+		| exp NOTEQUALS exp
+		| exp LESS exp
+		| exp GREATER exp
+		| exp LESSEQ exp
+		| exp GREATEREQ exp
+		| MINUS term
+		| term
+		;
+
+assign_exp	::= id ASSIGN exp
+		;
+
+term		::= id
+		| id PLUSPLUS
+		| id MINUSMINUS
+	        | INTLITERAL
+	        | DBLLITERAL
+	        | STRINGLITERAL
+	        | LPAREN exp RPAREN
+		| fncall
+		;
+
+actualList	::= exp
+		| actualList COMMA exp
+		;
+
+type		::= INT
+		| DBL
+		| VOID
+		;
+
+id              ::= ID
+		;
+

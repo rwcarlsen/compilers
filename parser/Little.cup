@@ -1,0 +1,123 @@
+/**********************************************************************
+ Java CUP specification for a parser for Little programs
+ **********************************************************************/
+
+import java_cup.runtime.*;
+import java.util.*;
+
+/* The code below redefines method syntax_error to give better error messages
+ * than just "Syntax error"
+ */
+parser code {:
+
+public void syntax_error(Symbol currToken) {
+    if (currToken.value == null) {
+       Errors.fatal(0,0, "Syntax error at end of file");
+    }
+    else {
+       Errors.fatal(((TokenVal)currToken.value).linenum,
+	            ((TokenVal)currToken.value).charnum,
+		    "Syntax error");
+    }
+    System.exit(-1);
+}
+
+:};
+
+
+/* Terminals (tokens returned by the scanner) */
+terminal 	        INT;
+terminal 	        VOID;
+terminal 	        DBL;
+terminal 	        IF;
+terminal 	        ELSE;
+terminal 	        WHILE;
+terminal 	        RETURN;
+terminal 	        SCANF;
+terminal 	        PRINTF;
+terminal 	        INT_FORMAT;
+terminal 	        DBL_FORMAT;
+terminal IdTokenVal     ID;
+terminal IntLitTokenVal INTLITERAL;
+terminal DblLitTokenVal DBLLITERAL;
+terminal StrLitTokenVal STRINGLITERAL;
+terminal 	        LCURLY;
+terminal 	        RCURLY;
+terminal 	        LPAREN;
+terminal 	        RPAREN;
+terminal 	        COMMA;
+terminal 	        ASSIGN;
+terminal 	        SEMICOLON;
+terminal 	        PLUS;
+terminal 	        MINUS;
+terminal 	        STAR;
+terminal 	        DIVIDE;
+terminal 	        PLUSPLUS;
+terminal 	        MINUSMINUS;
+terminal 	        NOT;
+terminal 	        AND;
+terminal 	        OR;
+terminal 	        EQUALS;
+terminal 	        NOTEQUALS;
+terminal 	        LESS;
+terminal 	        GREATER;
+terminal 	        LESSEQ;
+terminal 	        GREATEREQ;
+terminal 	        AMPERSAND;
+
+/* Non-terminals
+ *
+ * NOTE: You will need to add more nonterminals to this list as you
+ *       add productions to the grammar below.
+ */
+
+non terminal ProgramNode      program;
+non terminal LinkedList	      declList;
+non terminal DeclNode	      decl;
+non terminal VarDeclNode      varDecl;
+non terminal TypeNode	      type;
+non terminal IdNode	      id;
+
+/* NOTE: Add precedence and associativity declarations here */
+
+start with program;
+
+/* grammar with actions
+ *
+ * NOTE: add more grammar rules below
+ */
+
+program		::= declList: d
+		{: RESULT = new ProgramNode(new DeclListNode(d));
+		:}
+		;
+
+declList 	::= declList:dl decl:d
+		{: dl.addLast(d);
+		   RESULT = dl;
+		:}
+		| /* epsilon */
+		{: RESULT = new LinkedList<DeclNode>();
+		:}
+		;
+
+decl		::= varDecl:v
+		{: RESULT = v;
+		:}
+		;
+
+varDecl		::= type: t id: i SEMICOLON
+		{: RESULT = new VarDeclNode(t, i);
+		:}
+		;
+
+
+type		::= INT
+		{: RESULT = new IntNode();
+		:}
+		;
+
+id              ::= ID:i
+		{: RESULT = new IdNode(i.linenum, i.charnum, i.idVal);
+		:}
+		;

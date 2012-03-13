@@ -1,0 +1,385 @@
+<HTML>
+<HEAD>
+  <TITLE>CS 536, Program 3</title>
+</HEAD>
+<BODY>
+
+<H1>CS 536, Program 3
+<br>
+The Parser
+</H1>
+  <H2>
+  <pre>
+       Test Code (test.Little) Due: Saturday, March 20 (by midnight)
+       Not accepted late
+
+       Other Files Due: Tuesday, March 23 (by midnight).
+       Not accepted after midnight on Friday, March 26.
+  </pre>
+ </H2>
+
+<BODY>
+
+<hr>
+
+<a name="contents">
+<h2>Contents</h2>
+</a>
+
+<ul>
+  <li> <a href="#news"> Clarifications and Corrections</a>
+  <li> <a href="#introduction">Overview</a>
+  <li> <a href="#prec">Operator Precedences and Associativities</a>
+  <li> <a href="#ast">Building an AST</a>
+  <li> <a href="#unparsing">Unparsing</a>
+  <li> <a href="#astJava">Modifying ast.java</a>
+  <li> <a href="#testing">Testing</a>
+  <li> <a href="#pairs">Working in Pairs</a>
+  <li> <a href="#turning in">What to Turn In</a>
+</ul>
+
+<hr>
+
+<a name="news">
+<h2>Clarifications and Corrections</h2>
+</a>
+<em>none yet...</em>
+
+<p>
+<a name="introduction">
+<h2>Overview</h2>
+</a>
+For this assignment you will use the parser-generator <b>Java Cup</b>
+to write a parser for the Little language.
+The parser will find syntax errors, and for programs without errors,
+it will build an abstract-syntax tree (AST) representation of the program.
+You will also write methods to <b>unparse</b> the AST built by
+your parser, and an input file (a Little program) to test your parser.
+A main program,
+<A HREF="P3.java"><tt>P3.java</tt></a>,
+that calls the parser and then the unparser, is provided for you to use.
+You will be graded on the correctness of your parser and your unparse methods,
+and on how thoroughly your input file tests the parser.
+In particular, you should write an input file that causes
+the action associated with every grammar rule in your Java Cup
+specification to be executed at least once.
+
+Skeleton versions of the files you will need to write are in:
+<tt>~cs536-1/public/html/PROG3</tt>
+<P>
+The files are:
+<UL>
+  <LI> <A HREF="Little.jlex"><tt>Little.jlex</tt></a>:
+       A JLex specification for the Little language (a solution to program 2).
+       Use this if there were problems with your JLex specification.
+       (This file will be available after the final due date for
+       program 2.)
+  <LI> <A HREF="Little.cup"><tt>Little.cup</tt></a>:
+       A Java Cup specification for a very small subset of the Little
+       language (you will need to add to this file).
+  <LI> <A HREF="Little.grammar"><tt>Little.grammar</tt></a>:
+       A CFG for the Little language.  Use this to guide the enhancements
+       you make to <tt>Little.cup</tt>.
+  <LI> <A HREF="ast.java"><tt>ast.java</tt></a>:
+       Contains class definitions for the AST structure that the parser
+       will build (you will need to add unparsing code to this file, but
+       you should <i>not</i> add any new classes, fields, or methods).
+  <LI> <A HREF="P3.java"><tt>P3.java</tt></a>:
+       The main program that calls the parser, then, for a successful
+       parse, calls the unparser (no changes needed).
+       To compile P3 then run it, using <tt>test.Little</tt> as the input,
+       and sending the unparsed output to file <tt>test.out</tt>,
+       type:
+       <UL><tt>javac P3.java <br>
+               java P3 test.Little test.out </tt></UL>
+  <LI> <A HREF="Makefile"><tt>Makefile</tt></a>: A Makefile for
+       program 3 (no changes needed).
+  <LI> <A HREF="test.Little"><tt>test.Little</tt></a>:
+       Input for the current version of the parser (you will need to
+       change this file).
+  <LI> <A HREF="Errors.java"><tt>Errors.java</tt></a>:
+       Same as for program 2 (no changes needed).
+</UL>
+Here is a link to the Java Cup
+<A HREF="http://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html">
+reference manual</a>.
+There is also a link in the "Useful Programming Tools" section of the
+class web page.
+
+<a name="prec">
+<h2>Operator Precedences and Associativities</h2>
+</a>
+The Little grammar in the file <tt>Little.grammar</tt> is ambiguous;
+it does not uniquely define the precedences and associativities of
+the arithmetic, relational, equality, and logical operators.
+You will need to add appropriate precedence and associativity declarations
+to your Java Cup specification.
+<UL>
+  <LI> Assignment is right associative.
+  <P>
+  <LI> The relational
+       and equality operators (&lt;, &gt;, &lt;=, &gt;=, ==, and !=), are
+       non-associative (i.e., expressions like <tt>a &lt; b &lt; c</tt>
+       are not allowed and should cause a syntax error).
+  <P>
+  <LI> All of the other binary operators are left associative.
+  <P>
+  <LI> The unary minus, not (!), auto-increment (++) and auto-decrement
+       (--) operators have the highest
+       precedence, then multiplication and division,
+       then addition and subtraction,
+       then the relational and equality operators, then the logical
+       <i>and</i> operator (&&), then the logical <i>or</i>
+       operator (||), and finally the assignment operator (=).
+</UL>
+Note that the
+same token (MINUS) is used for both the unary and binary
+minus operator, and that they have difference precedences;
+however, the Little grammar has been written so that the unary minus operator
+has the correct (highest) precedence;
+therefore, you can declare MINUS to have
+the precedence appropriate for the binary minus operator.
+<P>
+Java Cup will print a message telling you how many <em>conflicts</em>
+it found in your grammar.
+If the number is not zero, it means that your grammar is still
+ambiguous, and the parser is unlikely to work correctly.
+<b>Do not ignore this!</b>
+Go back and fix your specification so that your grammar is not ambiguous.
+
+<a name="ast">
+<h2>Building an Abstract-Syntax Tree</h2>
+</a>
+
+To make your parser build an abstract-syntax tree, you must add new
+productions, declarations, and actions to <tt>Little.cup</tt>.
+You will need to decide, for each nonterminal that you add, what
+type its associated value should have.
+Then you must add the appropriate nonterminal
+declaration to the specification.
+For most nonterminals, the value will either be some kind of tree node
+(a subclass of <tt>ASTnode</tt>), or a <tt>LinkedList</tt>
+of some kind of node
+(use the information in <tt>ast.java</tt> to guide your decision).
+Note that you cannot use parameterized types for the types of
+nonterminals;
+so if the translation of a nonterminal is a <tt>LinkedList</tt>
+of some kind of node, you will have to declare its type as
+just plain <tt>LinkedList</tt>.
+<P>
+You must also add actions to each new grammar production that you
+add to <tt>Little.cup</tt>.
+Make sure that each action ends by assigning an appropriate value to
+<tt>RESULT</tt>.
+Note that the parser will return a <tt>Symbol</tt> whose <tt>value</tt>
+field contains the value assigned to <tt>RESULT</tt> in the production
+for the root nonterminal (nonterminal <tt>program</tt>).
+
+<a name="unparsing">
+<h2>Unparsing</h2>
+</a>
+
+To test your parser, you must write the <samp>unparse</samp>
+methods for the subclasses of <samp>ASTnode</samp> (in the file
+<tt>ast.java</tt>).
+When the <samp>unparse</samp> method of the root node of the program's
+abstract-syntax tree is called, it should print a nicely formatted
+version of the program (this is called <em>unparsing</em>
+the abstract-syntax tree).
+The output produced by calling <samp>unparse</samp> should be the
+same as the input to the parser except that:
+<ol>
+  <li> There will be no comments in the output.
+  <li> The output will be "pretty printed" (newlines and indentation
+       will be used to make the program readable); and
+  <li> Expressions will be fully parenthesized to reflect the order of
+       evaluation.
+</ol>
+For example, if the input program includes:
+<pre>
+  <samp>if (b == -1) { x = 4+3*5-y; while (c) { y = y*2+x; } } else { x = 0; }</samp>
+</pre>
+the output of <samp>unparse</samp> should be something like the following:
+<pre>
+  if ((b == (-1))) {
+      x = ((4 + (3 * 5)) - y);
+      while (c) {
+          y = ((y * 2) + x);
+      }
+  }
+  else {
+      x = 0;
+  }
+</pre>
+<P>
+To make grading easier, put open curly braces on the <em>same</em>
+line as the preceding code, and put closing curly braces on a line with no
+other code (as in the example above).
+Put the first statement in the body of an <em>if</em> or <em>while</em>
+on the line following the open curly brace.
+Whitespace within a line is up to you (as long as it looks reasonable).
+<P>
+Note: Trying to unparse a tree will help you determine whether you have
+built the tree correctly in the first place.
+Besides looking at the output of your unparser, you should try
+using it as the input to your parser;
+if it doesn't parse, you've made a mistake either in how you built
+your abstract-syntax tree, or in how you've written your unparser.
+<P>
+Another good way to test your code is to try compiling the output
+of your unparser using the C compiler (gcc).
+<P>
+It is a good idea to work incrementally (see
+<a href="#pairs">Suggestions for How to Work on this Assignment</a> below
+for more detailed suggestions):
+<UL>
+  <LI> Add a few grammar productions to <samp>Little.cup</samp>.
+  <LI> Write the corresponding <samp>unparse</samp> operations.
+  <LI> Write a test program that uses the new language constructs.
+  <LI> Create a parser (using <tt>make</tt>) and run it on your test program.
+</UL>
+
+<a name="astJava">
+<h2>Modifying ast.java</h2>
+</a>
+We will test your program by using our unparse
+methods on your abstract-syntax trees, and by using your unparse methods
+on our abstract-syntax trees.
+To make this work, you will need to:
+<OL>
+  <LI> Modify <tt>ast.java</tt> <b>only</b> by filling in
+       the bodies of the unparse methods (and you must fill in all of the
+       method bodies).
+  <LI> Make sure that no <tt>LinkedList</tt> field is null (i.e., when
+       you call the constructor of a class with a <tt>LinkedList</tt> argument,
+       that argument should never be null).
+       Note that it is OK to make the <tt>ExpNode</tt> field of a
+       <tt>ReturnStmtNode</tt> null (when no value is returned),
+       and ditto for the <tt>ExpListNode</tt> field of a
+       <tt>CallExpNode</tt> (when the call has no arguments).
+</OL>
+
+<a name="testing">
+<h2>Testing</h2>
+</a>
+Part of your task will be to write an input file called
+<tt>test.Little</tt> that thoroughly tests your parser.
+You should be sure to include code that corresponds to every grammar
+rule in the file <tt>Little.grammar</tt>.
+<P>
+Note that since you are to provide only <em>one</em> input file,
+<tt>test.Little</tt> should contain no syntax errors (you can also test your
+parser on some bad inputs, but don't hand those in).
+<p>
+You will probably find it helpful to use comments
+in <tt>test.Little</tt> to explain what aspects of the parser are
+being tested, but your testing grade will depend only on how
+thoroughly the file tests the parser.
+<p>
+So that you can be sure that the code in <tt>test.Little</tt> has no
+syntax errors (without having to finish your own parser), all of
+the <tt>.class</tt> files needed for a Little parser are available to
+you in <a href="CLASS-FILES">~cs536-1/public/html/PROG3/CLASS-FILES</a>.
+That parser doesn't create an actual AST, just one node with an unparse
+method that only prints a message saying that it does not unparse.
+To run P3 with the provided parser using your input file
+<tt>test.Little</tt>, type:
+<UL><tt>java P3 test.Little test.out</tt></UL>
+(no output will be written to <tt>test.out</tt>).
+
+<a name="pairs">
+<h2>Suggestions for How to Work on this Assignment</h2>
+</a>
+<P>
+This assignment involves three main tasks:
+<OL>
+  <LI> Writing the input file <tt>test.Little</tt> to test your implementation.
+  <LI> Writing the parser specification (<tt>Little.cup</tt>).
+  <LI> Writing the unparse methods for the AST nodes (in <tt>ast.java</tt>).
+</OL>
+If you work with a partner,
+it is a good idea to share responsibility for all tasks
+to ensure that both partners understand all aspects of the assignment.
+
+<P>
+I suggest that you proceed as follows (if you are working alone,
+I still suggest that you follow the basic steps outlined below,
+just do them all yourself).
+<UL>
+  <LI> Work together to write the input program <tt>test.Little</tt>.
+       Use the grammar (<tt>Little.grammar</tt>) to add code to your
+       test file that corresponds to each grammar production.
+       Make small changes to <tt>test.Little</tt>, and
+       after each change, run the provided parser to be sure you haven't
+       introduced any syntax errors.
+       You might want to save the intermediate versions of <tt>test.Little</tt>
+       so that you can use them to test your own parser as you write it.
+  <LI> Once <tt>test.Little</tt> is finished,
+       work together on extending <tt>Little.cup</tt> and <tt>ast.java</tt>
+       Start by making a very small change to <tt>Little.cup</tt>.
+       For example, add the rules and actions for:
+       <UL>
+         <tt>type ::= DBL</tt><br>
+         <tt>type ::= VOID</tt>
+       </UL>
+       Also update the appropriate <tt>unparse</tt> method in
+       <tt>ast.java</tt>.
+       Make sure that you can create and run the parser after making
+       this small change.
+       (To create the parser, just type <tt>make</tt> in the directory
+       where you are working.)
+  <LI> Next, add the rules needed to allow programs to include functions
+       with no formal parameters and with empty statement lists only,
+       and update the corresponding <tt>unparse</tt> methods.
+  <LI> Still working together, add the rules (and <tt>unparse</tt> methods)
+       for the simplest kind of expressions -- just plain identifiers.
+  <LI> Now divide up the statement nonterminals into two parts, one part for
+       each person.
+  <LI> Each person should extend their own copy of <tt>Little.cup</tt>
+       by adding rules for their half of the statements, and should extend
+       their own copy of <tt>ast.java</tt> to define the unparse methods
+       needed for those statements.
+  <LI> Write test inputs for your statements and your partner's statements.
+  <LI> After each person makes sure that their parser and unparser
+       work on their own statements, combine the two by cutting and
+       pasting one person's grammar rules into the other person's
+       <tt>Little.cup</tt> (and similarly for <tt>ast.java</tt>).
+  <LI> Now divide up the expression nonterminals into two parts, and
+       implement those using a similar approach.
+       Note that you will also need to give the operators the right
+       precedences and associativities during this step (see
+       <a href="#prec">above</a>).
+  <LI> Divide up any remaining productions that need to be added,
+       and add them.
+  <LI> When working on your own, do <em>not</em> try to implement all of
+       your nonterminals at once.  Instead, add one new rule at a time
+       to the Java Cup specification, make the corresponding changes
+       to the <tt>unparse</tt> methods in <tt>ast.java</tt>, and test
+       your work by augmenting your <tt>test.Little</tt>, or by writing
+       a new Little program that includes the new construct you added,
+       and make sure that it is parsed and unparsed correctly.
+</UL>
+<P>
+If you worked alone on the previous program and are now working with
+a partner, see assignment 2 for more suggestions on how to work in pairs.
+
+<P>
+<a name="turning in">
+<h2>What to Turn In</h2>
+</a>
+
+By midnight on March 20, copy your <code>test.Little</code>
+to your handin directory.
+
+Your code is due March 23. To hand in your code, copy all of the files 
+that are needed to create and run <tt>P3.class</tt>, as well as
+your <tt>Makefile</tt> to your handin directory.
+Please do <em>not</em> create any subdirectories in your handin directory,
+and do <em>not</em> copy any <tt>.class</tt> files.
+<P>
+If you are working with a partner <b>only one</b> of you should hand in files.
+Include a comment at the top of <tt>P3.java</tt> with the names of both
+partners.
+	
+</body>
+</html>
