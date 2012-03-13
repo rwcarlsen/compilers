@@ -63,51 +63,35 @@ fncall		::=  id LPAREN RPAREN   // fn call with no args
 		;
 
 exp		::= assign_exp
-          | prec5
-          ;
-
-prec5 ::=
-	          prec5 AND prec4
-	        | prec5 OR prec4
-          ;
-
-prec4 ::=
-            prec3 EQUALS prec3
-          | prec3 NOTEQUALS prec3
-          | prec3 LESS prec3
-          | prec3 GREATER prec3
-          | prec3 LESSEQ prec3
-          | prec3 GREATEREQ prec3
-          ;
-
-prec3 ::=
-	          prec3 PLUS prec2
-	        | prec3 MINUS prec2
-          ;
-
-prec2 ::=
-	          prec2 STAR prec1
-	        | prec2 DIVIDE prec1
-          ;
-
-prec1 ::=
-	          NOT term
-          | MINUS term
-          | term
-          ;
+		| exp PLUS exp
+	        | exp MINUS exp
+	        | exp STAR exp
+	        | exp DIVIDE exp
+	        | exp AND exp
+	        | exp OR exp
+		| exp EQUALS exp
+		| exp NOTEQUALS exp
+		| exp LESS exp
+		| exp GREATER exp
+		| exp LESSEQ exp
+		| exp GREATEREQ exp
+		| term
+		;
 
 assign_exp	::= id ASSIGN exp
 		;
 
 term		::= id
-          | id PLUSPLUS
-          | id MINUSMINUS
+		| MINUS term
+    | NOT term
+		| id PLUSPLUS
+		| id MINUSMINUS
 	        | INTLITERAL
 	        | DBLLITERAL
 	        | STRINGLITERAL
 	        | LPAREN exp RPAREN
-          | fncall
-          ;
+		| fncall
+		;
 
 actualList	::= exp
 		| actualList COMMA exp

@@ -93,6 +93,12 @@ non terminal TermNode          term        ;
 non terminal ActualListNode    actualList  ;
 
 /* NOTE: Add precedence and associativity declarations here */
+precedence right ASSIGN;
+precedence left OR;
+precedence left AND;
+precedence nonassoc EQUALS, NOTEQUALS, LESS, GREATER, LESSEQ, GREATEREQ;
+precedence left PLUS, MINUS;
+precedence left STAR, DIVIDE;
 
 start with program;
 
