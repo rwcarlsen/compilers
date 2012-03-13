@@ -1,135 +1,144 @@
-/* program, declList */
 
-  /* varDecl, type, id */
-    int foo;
-    double bar;
+/* program, declList, varDecl, type, id */
+int foo;
+double bar;
 
-  /* fnDecl */
-    int myfunc1() {}
-    double myfunc2() {}
+/* fnDecl, formalsList, formals, and returns*/
+void foo() {return;}
+void bar(int boo) {return 1;}
+void boo(int boo, int far) {return bar(1);}
+double myfunc2() {}
 
-    /* formalsList, formals */
-      void myfunc2(int foo, double bar, double boo) {}
+/* fnBody */
+double myfunc3() {
+  /* varDeclList */
+  int foo;
+  double a;
+  double b;
+  double c;
 
-    /* fnBody */
-      double myfunc3() {
-        /* varDeclList */
-          int foo;
-          double a;
-          double b;
-          double c;
+  /* stmtList, stmt, assign_exp */
+  a = 1;
+  b = a + 1;
+  c = 3; 
+  ++a;
+  --a;
+  a++;
+  a--;
 
-        /* stmtList, stmt */
-          /* assign_exp */
-            a = 1;
-            b = a + 1;
-            c = 3;
+  scanf("%d", &foo);
+  scanf("%f", &a);
 
-          ++a;
-          --a;
-          a++;
-          a--;
+  printf("%d", a + b);
+  printf("%f", 24);
 
-          scanf("%d", &foo);
-          scanf("%f", &a);
+  /* if statements */
+  if(1 < 2) {
+    int d;
+    int e;
+  }
 
-          printf("%d", a + b);
-          printf("%f", 24);
+  if(1 < 2) {
+    int f;
+    int g;
 
-          /* if statements */
-            if(1 < 2) {
-              int d;
-              int e;
-            }
+    /* nested if statements */
+      if(1 < 2) {}
+      f = f + a;
+  }
+  else {
+    int h;
+    int i;
 
-            if(1 < 2) {
-              int f;
-              int g;
+    h = h + a;
+  }
 
-              /* nested if statements */
-                if(1 < 2) {}
-                f = f + a;
-            }
-            else {
-              int h;
-              int i;
+  /* while statements */
+  while(1) {}
+  while(a < b) {}
+  while(a < b) {
+    int swiss;
+    double havarti;
 
-              h = h + a;
-            }
+    swiss = 10;
+    havarti = 0.4 + swiss;
+  }
 
-          /* prec5 expressions */
-            c = a && b;
-            c = a || b;
-            c = a || b && c;
-            c = a && b || c;
-            c = a && b && c;
-            c = a || b || c;
+  /***********************************/
+  /********** expressions ************/
+  /***********************************/
 
-            c = (a && a) && b;
-            c = (a && a) || b;
+  /* prec5 expressions */
+  c = a && b;
+  c = a || b;
+  c = a || b && c;
+  c = a && b || c;
+  c = a && b && c;
+  c = a || b || c;
 
-          /* prec4 expressions */
-            c = a == b;
-            c = a != b;
-            c = a <= b;
-            c = a >= b;
-            c = a < b;
-            c = a > b;
+  c = (a && a) && b;
+  c = (a && a) || b;
 
-            c = a && b == b;
-            c = a && b != b;
-            c = a && b <= b;
-            c = a && b >= b;
-            c = a && b < b;
-            c = a && b > b;
+  /* prec4 expressions */
+  c = a == b;
+  c = a != b;
+  c = a <= b;
+  c = a >= b;
+  c = a < b;
+  c = a > b;
 
-          /* prec3 expressions */
-            c = a + b;
-            c = a - b;
-            c = a - b + c;
-            c = a + b - c;
-            c = a - b - c;
-            c = a + b + c;
+  c = a && b == b;
+  c = a && b != b;
+  c = a && b <= b;
+  c = a && b >= b;
+  c = a && b < b;
+  c = a && b > b;
 
-            c = a && b + c;
-            c = a && b - c;
-            
-          /* prec2 expressions */
-            c = a * b;
-            c = a / b;
-            c = a / b * c;
-            c = a * b / c;
-            c = a / b / c;
-            c = a * b * c;
+  /* prec3 expressions */
+  c = a + b;
+  c = a - b;
+  c = a - b + c;
+  c = a + b - c;
+  c = a - b - c;
+  c = a + b + c;
 
-            c = a && b * c;
-            c = a && b / c;
+  c = a && b + c;
+  c = a && b - c;
+    
+  /* prec2 expressions */
+  c = a * b;
+  c = a / b;
+  c = a / b * c;
+  c = a * b / c;
+  c = a / b / c;
+  c = a * b * c;
 
-          /* prec1 expressions */
-            c = !b;
-            c = -b;
+  c = a && b * c;
+  c = a && b / c;
 
-          /* operator precedence */
-            c = a && a || a - a + a == a * -a / !a;
-            c = !a / -a * a == a + a - a || a && a;
+  /* prec1 expressions */
+  c = !b;
+  c = -b;
 
-          /* term */
-            c = b++;
-            c = b--;
-            c = 12;
-            c = 12.3 ;
-            c = "hello";
-            c = (2 + 3);
-            c = myfunc1();
+  /* operator precedence */
+  c = a && a || a - a + a == a * -a / !a;
+  c = !a / -a * a == a + a - a || a && a;
 
-          /* fncall */
-            
+  /* term */
+  c = b++;
+  c = b--;
+  c = 12;
+  c = 12.3 ;
+  c = "hello";
+  c = (2 + 3);
+  c = bar(1);
 
-          return a + c;
+  /* fncall */
+  foo();
+  bar(a);
+  boo(a, b);
+  boo(a + b, b && c);
 
-      }
-
-      int funcreturnfunc() {
-        return myfunc1();
-      }
+  return a + c;
+}
 

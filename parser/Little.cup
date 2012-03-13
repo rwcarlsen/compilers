@@ -92,7 +92,6 @@ non terminal AssignExpNode     assign_exp  ;
 non terminal TermNode          term        ;
 non terminal ActualListNode    actualList  ;
 
-
 /* NOTE: Add precedence and associativity declarations here */
 
 start with program;
