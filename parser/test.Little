@@ -6,21 +6,130 @@
 
   /* fnDecl */
     int myfunc1() {}
-    double myfunc1() {}
+    double myfunc2() {}
 
     /* formalsList, formals */
-      void myfunc2(int foo, double bar, void boo) {}
+      void myfunc2(int foo, double bar, double boo) {}
 
     /* fnBody */
       double myfunc3() {
         /* varDeclList */
-        double a;
-        double b;
-        double c;
+          int foo;
+          double a;
+          double b;
+          double c;
 
-        /* stmtList */
-        a = 1;
-        a = b;
-        a = b + a;
+        /* stmtList, stmt */
+          /* assign_exp */
+            a = 1;
+            b = a + 1;
+            c = 3;
+
+          ++a;
+          --a;
+          a++;
+          a--;
+
+          scanf("%d", &foo);
+          scanf("%f", &a);
+
+          printf("%d", a + b);
+          printf("%f", 24);
+
+          /* if statements */
+            if(1 < 2) {
+              int d;
+              int e;
+            }
+
+            if(1 < 2) {
+              int f;
+              int g;
+
+              /* nested if statements */
+                if(1 < 2) {}
+                f = f + a;
+            }
+            else {
+              int h;
+              int i;
+
+              h = h + a;
+            }
+
+          /* prec5 expressions */
+            c = a && b;
+            c = a || b;
+            c = a || b && c;
+            c = a && b || c;
+            c = a && b && c;
+            c = a || b || c;
+
+            c = (a && a) && b;
+            c = (a && a) || b;
+
+          /* prec4 expressions */
+            c = a == b;
+            c = a != b;
+            c = a <= b;
+            c = a >= b;
+            c = a < b;
+            c = a > b;
+
+            c = a && b == b;
+            c = a && b != b;
+            c = a && b <= b;
+            c = a && b >= b;
+            c = a && b < b;
+            c = a && b > b;
+
+          /* prec3 expressions */
+            c = a + b;
+            c = a - b;
+            c = a - b + c;
+            c = a + b - c;
+            c = a - b - c;
+            c = a + b + c;
+
+            c = a && b + c;
+            c = a && b - c;
+            
+          /* prec2 expressions */
+            c = a * b;
+            c = a / b;
+            c = a / b * c;
+            c = a * b / c;
+            c = a / b / c;
+            c = a * b * c;
+
+            c = a && b * c;
+            c = a && b / c;
+
+          /* prec1 expressions */
+            c = !b;
+            c = -b;
+
+          /* operator precedence */
+            c = a && a || a - a + a == a * -a / !a;
+            c = !a / -a * a == a + a - a || a && a;
+
+          /* term */
+            c = b++;
+            c = b--;
+            c = 12;
+            c = 12.3 ;
+            c = "hello";
+            c = (2 + 3);
+            c = myfunc1();
+
+          /* fncall */
+            
+
+          return a + c;
+
+      }
+
+      int funcreturnfunc() {
+        return myfunc1();
       }
 
