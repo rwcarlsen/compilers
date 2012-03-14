@@ -4,10 +4,10 @@ int foo;
 double bar;
 
 /* fnDecl, formalsList, formals, and returns*/
+void myfunc2() {}
 void foo() {return;}
-void bar(int boo) {return 1;}
-void boo(int boo, int far) {return bar(1);}
-double myfunc2() {}
+int bar(int boo) {return 1;}
+double boo(int boo, double far) {return bar(1);}
 
 int roo;
 int baf;
@@ -34,6 +34,7 @@ double myfunc3() {
 
   printf("%d", a + b);
   printf("%f", 24);
+  printf("hello");
 
   /* if statements */
   if(1 < 2) {
@@ -124,8 +125,8 @@ double myfunc3() {
   c = -b;
 
   /* operator precedence */
-  c = a && a || a - a + a == a * -a / !a;
-  c = !a / -a * a == a + a - a || a && a;
+  c = a || a && a == a + a - a * -a / !a / a++;
+  c = a++ / !a / -a * a - a + a == a && a || a;
 
   /* term */
   c = b++;

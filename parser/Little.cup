@@ -165,12 +165,12 @@ formalsList	::=
     formalDecl:d
       {:
         LinkedList<FormalDeclNode> dl = new LinkedList<FormalDeclNode>();
-        dl.addLast(d);
+        dl.addFirst(d);
         RESULT = dl;
       :}
 		|
     formalDecl:d COMMA formalsList:dl
-      {: dl.addLast(d);
+      {: dl.addFirst(d);
          RESULT = dl;
       :}
 		;

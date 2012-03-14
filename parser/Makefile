@@ -56,5 +56,5 @@ test:
 ###
 # run my parser
 ###
-run:
-	java -classpath ${CP} P3 test.Little test.out
+run: P3.class
+	java -classpath ${CP} P3 test.Little test.c
