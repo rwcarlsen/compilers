@@ -88,8 +88,8 @@ non terminal LinkedList        stmtList    ;
 non terminal StmtNode          stmt        ;
 non terminal CallExpNode       fncall      ;
 non terminal ExpNode           exp         ;
-non terminal AssignExpNode     assign_exp  ;
-non terminal TermNode          term        ;
+non terminal AssignNode        assign_exp  ;
+non terminal ExpNode           term        ;
 non terminal LinkedList        actualList  ;
 
 /* NOTE: Add precedence and associativity declarations here */
@@ -200,7 +200,9 @@ stmtList	::=
 		;
 
 stmt ::=
-    assign_exp SEMICOLON
+    assign_exp:e SEMICOLON
+      {: RESULT = new AssignStmtNode(e);
+      :}
 		| PLUSPLUS id:i SEMICOLON
       {: RESULT = new PreIncStmtNode(i);
       :}
@@ -225,17 +227,24 @@ stmt ::=
 		| PRINTF LPAREN DBL_FORMAT COMMA exp:e RPAREN SEMICOLON
       {: RESULT = new WriteDblStmtNode(e);
       :}
-		| PRINTF LPAREN STRINGLITERAL RPAREN SEMICOLON
-      {: /* ???? RESULT = new WriteStrStmtNode(i.value); */
+		| PRINTF LPAREN STRINGLITERAL:s RPAREN SEMICOLON
+      {: RESULT = new WriteStrStmtNode(new StringLitNode(s.linenum, s.charnum, s.strVal));
       :}
-    | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
-    | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
-    | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+    | IF LPAREN exp:e RPAREN LCURLY varDeclList:vl stmtList:sl RCURLY
+      {: RESULT = new IfStmtNode(e, new DeclListNode(vl), new StmtListNode(sl));
+      :}
+    | IF LPAREN exp:e RPAREN LCURLY varDeclList:vl1 stmtList:sl1 RCURLY ELSE LCURLY varDeclList:vl2 stmtList:sl2 RCURLY
+      {: RESULT = new IfElseStmtNode(e, new DeclListNode(vl1), new StmtListNode(sl1),
+                                     new DeclListNode(vl2), new StmtListNode(sl2));
+      :}
+    | WHILE LPAREN exp:e RPAREN LCURLY varDeclList:vl stmtList:sl RCURLY
+      {: RESULT = new WhileStmtNode(e, new DeclListNode(vl), new StmtListNode(sl));
+      :}
 		| RETURN exp:e SEMICOLON
       {: RESULT = new ReturnStmtNode(e);
       :}
 		| RETURN SEMICOLON
-      {: /*???? RESULT = new ReturnStmtNode(call); */
+      {: RESULT = new ReturnStmtNode(null);
       :}
 		| fncall:call SEMICOLON
       {: RESULT = new CallStmtNode(call);
@@ -245,22 +254,125 @@ stmt ::=
 fncall ::=  
     id:i LPAREN RPAREN
       {:
-        arglist = new LinkedList<ExpNode>();
-        args = new ExpListNode(arglist);
-        RESULT = new CallExpNode(i, args);
+        LinkedList<ExpNode> arglist = new LinkedList<ExpNode>();
+        RESULT = new CallExpNode(i, new ExpListNode(arglist));
       :}
     |
     id:i LPAREN actualList:arglist RPAREN
-      {:
-        args = new ExpListNode(arglist);
-        RESULT = new CallExpNode(i, args);
+      {: RESULT = new CallExpNode(i, new ExpListNode(arglist));
+      :}
+		;
+
+exp		::=
+    assign_exp:e
+      {: RESULT = e;
+      :}
+		|
+    exp:e1 PLUS exp:e2
+      {: RESULT = new PlusNode(e1, e2);
+      :}
+    |
+    exp:e1 MINUS exp:e2
+      {: RESULT = new MinusNode(e1, e2);
+      :}
+    |
+    exp:e1 STAR exp:e2
+      {: RESULT = new TimesNode(e1, e2);
+      :}
+    |
+    exp:e1 DIVIDE exp:e2
+      {: RESULT = new DivideNode(e1, e2);
+      :}
+    |
+    exp:e1 AND exp:e2
+      {: RESULT = new AndNode(e1, e2);
+      :}
+    |
+    exp:e1 OR exp:e2
+      {: RESULT = new OrNode(e1, e2);
+      :}
+		|
+    exp:e1 EQUALS exp:e2
+      {: RESULT = new EqualsNode(e1, e2);
+      :}
+		|
+    exp:e1 NOTEQUALS exp:e2
+      {: RESULT = new NotEqualsNode(e1, e2);
+      :}
+		|
+    exp:e1 LESS exp:e2
+      {: RESULT = new LessNode(e1, e2);
+      :}
+		|
+    exp:e1 GREATER exp:e2
+      {: RESULT = new GreaterNode(e1, e2);
+      :}
+		|
+    exp:e1 LESSEQ exp:e2
+      {: RESULT = new LessEqNode(e1, e2);
+      :}
+		|
+    exp:e1 GREATEREQ exp:e2
+      {: RESULT = new GreaterEqNode(e1, e2);
+      :}
+		|
+    term:t
+      {: RESULT = t;
+      :}
+		;
+
+assign_exp	::=
+    id:i ASSIGN exp:e
+      {: RESULT = new AssignNode(i, e);
+      :}
+		;
+
+term		::=
+    id:i
+      {: RESULT = i;
+      :}
+		|
+    MINUS term:t
+      {: RESULT = new UnaryMinusNode(t);
+      :}
+    |
+    NOT term:t
+      {: RESULT = new NotNode(t);
+      :}
+		|
+    id:i PLUSPLUS
+      {: RESULT = new PlusPlusNode(i);
+      :}
+		|
+    id:i MINUSMINUS
+      {: RESULT = new MinusMinusNode(i);
+      :}
+    |
+    INTLITERAL:lit
+      {: RESULT = new IntLitNode(lit.linenum, lit.charnum, lit.intVal);
+      :}
+    |
+    DBLLITERAL:lit
+      {: RESULT = new DblLitNode(lit.linenum, lit.charnum, lit.dblVal);
+      :}
+    |
+    STRINGLITERAL:s
+      {: RESULT = new StringLitNode(s.linenum, s.charnum, s.strVal);
+      :}
+    |
+    LPAREN exp:e RPAREN
+      {: RESULT = e;
+      :}
+		|
+    fncall:f
+      {: RESULT = f;
       :}
 		;
 
 actualList	::=
     exp:e
       {:
-        lst = new LinkedList<ExpNode>();
+        LinkedList<ExpNode> lst = new LinkedList<ExpNode>();
         lst.addLast(e);
         RESULT = lst;
       :}
