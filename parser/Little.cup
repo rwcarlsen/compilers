@@ -195,27 +195,81 @@ stmtList	::=
       RESULT = sl;
     :}
 		| /* epsilon */
-    {:
-      RESULT = new LinkedList<StmtNode>();
+    {: RESULT = new LinkedList<StmtNode>();
     :}
 		;
 
-stmt ::= assign_exp SEMICOLON
-		| PLUSPLUS id SEMICOLON
-		| MINUSMINUS id SEMICOLON
-		| id PLUSPLUS SEMICOLON
-		| id MINUSMINUS SEMICOLON
-	        | SCANF LPAREN INT_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
-	        | SCANF LPAREN DBL_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
-		| PRINTF LPAREN INT_FORMAT COMMA exp RPAREN SEMICOLON
-		| PRINTF LPAREN DBL_FORMAT COMMA exp RPAREN SEMICOLON
+stmt ::=
+    assign_exp SEMICOLON
+		| PLUSPLUS id:i SEMICOLON
+      {: RESULT = new PreIncStmtNode(i);
+      :}
+		| MINUSMINUS id:i SEMICOLON
+      {: RESULT = new PreDecStmtNode(i);
+      :}
+		| id:i PLUSPLUS SEMICOLON
+      {: RESULT = new PostIncStmtNode(i);
+      :}
+		| id:i MINUSMINUS SEMICOLON
+      {: RESULT = new PostDecStmtNode(i);
+      :}
+    | SCANF LPAREN INT_FORMAT COMMA AMPERSAND id:i RPAREN SEMICOLON
+      {: RESULT = new ReadIntStmtNode(i);
+      :}
+    | SCANF LPAREN DBL_FORMAT COMMA AMPERSAND id:i RPAREN SEMICOLON
+      {: RESULT = new ReadDblStmtNode(i);
+      :}
+		| PRINTF LPAREN INT_FORMAT COMMA exp:e RPAREN SEMICOLON
+      {: RESULT = new WriteIntStmtNode(e);
+      :}
+		| PRINTF LPAREN DBL_FORMAT COMMA exp:e RPAREN SEMICOLON
+      {: RESULT = new WriteDblStmtNode(e);
+      :}
 		| PRINTF LPAREN STRINGLITERAL RPAREN SEMICOLON
-	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
-	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
-	        | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
-		| RETURN exp SEMICOLON
+      {: /* ???? RESULT = new WriteStrStmtNode(i.value); */
+      :}
+    | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+    | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
+    | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+		| RETURN exp:e SEMICOLON
+      {: RESULT = new ReturnStmtNode(e);
+      :}
 		| RETURN SEMICOLON
-		| fncall SEMICOLON
+      {: /*???? RESULT = new ReturnStmtNode(call); */
+      :}
+		| fncall:call SEMICOLON
+      {: RESULT = new CallStmtNode(call);
+      :}
+		;
+
+fncall ::=  
+    id:i LPAREN RPAREN
+      {:
+        arglist = new LinkedList<ExpNode>();
+        args = new ExpListNode(arglist);
+        RESULT = new CallExpNode(i, args);
+      :}
+    |
+    id:i LPAREN actualList:arglist RPAREN
+      {:
+        args = new ExpListNode(arglist);
+        RESULT = new CallExpNode(i, args);
+      :}
+		;
+
+actualList	::=
+    exp:e
+      {:
+        lst = new LinkedList<ExpNode>();
+        lst.addLast(e);
+        RESULT = lst;
+      :}
+		|
+    actualList:lst COMMA exp:e
+      {:
+        lst.addLast(e);
+        RESULT = lst;
+      :}
 		;
 
 type		::=
