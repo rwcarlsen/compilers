@@ -4,3 +4,4 @@ doc
 *.out
 Little.*.java
 parser/*.class
+parser/*.c
