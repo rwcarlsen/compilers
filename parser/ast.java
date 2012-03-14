@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-// **********************************************************************
+/* **********************************************************************
 // The ASTnode class defines the nodes of the abstract-syntax tree that
 // represents a Little program.
 //
@@ -103,7 +103,7 @@ import java.util.*;
 //       OrNode,           EqualsNode,      NotEqualsNode,  LessNode,        
 //       GreaterNode,      LessEqNode,      GreaterEqNode
 //
-// **********************************************************************
+// **********************************************************************/
 
 // **********************************************************************
 // ASTnode class (base class for all other kinds of nodes)
@@ -145,6 +145,7 @@ class DeclListNode extends ASTnode {
     try {
       for (DeclNode oneDecl : myDecls) {
         oneDecl.unparse(p, indent);
+        p.print("\n");
       }
     } catch (NoSuchElementException ex) {
       System.err.println("unexpected NoSuchElementException in DeclListNode.unparse");
@@ -163,6 +164,12 @@ class FormalsListNode extends ASTnode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    for (FormalDeclNode node : myFormals) {
+      node.unparse(p, 0);
+      if (node != myFormals.get(myFormals.size() - 1)) {
+        p.print(", ");
+      }
+    }
   }
 
   // list of kids (FormalDeclNodes)
@@ -177,6 +184,8 @@ class FnBodyNode extends ASTnode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    myDeclList.unparse(p, indent);
+    myStmtList.unparse(p, indent);
   }
 
   // 2 kids
@@ -249,6 +258,19 @@ class FnDeclNode extends DeclNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    doIndent(p, indent);
+    myType.unparse(p, 0);
+    p.print(" ");
+    myId.unparse(p, 0);
+    p.println("(");
+    myFormalsList.unparse(p, 0);
+    p.println(")");
+    
+    p.print(" {\n");
+    myBody.unparse(p, indent + 1);
+    p.print("\n");
+    doIndent(p, indent);
+    p.print("}");
   }
 
   // 4 kids
