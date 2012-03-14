@@ -52,3 +52,9 @@ clean:
 ###
 test:
 	java -classpath testclass:${CP} P3 test.Little test.out
+
+###
+# run my parser
+###
+run:
+	java -classpath ${CP} P3 test.Little test.out

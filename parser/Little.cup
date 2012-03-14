@@ -78,19 +78,19 @@ non terminal VarDeclNode      varDecl;
 non terminal TypeNode	      type;
 non terminal IdNode	      id;
 
-non terminal VarDecleListNode  varDeclList ;
+non terminal LinkedList        varDeclList ;
 non terminal FnDeclNode        fnDecl      ;
-non terminal FormalsNode       formals     ;
-non terminal FormalsListNode   formalsList ;
+non terminal FormalsListNode   formals     ;
+non terminal LinkedList        formalsList ;
 non terminal FormalDeclNode    formalDecl  ;
 non terminal FnBodyNode        fnBody      ;
-non terminal StmtListNode      stmtList    ;
+non terminal LinkedList        stmtList    ;
 non terminal StmtNode          stmt        ;
-non terminal FncallNode        fncall      ;
+non terminal CallExpNode       fncall      ;
 non terminal ExpNode           exp         ;
 non terminal AssignExpNode     assign_exp  ;
 non terminal TermNode          term        ;
-non terminal ActualListNode    actualList  ;
+non terminal LinkedList        actualList  ;
 
 /* NOTE: Add precedence and associativity declarations here */
 precedence right ASSIGN;
@@ -121,20 +121,113 @@ declList 	::= declList:dl decl:d
 		:}
 		;
 
-decl		::= varDecl:v
-		{: RESULT = v;
-		:}
+decl		::=
+    varDecl:v
+      {: RESULT = v;
+      :}
+    |
+    fnDecl:f
+      {: RESULT = f;
+      :}
 		;
 
-varDecl		::= type: t id: i SEMICOLON
+varDeclList ::=
+    varDeclList:dl varDecl:d
+      {: dl.addLast(d);
+         RESULT = dl;
+      :}
+    | /* epsilon */
+      {: RESULT = new LinkedList<DeclNode>();
+      :}
+    ;
+
+varDecl		::= type:t id:i SEMICOLON
 		{: RESULT = new VarDeclNode(t, i);
 		:}
 		;
 
+fnDecl ::= type:t id:name formals:args fnBody:body
+    {: RESULT = new FnDeclNode(t, name, args, body);
+    :}
+    ;
 
-type		::= INT
-		{: RESULT = new IntNode();
-		:}
+formals ::=
+    LPAREN RPAREN
+      {: RESULT = new FormalsListNode(new LinkedList<FormalDeclNode>());
+      :}
+    |
+    LPAREN formalsList:dl RPAREN
+      {: RESULT = new FormalsListNode(dl);
+      :}
+    ;
+
+formalsList	::= 
+    formalDecl:d
+      {:
+        LinkedList<FormalDeclNode> dl = new LinkedList<FormalDeclNode>();
+        dl.addLast(d);
+        RESULT = dl;
+      :}
+		|
+    formalDecl:d COMMA formalsList:dl
+      {: dl.addLast(d);
+         RESULT = dl;
+      :}
+		;
+
+formalDecl	::=
+    type:t id:i
+      {: RESULT = new FormalDeclNode(t, i);
+      :}
+		;
+
+fnBody		::= 
+    LCURLY varDeclList:vdl stmtList:sdl RCURLY
+    {:
+      RESULT = new FnBodyNode(new DeclListNode(vdl), new StmtListNode(sdl));
+    :}
+		;
+
+stmtList	::= 
+    stmtList:sl stmt:s
+    {:
+      sl.addLast(s);
+      RESULT = sl;
+    :}
+		| /* epsilon */
+    {:
+      RESULT = new LinkedList<StmtNode>();
+    :}
+		;
+
+stmt		::= assign_exp SEMICOLON
+		| PLUSPLUS id SEMICOLON
+		| MINUSMINUS id SEMICOLON
+		| id PLUSPLUS SEMICOLON
+		| id MINUSMINUS SEMICOLON
+	        | SCANF LPAREN INT_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
+	        | SCANF LPAREN DBL_FORMAT COMMA AMPERSAND id RPAREN SEMICOLON
+		| PRINTF LPAREN INT_FORMAT COMMA exp RPAREN SEMICOLON
+		| PRINTF LPAREN DBL_FORMAT COMMA exp RPAREN SEMICOLON
+		| PRINTF LPAREN STRINGLITERAL RPAREN SEMICOLON
+	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+	        | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
+	        | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+		| RETURN exp SEMICOLON
+		| RETURN SEMICOLON
+		| fncall SEMICOLON
+		;
+
+type		::=
+    INT
+      {: RESULT = new IntNode();
+      :}
+    | DBL
+      {: RESULT = new DblNode();
+      :}
+    | VOID
+      {: RESULT = new VoidNode();
+      :}
 		;
 
 id              ::= ID:i
