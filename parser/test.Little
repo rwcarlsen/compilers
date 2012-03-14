@@ -9,6 +9,9 @@ void bar(int boo) {return 1;}
 void boo(int boo, int far) {return bar(1);}
 double myfunc2() {}
 
+int roo;
+int baf;
+
 /* fnBody */
 double myfunc3() {
   /* varDeclList */

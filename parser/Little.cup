@@ -200,7 +200,7 @@ stmtList	::=
     :}
 		;
 
-stmt		::= assign_exp SEMICOLON
+stmt ::= assign_exp SEMICOLON
 		| PLUSPLUS id SEMICOLON
 		| MINUSMINUS id SEMICOLON
 		| id PLUSPLUS SEMICOLON
