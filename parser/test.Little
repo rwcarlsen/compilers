@@ -47,7 +47,20 @@ double myfunc3() {
     int g;
 
     /* nested if statements */
-      if(1 < 2) {}
+      if(1 < 2) {
+        while(a < b) {
+          int swiss;
+          double havarti;
+
+          if(1 < 2) {
+            int d;
+            int e;
+          }
+
+          swiss = 10;
+          havarti = 0.4 + swiss;
+        }
+      }
       f = f + a;
   }
   else {

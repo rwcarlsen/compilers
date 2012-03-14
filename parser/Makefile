@@ -45,7 +45,7 @@ Errors.class: Errors.java
 # clean
 ###
 clean:
-	rm -f *~ *.class parser.java Little.jlex.java sym.java
+	rm -f *~ *.class parser.java Little.jlex.java sym.java *.c
 
 ###
 # run provided parser
@@ -58,3 +58,7 @@ test:
 ###
 run: P3.class
 	java -classpath ${CP} P3 test.Little test.c
+
+runrun: P3.class
+	java -classpath ${CP} P3 test.Little test.c
+	java -classpath ${CP} P3 test.c testtest.c

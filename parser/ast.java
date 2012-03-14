@@ -762,8 +762,10 @@ class PlusPlusNode extends UnaryExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    p.print("(");
     myExp.unparse(p, indent);
     p.print("++");
+    p.print(")");
   }
 }
 
@@ -774,8 +776,10 @@ class MinusMinusNode extends UnaryExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    p.print("(");
     myExp.unparse(p, indent);
     p.print("--");
+    p.print(")");
   }
 }
 
@@ -786,8 +790,10 @@ class UnaryMinusNode extends UnaryExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    p.print("(");
     p.print("-");
     myExp.unparse(p, indent);
+    p.print(")");
   }
 }
 
@@ -798,8 +804,10 @@ class NotNode extends UnaryExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    p.print("(");
     p.print("!");
     myExp.unparse(p, indent);
+    p.print(")");
   }
 }
 
