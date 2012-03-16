@@ -45,7 +45,7 @@ Errors.class: Errors.java
 # clean
 ###
 clean:
-	rm -f *~ *.class parser.java Little.jlex.java sym.java *.c
+	rm -f *~ *.class parser.java Little.jlex.java sym.java *.out
 
 ###
 # run my parser
