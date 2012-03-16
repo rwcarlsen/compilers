@@ -140,6 +140,15 @@ double myfunc3() {
   /* operator precedence */
   c = a || a && a == a + a - a * -a / !a / a++;
   c = a++ / !a / -a * a - a + a == a && a || a;
+  c = a + b * c;
+  c = a - b * c;
+  c = a + b / c;
+  c = a - b / c;
+  c = a == b + c;
+  c = a * -b;
+  c = a * !b;
+  c = !a++;
+  c = -a++;
 
   /* term */
   c = b++;
