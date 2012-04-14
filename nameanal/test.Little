@@ -1,161 +1,255 @@
 
-/* program, declList, varDecl, type, id */
-int foo;
-double bar;
+int i1;
+double d1;
 
-/* fnDecl, formalsList, formals, and returns*/
-void myfunc2() {}
-void foo() {return;}
-int bar(int boo) {return 1;}
-double boo(int boo, double far) {return bar(1);}
+void func1() { }
+int func2() {return 1;}
+double func3() {return 1.0;}
 
-int roo;
-int baf;
+int func4(int foo) { return foo; }
+int func5(int foo, int bar) { return foo + bar; }
+double func6(double foo) { return foo; }
+double func7(double foo, double bar) { return foo + bar; }
 
-/* fnBody */
-double myfunc3() {
-  /* varDeclList */
-  int foo;
-  double a;
-  double b;
-  double c;
+void main(int i2, double d2) {
+  int i3;
+  double d3;
 
-  /* stmtList, stmt, assign_exp */
-  a = 1;
-  b = a + 1;
-  c = 3; 
-  ++a;
-  --a;
-  a++;
-  a--;
-
-  scanf("%d", &foo);
-  scanf("%f", &a);
-
-  printf("%d", a + b);
-  printf("%f", 24);
-  printf("hello");
-
-  /* if statements */
-  if(1 < 2) {
-    int d;
-    int e;
-  }
+  /********** expressions ************/
+  i1 = i1 || i2 && i3 == i1 + i2 - i3 * -i1 / !i2 / i3++ + (++i1) + i2-- + (--i3);
+  i2 = i2 != i1;
+  i3 = i3 <= i3;
+  i3 = i3 >= i3;
+  i3 = i3 < i3;
+  i3 = i3 > i3;
+  i3 = i3 + func2() + func4(i1) + func5(i2 + i3, i3);
+  scanf("%d", &i3);
+  printf("%d", i3 + i3);
+  d1 = d1 || d2 && d3 == d3 + d3 - d3 * -d3 / !d3 / d3++ + (++d3) + d3-- + (--d3);
+  d2 = d3 != d3;
+  d3 = d3 <= d3;
+  d3 = d3 >= d3;
+  d3 = d3 < d3;
+  d3 = d3 > d3;
+  d3 = d3 + func3() + func6(d1) + func7(d2 + d3, d3);
+  scanf("%f", &d3);
+  printf("%f", d3 + d3);
 
   if(1 < 2) {
-    int f;
-    int g;
+    int i4;
+    double d4;
 
-    /* nested if statements */
-      if(1 < 2) {
-        while(a < b) {
-          int swiss;
-          double havarti;
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i4 + i1 - i2 * -i3 / !i4 / i1++ + (++i2) + i3-- + (--i4);
+    i2 = i2 != i1;
+    i3 = i3 <= i3;
+    i4 = i4 >= i4;
+    i4 = i4 < i4;
+    i4 = i4 > i4;
+    i4 = i4 + func2() + func4(i1) + func5(i2 + i3, i4);
+    scanf("%d", &i4);
+    printf("%d", i4 + i4);
+    d1 = d1 || d2 && d3 == d4 + d1 - d2 * -d3 / !d4 / d1++ + (++d2) + d3-- + (--d4);
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d4 = d4 >= d4;
+    d4 = d4 < d4;
+    d4 = d4 > d4;
+    d4 = d4 + func3() + func6(d1) + func7(d2 + d3, d4);
+    scanf("%f", &d4);
+    printf("%f", d4 + d4);
 
-          if(1 < 2) {
-            int d;
-            int e;
-          }
+    if(1 < 2) {
+      int i5;
+      double d5;
 
-          swiss = 10;
-          havarti = 0.4 + swiss;
+      while(a < b) {
+        int i6;
+        double d6;
+
+        if(1 < 2) {
+          int i7;
+          double d7;
+
+          /********** expressions ************/
+          i7 = i1 || i2 && i3 == i4 + i5 - i6 * -i7 / !i1 / i2++ + (++i3) + i4-- + (--i6);
+          i1 = i2 != i1;
+          i5 = i3 <= i3;
+          i3 = i4 >= i4;
+          i4 = i5 < i5;
+          i6 = i6 > i6;
+          i7 = i1 + func2() + func4(i3) + func5(i5 + i6, i7);
+          scanf("%d", &i7);
+          printf("%d", i7 + i7);
+          d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d7 / !d6 / d5++ + (++d4) + d3-- + (--d2);
+          d4 = d2 != d7;
+          d3 = d3 <= d6;
+          d2 = d4 >= d5;
+          d5 = d5 < d4;
+          d6 = d6 > d3;
+          d3 = d4 + func3() + func6(d5) + func7(d6 + d7, d3);
+          scanf("%f", &d7);
+          printf("%f", d7 + d7);
         }
+        else {
+          int i8;
+          double d8;
+
+          /********** expressions ************/
+          i8 = i1 || i2 && i3 == i4 + i5 - i6 * -i8 / !i1 / i2++ + (++i3) + i4-- + (--i6);
+          i1 = i2 != i1;
+          i5 = i3 <= i3;
+          i3 = i4 >= i4;
+          i4 = i5 < i5;
+          i6 = i6 > i6;
+          i8 = i1 + func2() + func4(i3) + func5(i5 + i6, i8);
+          scanf("%d", &i8);
+          printf("%d", i8 + i8);
+          d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d8 / !d6 / d5++ + (++d4) + d3-- + (--d2);
+          d4 = d2 != d8;
+          d3 = d3 <= d6;
+          d2 = d4 >= d5;
+          d5 = d5 < d4;
+          d6 = d6 > d3;
+          d3 = d4 + func3() + func6(d5) + func7(d6 + d8, d3);
+          scanf("%f", &d8);
+          printf("%f", d8 + d8);
+        }
+
+        /********** expressions ************/
+        i1 = i1 || i2 && i3 == i4 + i5 - i6 * -i1 / !i1 / i2++ + (++i3) + i4-- + (--i6);
+        i1 = i2 != i1;
+        i5 = i3 <= i3;
+        i3 = i4 >= i4;
+        i4 = i5 < i5;
+        i6 = i6 > i6;
+        i1 = i1 + func2() + func4(i3) + func5(i5 + i6, i1);
+        scanf("%d", &i1);
+        printf("%d", i1 + i1);
+        d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d1 / !d6 / d5++ + (++d4) + d3-- + (--d2);
+        d4 = d2 != d1;
+        d3 = d3 <= d6;
+        d2 = d4 >= d5;
+        d5 = d5 < d4;
+        d6 = d6 > d3;
+        d3 = d4 + func3() + func6(d5) + func7(d6 + d1, d3);
+        scanf("%f", &d1);
+        printf("%f", d1 + d5);
       }
-      f = f + a;
+
+      /********** expressions ************/
+      i1 = i1 || i2 && i3 == i4 + i5 - i3 * -i1 / !i1 / i2++ + (++i3) + i4-- + (--i3);
+      i1 = i2 != i1;
+      i5 = i3 <= i3;
+      i3 = i4 >= i4;
+      i4 = i5 < i5;
+      i3 = i3 > i3;
+      i1 = i1 + func2() + func4(i3) + func5(i5 + i3, i1);
+      scanf("%d", &i1);
+      printf("%d", i1 + i1);
+      d1 = d1 || d2 && d3 == d4 + d5 - d3 * -d1 / !d3 / d5++ + (++d4) + d3-- + (--d2);
+      d4 = d2 != d1;
+      d3 = d3 <= d3;
+      d2 = d4 >= d5;
+      d5 = d5 < d4;
+      d3 = d3 > d3;
+      d3 = d4 + func3() + func6(d5) + func7(d3 + d1, d3);
+      scanf("%f", &d1);
+      printf("%f", d1 + d5);
+    }
   }
   else {
-    int h;
-    int i;
+    int i9;
+    double d9;
 
-    h = h + a;
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i9 - i3 * -i1 / !i1 / i2++ + (++i3) + i2-- + (--i3);
+    i1 = i2 != i1;
+    i9 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i9 < i9;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i9 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d9 - d3 * -d1 / !d3 / d9++ + (++d2) + d3-- + (--d2);
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d9;
+    d9 = d9 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d9) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d9);
   }
 
   /* while statements */
-  while(1) {}
-  while(a < b) {}
   while(a < b) {
-    int swiss;
-    double havarti;
+    int i10;
+    double d10;
 
-    swiss = 10;
-    havarti = 0.4 + swiss;
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i10 - i3 * -i1 / !i1 / i2++ + (++i3) + i2-- + (--i3);
+    i1 = i2 != i1;
+    i10 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i10 < i10;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i10 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d10 - d3 * -d1 / !d3 / d10++ + (++d2) + d3-- + (--d2);
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d10;
+    d10 = d10 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d10) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d10);
   }
 
-  /***********************************/
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i3 - i3 * -i1 / !i1 / i2++ + (++i3) + i2-- + (--i3);
+    i1 = i2 != i1;
+    i3 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i3 < i3;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i3 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d3 - d3 * -d1 / !d3 / d3++ + (++d2) + d3-- + (--d2);
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d3;
+    d3 = d3 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d3) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d3);
+}
+
+void expressions() {
+
   /********** expressions ************/
-  /***********************************/
-
-  /* prec5 expressions */
-  c = a && b;
-  c = a || b;
-  c = a || b && c;
-  c = a && b || c;
-  c = a && b && c;
-  c = a || b || c;
-
-  c = (a && a) && b;
-  c = (a && a) || b;
-
-  /* prec4 expressions */
-  c = a == b;
-  c = a != b;
-  c = a <= b;
-  c = a >= b;
-  c = a < b;
-  c = a > b;
-
-  c = a && b == b;
-  c = a && b != b;
-  c = a && b <= b;
-  c = a && b >= b;
-  c = a && b < b;
-  c = a && b > b;
-
-  /* prec3 expressions */
-  c = a + b;
-  c = a - b;
-  c = a - b + c;
-  c = a + b - c;
-  c = a - b - c;
-  c = a + b + c;
-
-  c = a && b + c;
-  c = a && b - c;
-    
-  /* prec2 expressions */
-  c = a * b;
-  c = a / b;
-  c = a / b * c;
-  c = a * b / c;
-  c = a / b / c;
-  c = a * b * c;
-
-  c = a && b * c;
-  c = a && b / c;
-
-  /* prec1 expressions */
-  c = !b;
-  c = -b;
-
-  /* operator precedence */
-  c = a || a && a == a + a - a * -a / !a / a++;
-  c = a++ / !a / -a * a - a + a == a && a || a;
-
-  /* term */
-  c = b++;
-  c = b--;
-  c = 12;
-  c = 12.3 ;
-  c = "hello";
-  c = (2 + 3);
-  c = bar(1);
-
-  /* fncall */
-  foo();
-  bar(a);
-  boo(a, b);
-  boo(a + b, b && c);
-
-  return a + c;
+  a = a || a && a == a + a - a * -a / !a / a++ + (++a) + a-- + (--a);
+  a = a != a;
+  a = a <= a;
+  a = a >= a;
+  a = a < a;
+  a = a > a;
+  a = a + func2() + func4(a) + func5(a + a, a)
+  scanf("%d", &a);
+  printf("%d", a + a);
+  b = b || b && b == b + b - b * -b / !b / b++ + (++b) + b-- + (--b);
+  b = b != b;
+  b = b <= b;
+  b = b >= b;
+  b = b < b;
+  b = b > b;
+  b = b + func3() + func6(b) + func7(b + b, b)
+  scanf("%f", &b);
+  printf("%f", b + b);
 }
 
