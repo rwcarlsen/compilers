@@ -15,6 +15,14 @@ int func5(int foo, int bar) { return foo + bar; }
 double func6(double foo) { return foo; }
 double func7(double foo, double bar) { return foo + bar; }
 
+/* bad and redeclarations */
+void bad; /* bad */
+void i1; /* bad and redeclare */
+int i1; /* redeclare */
+double d1; /* redeclare */
+void func1() { };
+int func1(int foo) {return 1;}
+
 void main(int i2, double d2) {
   int i0;
   double i0;
@@ -22,22 +30,51 @@ void main(int i2, double d2) {
   int i3;
   double d3;
 
+  /* bad and redeclarations */
+  void bad;
+  void i1;
+  void i2;
+  void i3;
+  void i4;
+  void i5;
+  void i6;
+  void i7;
+  void i8;
+  void i9;
+  void i10;
+  void d1;
+  void d2;
+  void d3;
+  void d4;
+  void d5;
+  void d6;
+  void d7;
+  void d8;
+  void d9;
+  void d10;
+  int i1;
+  int i2;
+  int i3;
+  double d1;
+  double d2;
+  double d3;
+
   /********** expressions ************/
   i1 = i1 || i2 && i3 == i1 + i2 - i3 * -i1 / !i2 / i3++ + i2--;
   i2 = i2 != i1;
   i3 = i3 <= i3;
-  i3 = i3 >= i3;
-  i3 = i3 < i3;
-  i3 = i3 > i3;
+  i3 = i1 >= i3;
+  i2 = i2 < i3;
+  i1 = i3 > i3;
   i3 = i3 + func2() + func4(i1) + func5(i2 + i3, i3);
   scanf("%d", &i3);
   printf("%d", i3 + i3);
   d1 = d1 || d2 && d3 == d3 + d3 - d3 * -d3 / !d3 / d3++ + d3--;
-  d2 = d3 != d3;
+  d2 = d2 != d1;
   d3 = d3 <= d3;
-  d3 = d3 >= d3;
-  d3 = d3 < d3;
-  d3 = d3 > d3;
+  d1 = d2 >= d3;
+  d2 = d1 < d2;
+  d3 = d3 > d1;
   d3 = d3 + func3() + func6(d1) + func7(d2 + d3, d3);
   scanf("%f", &d3);
   printf("%f", d3 + d3);
@@ -47,6 +84,37 @@ void main(int i2, double d2) {
     double i0;
 
     int i4;
+    double d4;
+
+    /* bad and redeclarations */
+    void bad;
+    void i1;
+    void i2;
+    void i3;
+    void i4;
+    void i5;
+    void i6;
+    void i7;
+    void i8;
+    void i9;
+    void i10;
+    void d1;
+    void d2;
+    void d3;
+    void d4;
+    void d5;
+    void d6;
+    void d7;
+    void d8;
+    void d9;
+    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i4;
+    double d1;
+    double d2;
+    double d3;
     double d4;
 
     /********** expressions ************/
@@ -76,6 +144,39 @@ void main(int i2, double d2) {
       int i5;
       double d5;
 
+      /* bad and redeclarations */
+      void bad;
+      void i1;
+      void i2;
+      void i3;
+      void i4;
+      void i5;
+      void i6;
+      void i7;
+      void i8;
+      void i9;
+      void i10;
+      void d1;
+      void d2;
+      void d3;
+      void d4;
+      void d5;
+      void d6;
+      void d7;
+      void d8;
+      void d9;
+      void d10;
+      int i1;
+      int i2;
+      int i3;
+      int i4;
+      int i5;
+      double d1;
+      double d2;
+      double d3;
+      double d4;
+      double d5;
+
       while(a < b) {
         int i0;
         double i0;
@@ -83,11 +184,83 @@ void main(int i2, double d2) {
         int i6;
         double d6;
 
+        /* bad and redeclarations */
+        void bad;
+        void i1;
+        void i2;
+        void i3;
+        void i4;
+        void i5;
+        void i6;
+        void i7;
+        void i8;
+        void i9;
+        void i10;
+        void d1;
+        void d2;
+        void d3;
+        void d4;
+        void d5;
+        void d6;
+        void d7;
+        void d8;
+        void d9;
+        void d10;
+        int i1;
+        int i2;
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        double d1;
+        double d2;
+        double d3;
+        double d4;
+        double d5;
+        double d6;
+
         if(1 < 2) {
           int i0;
           double i0;
 
           int i7;
+          double d7;
+
+          /* bad and redeclarations */
+          void bad;
+          void i1;
+          void i2;
+          void i3;
+          void i4;
+          void i5;
+          void i6;
+          void i7;
+          void i8;
+          void i9;
+          void i10;
+          void d1;
+          void d2;
+          void d3;
+          void d4;
+          void d5;
+          void d6;
+          void d7;
+          void d8;
+          void d9;
+          void d10;
+          int i1;
+          int i2;
+          int i3;
+          int i4;
+          int i5;
+          int i6;
+          int i7;
+          double d1;
+          double d2;
+          double d3;
+          double d4;
+          double d5;
+          double d6;
           double d7;
 
           /********** expressions ************/
@@ -115,6 +288,43 @@ void main(int i2, double d2) {
           double i0;
 
           int i8;
+          double d8;
+
+          /* bad and redeclarations */
+          void bad;
+          void i1;
+          void i2;
+          void i3;
+          void i4;
+          void i5;
+          void i6;
+          void i7;
+          void i8;
+          void i9;
+          void i10;
+          void d1;
+          void d2;
+          void d3;
+          void d4;
+          void d5;
+          void d6;
+          void d7;
+          void d8;
+          void d9;
+          void d10;
+          int i1;
+          int i2;
+          int i3;
+          int i4;
+          int i5;
+          int i6;
+          int i8;
+          double d1;
+          double d2;
+          double d3;
+          double d4;
+          double d5;
+          double d6;
           double d8;
 
           /********** expressions ************/
@@ -187,6 +397,37 @@ void main(int i2, double d2) {
     int i9;
     double d9;
 
+    /* bad and redeclarations */
+    void bad;
+    void i1;
+    void i2;
+    void i3;
+    void i4;
+    void i5;
+    void i6;
+    void i7;
+    void i8;
+    void i9;
+    void i10;
+    void d1;
+    void d2;
+    void d3;
+    void d4;
+    void d5;
+    void d6;
+    void d7;
+    void d8;
+    void d9;
+    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i9;
+    double d1;
+    double d2;
+    double d3;
+    double d9;
+
     /********** expressions ************/
     i1 = i1 || i2 && i3 == i2 + i9 - i3 * -i1 / !i1 / i2++ + i2--;
     i1 = i2 != i1;
@@ -216,6 +457,37 @@ void main(int i2, double d2) {
     int i10;
     double d10;
 
+    /* bad and redeclarations */
+    void bad;
+    void i1;
+    void i2;
+    void i3;
+    void i4;
+    void i5;
+    void i6;
+    void i7;
+    void i8;
+    void i9;
+    void i10;
+    void d1;
+    void d2;
+    void d3;
+    void d4;
+    void d5;
+    void d6;
+    void d7;
+    void d8;
+    void d9;
+    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i10;
+    double d1;
+    double d2;
+    double d3;
+    double d10;
+
     /********** expressions ************/
     i1 = i1 || i2 && i3 == i2 + i10 - i3 * -i1 / !i1 / i2++ + i2--;
     i1 = i2 != i1;
@@ -237,25 +509,25 @@ void main(int i2, double d2) {
     printf("%f", d1 + d10);
   }
 
-    /********** expressions ************/
-    i1 = i1 || i2 && i3 == i2 + i3 - i3 * -i1 / !i1 / i2++ + i2--;
-    i1 = i2 != i1;
-    i3 = i3 <= i3;
-    i3 = i2 >= i2;
-    i2 = i3 < i3;
-    i3 = i3 > i3;
-    i1 = i1 + func2() + func4(i3) + func5(i3 + i3, i1);
-    scanf("%d", &i1);
-    printf("%d", i1 + i1);
-    d1 = d1 || d2 && d3 == d2 + d3 - d3 * -d1 / !d3 / d3++ + d3--;
-    d2 = d2 != d1;
-    d3 = d3 <= d3;
-    d2 = d2 >= d3;
-    d3 = d3 < d2;
-    d3 = d3 > d3;
-    d3 = d2 + func3() + func6(d3) + func7(d3 + d1, d3);
-    scanf("%f", &d1);
-    printf("%f", d1 + d3);
+  /********** expressions ************/
+  i1 = i1 || i2 && i3 == i2 + i3 - i3 * -i1 / !i1 / i2++ + i2--;
+  i1 = i2 != i1;
+  i3 = i3 <= i3;
+  i3 = i2 >= i2;
+  i2 = i3 < i3;
+  i3 = i3 > i3;
+  i1 = i1 + func2() + func4(i3) + func5(i3 + i3, i1);
+  scanf("%d", &i1);
+  printf("%d", i1 + i1);
+  d1 = d1 || d2 && d3 == d2 + d3 - d3 * -d1 / !d3 / d3++ + d3--;
+  d2 = d2 != d1;
+  d3 = d3 <= d3;
+  d2 = d2 >= d3;
+  d3 = d3 < d2;
+  d3 = d3 > d3;
+  d3 = d2 + func3() + func6(d3) + func7(d3 + d1, d3);
+  scanf("%f", &d1);
+  printf("%f", d1 + d3);
 }
 
 void expressions() {
