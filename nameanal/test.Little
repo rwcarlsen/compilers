@@ -1,6 +1,6 @@
 
 int i0;
-double i0;
+double d0;
 int func0(int i0) { return i0; }
 
 int i1;
@@ -17,7 +17,7 @@ double func7(double foo, double bar) { return foo + bar; }
 
 void main(int i2, double d2) {
   int i0;
-  double i0;
+  double d0;
 
   int i3;
   double d3;
@@ -44,7 +44,7 @@ void main(int i2, double d2) {
 
   if(1 < 2) {
     int i0;
-    double i0;
+    double d0;
 
     int i4;
     double d4;
@@ -71,21 +71,21 @@ void main(int i2, double d2) {
 
     if(1 < 2) {
       int i0;
-      double i0;
+      double d0;
 
       int i5;
       double d5;
 
       while(a < b) {
         int i0;
-        double i0;
+        double d0;
 
         int i6;
         double d6;
 
         if(1 < 2) {
           int i0;
-          double i0;
+          double d0;
 
           int i7;
           double d7;
@@ -112,7 +112,7 @@ void main(int i2, double d2) {
         }
         else {
           int i0;
-          double i0;
+          double d0;
 
           int i8;
           double d8;
@@ -182,7 +182,7 @@ void main(int i2, double d2) {
   }
   else {
     int i0;
-    double i0;
+    double d0;
 
     int i9;
     double d9;
@@ -211,7 +211,7 @@ void main(int i2, double d2) {
   /* while statements */
   while(a < b) {
     int i0;
-    double i0;
+    double d0;
 
     int i10;
     double d10;
