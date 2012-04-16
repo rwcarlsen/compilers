@@ -19,29 +19,29 @@
 // toString()        -- prints the values associated with this Sym
 
 class Sym {
-    // private field
-    private String myType;
+  // private field
+  private String type;
+  private String name;
 
-    // constructor
-    public Sym(String type) {
-	myType = type;
-    }
+  // constructor
+  public Sym(String name, String type) {
+    this.type = type;
+    this.name = name;
+  }
 
-    // accessor
+  // accessor
 
-    // **********************************************************************
-    // getType
-    // **********************************************************************
-    public String getType() {
-	return myType;
-    }
+  public String getType() {
+    return this.type;
+  }
 
-    // other methods
+  public String getName() {
+    return this.name;
+  }
 
-    // **********************************************************************
-    // toString
-    // **********************************************************************
-    public String toString() {
-	return myType;
-    }
+  // other methods
+
+  public String toString() {
+    return "type=" + this.type + ", name=" + this.name;
+  }
 }

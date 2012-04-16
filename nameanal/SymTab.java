@@ -42,83 +42,83 @@
 
 import java.io.*;
 import java.util.*;
-                                               
+
 class SymTab {
-    /*** private fields ***/
-    List<HashMap<String,Sym>> myList; // the List of Maps
+  /*** private fields ***/
+  List<HashMap<String,Sym>> myList; // the List of Maps
 
-    /*** public methods ***/
+  /*** public methods ***/
 
-    // **********************************************************************
-    // constructor
-    // **********************************************************************
-    public SymTab() {
-	myList = new LinkedList<HashMap<String,Sym>>();
-	addMap();
+  // **********************************************************************
+  // constructor
+  // **********************************************************************
+  public SymTab() {
+    myList = new LinkedList<HashMap<String,Sym>>();
+    addMap();
+  }
+
+  // **********************************************************************
+  // insert
+  // **********************************************************************
+  public void insert(String name, Sym sym)
+    throws DuplicateException, EmptySymTabException
+    {
+      if (myList.size() == 0) throw new EmptySymTabException();
+      if (localLookup(name) != null) throw new DuplicateException();
+      HashMap<String,Sym> oneMap = myList.get(0);
+      oneMap.put(name, sym);
     }
 
-    // **********************************************************************
-    // insert
-    // **********************************************************************
-    public void insert(String name, Sym sym)
-	throws DuplicateException, EmptySymTabException
-{
-	if (myList.size() == 0) throw new EmptySymTabException();
-	if (localLookup(name) != null) throw new DuplicateException();
-	HashMap<String,Sym> oneMap = myList.get(0);
-	oneMap.put(name, sym);
-    }
+  // **********************************************************************
+  // addMap
+  // **********************************************************************
+  public void addMap() {
+    myList.add(0, new HashMap<String,Sym>());
+  }
 
-    // **********************************************************************
-    // addMap
-    // **********************************************************************
-    public void addMap() {
-	myList.add(0, new HashMap<String,Sym>());
+  // **********************************************************************
+  // removeMap
+  // **********************************************************************
+  public void removeMap() throws EmptySymTabException {
+    if (myList.isEmpty()) {
+      throw new EmptySymTabException();
     }
+    myList.remove(0);
+  }
 
-    // **********************************************************************
-    // removeMap
-    // **********************************************************************
-    public void removeMap() throws EmptySymTabException {
-	if (myList.isEmpty()) {
-	    throw new EmptySymTabException();
-	}
-	myList.remove(0);
-    }
+  // **********************************************************************
+  // localLookup
+  // **********************************************************************
+  public Sym localLookup(String str) {
+    if (myList.size() == 0) return null;
+    Sym tmp;
+    HashMap<String,Sym> oneMap = myList.get(0);
+    tmp = oneMap.get(str);
+    if (tmp != null) return tmp;
+    return null;
+  }
 
-    // **********************************************************************
-    // localLookup
-    // **********************************************************************
-    public Sym localLookup(String str) {
-	if (myList.size() == 0) return null;
-	Sym tmp;
-	HashMap<String,Sym> oneMap = myList.get(0);
-	tmp = oneMap.get(str);
-	if (tmp != null) return tmp;
-	return null;
+  // **********************************************************************
+  // globalLookup
+  // **********************************************************************
+  public Sym globalLookup(String str) {
+    if (myList.size() == 0) return null;
+    Sym tmp;
+    for (HashMap<String,Sym> oneMap : myList) {
+      tmp = oneMap.get(str);
+      if (tmp != null) return tmp;
     }
+    return null;
+  }
 
-    // **********************************************************************
-    // globalLookup
-    // **********************************************************************
-    public Sym globalLookup(String str) {
-	if (myList.size() == 0) return null;
-	Sym tmp;
-	for (HashMap<String,Sym> oneMap : myList) {
-	    tmp = oneMap.get(str);
-	    if (tmp != null) return tmp;
-	}
-	return null;
+  // **********************************************************************
+  // print
+  // **********************************************************************
+  public void print() {
+    System.out.println("\nSYMBOL TABLE");
+    for (HashMap<String,Sym> oneMap : myList) {
+      System.out.println(oneMap.toString());
     }
-
-    // **********************************************************************
-    // print
-    // **********************************************************************
-    public void print() {
-	System.out.println("\nSYMBOL TABLE");
-	for (HashMap<String,Sym> oneMap : myList) {
-	    System.out.println(oneMap.toString());
-	}
-	System.out.println();
-    }
+    System.out.println();
+  }
 }

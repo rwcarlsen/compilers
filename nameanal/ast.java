@@ -123,19 +123,30 @@ abstract class ASTnode {
 // StmtListNode, ExpListNode
 // **********************************************************************
 class ProgramNode extends ASTnode {
+
+  private SymTab symtab;
+  private DeclListNode myDeclList;
+
   public ProgramNode(DeclListNode L) {
     myDeclList = L;
+    this.symtab = new SymTab();
   }
 
   public void unparse(PrintWriter p, int indent) {
     myDeclList.unparse(p, indent);
   }
 
-  // 1 kid
-  private DeclListNode myDeclList;
+  public void nanal(SymTab symtab) {
+    symtab.addMap();
+    myDeclList.nanal(symtab);
+    symtab.removeMap();
+  }
 }
 
 class DeclListNode extends ASTnode {
+  // list of kids (DeclNodes)
+  private List<DeclNode> myDecls;
+
   public DeclListNode(List<DeclNode> L) {
     myDecls = L;
   }
@@ -153,11 +164,17 @@ class DeclListNode extends ASTnode {
     }
   }
 
-  // list of kids (DeclNodes)
-  private List<DeclNode> myDecls;
+  public void nanal(SymTab symtab) {
+    for (DeclNode decl : myDecls) {
+      decl.nanal(symtab);
+    }
+  }
 }
 
 class FormalsListNode extends ASTnode {
+  // list of kids (FormalDeclNodes)
+  private List<FormalDeclNode> myFormals;
+
   public FormalsListNode(List<FormalDeclNode> L) {
     myFormals = L;
   }
@@ -172,8 +189,11 @@ class FormalsListNode extends ASTnode {
     }
   }
 
-  // list of kids (FormalDeclNodes)
-  private List<FormalDeclNode> myFormals;
+  public void nanal(SymTab symtab) {
+    for (FormalDeclNode node : myFormals) {
+      node.nanal();
+    }
+  }
 }
 
 class FnBodyNode extends ASTnode {
@@ -233,9 +253,14 @@ class ExpListNode extends ASTnode {
 // DeclNode and its subclasses
 // **********************************************************************
 abstract class DeclNode extends ASTnode {
+  abstract public void nanal(SymTab symtab);
 }
 
 class VarDeclNode extends DeclNode {
+  // 2 kids
+  private TypeNode myType;
+  private IdNode myId;
+
   public VarDeclNode(TypeNode type, IdNode id) {
     myType = type;
     myId = id;
@@ -250,12 +275,27 @@ class VarDeclNode extends DeclNode {
     p.print(";");
   }
 
-  // 2 kids
-  private TypeNode myType;
-  private IdNode myId;
+  public void nanal(SymTab symtab) {
+    if (myType.str == "void") {
+      Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
+    }
+    try {
+      Sym sym = Sym(myId.str, myType,str);
+      symtab.insert(sym);
+      myId.sym = sym;
+    } catch (DuplicateException err) {
+      Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
+    }
+  }
 }
 
 class FnDeclNode extends DeclNode {
+  // 4 kids
+  private TypeNode myType;
+  private IdNode myId;
+  private FormalsListNode myFormalsList;
+  private FnBodyNode myBody;
+
   public FnDeclNode(TypeNode type,
       IdNode id,
       FormalsListNode formalList,
@@ -282,14 +322,26 @@ class FnDeclNode extends DeclNode {
     p.print("}");
   }
 
-  // 4 kids
-  private TypeNode myType;
-  private IdNode myId;
-  private FormalsListNode myFormalsList;
-  private FnBodyNode myBody;
+  public void nanal(SymTab symtab) {
+    try {
+      Sym sym = Sym(myId.str, myType,str);
+      symtab.insert(sym);
+      myId.sym = sym;
+    } catch (DuplicateException err) {
+      Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
+    }
+    symtab.addMap();
+    myFormalsList.nanal(symtab);
+    myBody.nanal(symtab);
+    symtab.removeMap();
+  }
 }
 
 class FormalDeclNode extends DeclNode {
+  // 2 kids
+  private TypeNode myType;
+  private IdNode myId;
+
   public FormalDeclNode(TypeNode type, IdNode id) {
     myType = type;
     myId = id;
@@ -302,44 +354,46 @@ class FormalDeclNode extends DeclNode {
     myId.unparse(p, indent);
   }
 
-  // 2 kids
-  private TypeNode myType;
-  private IdNode myId;
+  public void nanal(SymTab symtab) {
+    if (myType.str == "void") {
+      Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
+    }
+    try {
+      Sym sym = Sym(myId.str, myType,str);
+      symtab.insert(sym);
+      myId.sym = sym;
+    } catch (DuplicateException err) {
+      Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
+    }
+  }
 }
 
 // **********************************************************************
 // TypeNode and its Subclasses
 // **********************************************************************
 abstract class TypeNode extends ASTnode {
+  public String str;
+
+  public void unparse(PrintWriter p, int indent) {
+    p.print(str);
+  }
 }
 
 class IntNode extends TypeNode {
   public IntNode() {
-  }
-
-  // ** unparse **
-  public void unparse(PrintWriter p, int indent) {
-    p.print("int");
+    this.str = "int";
   }
 }
 
 class DblNode extends TypeNode {
   public DblNode() {
-  }
-
-  // ** unparse **
-  public void unparse(PrintWriter p, int indent) {
-    p.print("double");
+    this.str = "double";
   }
 }
 
 class VoidNode extends TypeNode {
   public VoidNode() {
-  }
-
-  // ** unparse **
-  public void unparse(PrintWriter p, int indent) {
-    p.print("void");
+    this.str = "void";
   }
 }
 
@@ -695,21 +749,22 @@ class StringLitNode extends ExpNode {
 }
 
 class IdNode extends ExpNode {
+  // fields
+  public int ln;
+  public int ch;
+  public String str;
+  public Sym sym;
+
   public IdNode(int lineNum, int charNum, String strVal) {
-    myLineNum = lineNum;
-    myCharNum = charNum;
-    myStrVal = strVal;
+    ln = lineNum;
+    ch = charNum;
+    str = strVal;
   }
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
     p.print(myStrVal);
   }
-
-  // fields
-  private int myLineNum;
-  private int myCharNum;
-  private String myStrVal;
 }
 
 class CallExpNode extends ExpNode {
