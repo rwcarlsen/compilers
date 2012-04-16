@@ -136,10 +136,20 @@ class ProgramNode extends ASTnode {
     myDeclList.unparse(p, indent);
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal() {
     symtab.addMap();
-    myDeclList.nanal(symtab);
-    symtab.removeMap();
+
+    try {
+      myDeclList.nanal(symtab);
+    } catch (EmptySymTabException err) {
+      System.out.println("Name analsis is broken!!");
+    }
+
+    try {
+      symtab.removeMap();
+    } catch (EmptySymTabException err) {
+      System.out.println("Name analsis is broken!!");
+    }
   }
 }
 
@@ -164,7 +174,7 @@ class DeclListNode extends ASTnode {
     }
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     for (DeclNode decl : myDecls) {
       decl.nanal(symtab);
     }
@@ -189,7 +199,7 @@ class FormalsListNode extends ASTnode {
     }
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     for (FormalDeclNode node : myFormals) {
       node.nanal(symtab);
     }
@@ -212,9 +222,9 @@ class FnBodyNode extends ASTnode {
     myStmtList.unparse(p, indent);
   }
 
-  public void nanal(SymTab symtab) {
-    myDeclList.nanal();
-    myStmtList.nanal();
+  public void nanal(SymTab symtab) throws EmptySymTabException {
+    myDeclList.nanal(symtab);
+    myStmtList.nanal(symtab);
   }
 }
 
@@ -234,9 +244,9 @@ class StmtListNode extends ASTnode {
     }
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     for (StmtNode stmt : myStmts) {
-      stmt.nanal();
+      stmt.nanal(symtab);
     }
   }
 }
@@ -264,7 +274,7 @@ class ExpListNode extends ASTnode {
 // DeclNode and its subclasses
 // **********************************************************************
 abstract class DeclNode extends ASTnode {
-  abstract public void nanal(SymTab symtab);
+  abstract public void nanal(SymTab symtab) throws EmptySymTabException;
 }
 
 class VarDeclNode extends DeclNode {
@@ -286,7 +296,7 @@ class VarDeclNode extends DeclNode {
     p.print(";");
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
@@ -333,7 +343,7 @@ class FnDeclNode extends DeclNode {
     p.print("}");
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     try {
       Sym sym = new Sym(myType.str, myId.str);
       symtab.insert(myId.str, sym);
@@ -365,7 +375,7 @@ class FormalDeclNode extends DeclNode {
     myId.unparse(p, indent);
   }
 
-  public void nanal(SymTab symtab) {
+  public void nanal(SymTab symtab) throws EmptySymTabException {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
