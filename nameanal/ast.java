@@ -191,12 +191,16 @@ class FormalsListNode extends ASTnode {
 
   public void nanal(SymTab symtab) {
     for (FormalDeclNode node : myFormals) {
-      node.nanal();
+      node.nanal(symtab);
     }
   }
 }
 
 class FnBodyNode extends ASTnode {
+  // 2 kids
+  private DeclListNode myDeclList;
+  private StmtListNode myStmtList;
+
   public FnBodyNode(DeclListNode declList, StmtListNode stmtList) {
     myDeclList = declList;
     myStmtList = stmtList;
@@ -208,12 +212,16 @@ class FnBodyNode extends ASTnode {
     myStmtList.unparse(p, indent);
   }
 
-  // 2 kids
-  private DeclListNode myDeclList;
-  private StmtListNode myStmtList;
+  public void nanal(SymTab symtab) {
+    myDeclList.nanal();
+    myStmtList.nanal();
+  }
 }
 
 class StmtListNode extends ASTnode {
+  // list of kids (StmtNodes)
+  private List<StmtNode> myStmts;
+
   public StmtListNode(List<StmtNode> L) {
     myStmts = L;
   }
@@ -226,8 +234,11 @@ class StmtListNode extends ASTnode {
     }
   }
 
-  // list of kids (StmtNodes)
-  private List<StmtNode> myStmts;
+  public void nanal(SymTab symtab) {
+    for (StmtNode stmt : myStmts) {
+      stmt.nanal();
+    }
+  }
 }
 
 class ExpListNode extends ASTnode {
@@ -280,8 +291,8 @@ class VarDeclNode extends DeclNode {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
     try {
-      Sym sym = Sym(myId.str, myType,str);
-      symtab.insert(sym);
+      Sym sym = new Sym(myType.str, myId.str);
+      symtab.insert(myId.str, sym);
       myId.sym = sym;
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
@@ -324,8 +335,8 @@ class FnDeclNode extends DeclNode {
 
   public void nanal(SymTab symtab) {
     try {
-      Sym sym = Sym(myId.str, myType,str);
-      symtab.insert(sym);
+      Sym sym = new Sym(myType.str, myId.str);
+      symtab.insert(myId.str, sym);
       myId.sym = sym;
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
@@ -359,8 +370,8 @@ class FormalDeclNode extends DeclNode {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
     try {
-      Sym sym = Sym(myId.str, myType,str);
-      symtab.insert(sym);
+      Sym sym = new Sym(myType.str, myId.str);
+      symtab.insert(myId.str, sym);
       myId.sym = sym;
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
@@ -403,6 +414,8 @@ class VoidNode extends TypeNode {
 // **********************************************************************
 
 abstract class StmtNode extends ASTnode {
+
+  public void nanal(SymTab symtab){};
 }
 
 class AssignStmtNode extends StmtNode {
@@ -763,7 +776,7 @@ class IdNode extends ExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
-    p.print(myStrVal);
+    p.print(str);
   }
 }
 

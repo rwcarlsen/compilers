@@ -24,7 +24,7 @@ class Sym {
   private String name;
 
   // constructor
-  public Sym(String name, String type) {
+  public Sym(String type, String name) {
     this.type = type;
     this.name = name;
   }
