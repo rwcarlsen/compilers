@@ -266,6 +266,12 @@ class ExpListNode extends ASTnode {
     }
   }
 
+  public void nanal(SymTab symtab) throws EmptySymTabException {
+    for (ExpNode node : myExps) {
+      node.nanal(symtab);
+    }
+  }
+
   // list of kids (ExpNodes)
   private List<ExpNode> myExps;
 }
@@ -421,7 +427,7 @@ class VoidNode extends TypeNode {
 // **********************************************************************
 
 abstract class StmtNode extends ASTnode {
-  abstract public void nanal(SymTab symtab) throws EmptySymTabException;
+  public void nanal(SymTab symtab) throws EmptySymTabException { };
 }
 
 class AssignStmtNode extends StmtNode {
@@ -813,6 +819,7 @@ class ReturnStmtNode extends StmtNode {
 // **********************************************************************
 
 abstract class ExpNode extends ASTnode {
+  public void nanal(SymTab symtab) throws EmptySymTabException { };
 }
 
 class IntLitNode extends ExpNode {
@@ -1039,9 +1046,9 @@ class AssignNode extends ExpNode {
   public void nanal(SymTab symtab) throws EmptySymTabException {
     Sym sym = symtab.globalLookup(myLhs.str);
     if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
+      Errors.fatal(myLhs.ln, myLhs.ch, "Undeclared identifier");
     } else {
-      myId.sym = sym;
+      myLhs.sym = sym;
     }
     myExp.nanal(symtab);
   }
