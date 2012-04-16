@@ -20,7 +20,7 @@ void bad; /* bad */
 void i1; /* bad and redeclare */
 int i1; /* redeclare */
 double d1; /* redeclare */
-void func1() { };
+void func1() { }
 int func1(int foo) {return 1;}
 
 void main(int i2, double d2) {

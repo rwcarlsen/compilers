@@ -59,6 +59,9 @@ test:
 run: P4.class
 	java -classpath ${CP} P4 test.Little test.c
 
+runerr: P4.class
+	java -classpath ${CP} P4 nameErrors.Little test.c
+
 runrun: P4.class
 	java -classpath ${CP} P4 test.Little test.c
 	java -classpath ${CP} P4 test.c testtest.c
