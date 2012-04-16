@@ -258,26 +258,3 @@ void main(int i2, double d2) {
     printf("%f", d1 + d3);
 }
 
-void expressions() {
-
-  /********** expressions ************/
-  a = a || a && a == a + a - a * -a / !a / a++ + a--;
-  a = a != a;
-  a = a <= a;
-  a = a >= a;
-  a = a < a;
-  a = a > a;
-  a = a + func2() + func4(a) + func5(a + a, a);
-  scanf("%d", &a);
-  printf("%d", a + a);
-  b = b || b && b == b + b - b * -b / !b / b++ + b--;
-  b = b != b;
-  b = b <= b;
-  b = b >= b;
-  b = b < b;
-  b = b > b;
-  b = b + func3() + func6(b) + func7(b + b, b);
-  scanf("%f", &b);
-  printf("%f", b + b);
-}
-
