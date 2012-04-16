@@ -1,7 +1,7 @@
 
 int i0;
-double i0;
-int func0(int i0) { return i0; }
+double d0;
+int func0(int i0, double d0) { return i0; }
 
 int i1;
 double d1;
@@ -20,38 +20,38 @@ void bad; /* bad */
 void i1; /* bad and redeclare */
 int i1; /* redeclare */
 double d1; /* redeclare */
-void func1() { }
-int func1(int foo) {return 1;}
+void func1() { } /* redeclare */
+int func1(int foo) {return 1;} /* redeclare */
 
 void main(int i2, double d2) {
   int i0;
-  double i0;
+  double d0;
 
   int i3;
   double d3;
 
   /* bad and redeclarations */
   void bad;
-  void i1;
-  void i2;
-  void i3;
-  void i4;
-  void i5;
-  void i6;
-  void i7;
-  void i8;
-  void i9;
-  void i10;
-  void d1;
-  void d2;
-  void d3;
-  void d4;
-  void d5;
-  void d6;
-  void d7;
-  void d8;
-  void d9;
-  void d10;
+  int i1;
+  int i2;
+  int i3;
+  int i4;
+  int i5;
+  int i6;
+  int i7;
+  int i8;
+  int i9;
+  int i10;
+  double d1;
+  double d2;
+  double d3;
+  double d4;
+  double d5;
+  double d6;
+  double d7;
+  double d8;
+  double d9;
+  double d10;
   int i1;
   int i2;
   int i3;
@@ -109,33 +109,33 @@ void main(int i2, double d2) {
 
   if(1 < 2) {
     int i0;
-    double i0;
+    double d0;
 
     int i4;
     double d4;
 
     /* bad and redeclarations */
     void bad;
-    void i1;
-    void i2;
-    void i3;
-    void i4;
-    void i5;
-    void i6;
-    void i7;
-    void i8;
-    void i9;
-    void i10;
-    void d1;
-    void d2;
-    void d3;
-    void d4;
-    void d5;
-    void d6;
-    void d7;
-    void d8;
-    void d9;
-    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i4;
+    int i5;
+    int i6;
+    int i7;
+    int i8;
+    int i9;
+    int i10;
+    double d1;
+    double d2;
+    double d3;
+    double d4;
+    double d5;
+    double d6;
+    double d7;
+    double d8;
+    double d9;
+    double d10;
     int i1;
     int i2;
     int i3;
@@ -169,33 +169,33 @@ void main(int i2, double d2) {
 
     if(1 < 2) {
       int i0;
-      double i0;
+      double d0;
 
       int i5;
       double d5;
 
       /* bad and redeclarations */
       void bad;
-      void i1;
-      void i2;
-      void i3;
-      void i4;
-      void i5;
-      void i6;
-      void i7;
-      void i8;
-      void i9;
-      void i10;
-      void d1;
-      void d2;
-      void d3;
-      void d4;
-      void d5;
-      void d6;
-      void d7;
-      void d8;
-      void d9;
-      void d10;
+      int i1;
+      int i2;
+      int i3;
+      int i4;
+      int i5;
+      int i6;
+      int i7;
+      int i8;
+      int i9;
+      int i10;
+      double d1;
+      double d2;
+      double d3;
+      double d4;
+      double d5;
+      double d6;
+      double d7;
+      double d8;
+      double d9;
+      double d10;
       int i1;
       int i2;
       int i3;
@@ -209,33 +209,33 @@ void main(int i2, double d2) {
 
       while(a < b) {
         int i0;
-        double i0;
+        double d0;
 
         int i6;
         double d6;
 
         /* bad and redeclarations */
         void bad;
-        void i1;
-        void i2;
-        void i3;
-        void i4;
-        void i5;
-        void i6;
-        void i7;
-        void i8;
-        void i9;
-        void i10;
-        void d1;
-        void d2;
-        void d3;
-        void d4;
-        void d5;
-        void d6;
-        void d7;
-        void d8;
-        void d9;
-        void d10;
+        int i1;
+        int i2;
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        int i7;
+        int i8;
+        int i9;
+        int i10;
+        double d1;
+        double d2;
+        double d3;
+        double d4;
+        double d5;
+        double d6;
+        double d7;
+        double d8;
+        double d9;
+        double d10;
         int i1;
         int i2;
         int i3;
@@ -251,33 +251,33 @@ void main(int i2, double d2) {
 
         if(1 < 2) {
           int i0;
-          double i0;
+          double d0;
 
           int i7;
           double d7;
 
           /* bad and redeclarations */
           void bad;
-          void i1;
-          void i2;
-          void i3;
-          void i4;
-          void i5;
-          void i6;
-          void i7;
-          void i8;
-          void i9;
-          void i10;
-          void d1;
-          void d2;
-          void d3;
-          void d4;
-          void d5;
-          void d6;
-          void d7;
-          void d8;
-          void d9;
-          void d10;
+          int i1;
+          int i2;
+          int i3;
+          int i4;
+          int i5;
+          int i6;
+          int i7;
+          int i8;
+          int i9;
+          int i10;
+          double d1;
+          double d2;
+          double d3;
+          double d4;
+          double d5;
+          double d6;
+          double d7;
+          double d8;
+          double d9;
+          double d10;
           int i1;
           int i2;
           int i3;
@@ -317,33 +317,33 @@ void main(int i2, double d2) {
         }
         else {
           int i0;
-          double i0;
+          double d0;
 
           int i8;
           double d8;
 
           /* bad and redeclarations */
           void bad;
-          void i1;
-          void i2;
-          void i3;
-          void i4;
-          void i5;
-          void i6;
-          void i7;
-          void i8;
-          void i9;
-          void i10;
-          void d1;
-          void d2;
-          void d3;
-          void d4;
-          void d5;
-          void d6;
-          void d7;
-          void d8;
-          void d9;
-          void d10;
+          int i1;
+          int i2;
+          int i3;
+          int i4;
+          int i5;
+          int i6;
+          int i7;
+          int i8;
+          int i9;
+          int i10;
+          double d1;
+          double d2;
+          double d3;
+          double d4;
+          double d5;
+          double d6;
+          double d7;
+          double d8;
+          double d9;
+          double d10;
           int i1;
           int i2;
           int i3;
@@ -439,33 +439,33 @@ void main(int i2, double d2) {
   }
   else {
     int i0;
-    double i0;
+    double d0;
 
     int i9;
     double d9;
 
     /* bad and redeclarations */
     void bad;
-    void i1;
-    void i2;
-    void i3;
-    void i4;
-    void i5;
-    void i6;
-    void i7;
-    void i8;
-    void i9;
-    void i10;
-    void d1;
-    void d2;
-    void d3;
-    void d4;
-    void d5;
-    void d6;
-    void d7;
-    void d8;
-    void d9;
-    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i4;
+    int i5;
+    int i6;
+    int i7;
+    int i8;
+    int i9;
+    int i10;
+    double d1;
+    double d2;
+    double d3;
+    double d4;
+    double d5;
+    double d6;
+    double d7;
+    double d8;
+    double d9;
+    double d10;
     int i1;
     int i2;
     int i3;
@@ -505,33 +505,33 @@ void main(int i2, double d2) {
   /* while statements */
   while(a < b) {
     int i0;
-    double i0;
+    double d0;
 
     int i10;
     double d10;
 
     /* bad and redeclarations */
     void bad;
-    void i1;
-    void i2;
-    void i3;
-    void i4;
-    void i5;
-    void i6;
-    void i7;
-    void i8;
-    void i9;
-    void i10;
-    void d1;
-    void d2;
-    void d3;
-    void d4;
-    void d5;
-    void d6;
-    void d7;
-    void d8;
-    void d9;
-    void d10;
+    int i1;
+    int i2;
+    int i3;
+    int i4;
+    int i5;
+    int i6;
+    int i7;
+    int i8;
+    int i9;
+    int i10;
+    double d1;
+    double d2;
+    double d3;
+    double d4;
+    double d5;
+    double d6;
+    double d7;
+    double d8;
+    double d9;
+    double d10;
     int i1;
     int i2;
     int i3;
