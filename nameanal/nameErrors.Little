@@ -1,7 +1,8 @@
 
 int i0;
 double d0;
-int func0(int i0, double d0) { return i0; }
+int func0(int i0, double d0, void boo) { void bar; return i0; }
+int func0() { void bar; return i0; }
 
 int i1;
 double d1;

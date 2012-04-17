@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 
+enum foo {
 /* **********************************************************************
 // The ASTnode class defines the nodes of the abstract-syntax tree that
 // represents a Little program.
@@ -104,6 +105,7 @@ import java.util.*;
 //       GreaterNode,      LessEqNode,      GreaterEqNode
 //
 // **********************************************************************/
+}
 
 // **********************************************************************
 // ASTnode class (base class for all other kinds of nodes)
@@ -349,8 +351,8 @@ class FnDeclNode extends DeclNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
+    Sym sym = new FnSym(myType.str, myId.str);
     try {
-      Sym sym = new Sym(myType.str, myId.str);
       symtab.insert(myId.str, sym);
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
@@ -383,9 +385,11 @@ class FormalDeclNode extends DeclNode {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
+    Sym sym = new Sym(myType.str, myId.str);
     try {
-      Sym sym = new Sym(myType.str, myId.str);
       symtab.insert(myId.str, sym);
+      FnSym fn = symtab.frontFunc();
+      if (fn != null) fn.addArg(sym);
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
     }
@@ -889,6 +893,10 @@ class IdNode extends ExpNode {
 
   // ** unparse **
   public void unparse(PrintWriter p, int indent) {
+    if (sym != null) {
+      p.print(sym.toString());
+      return;
+    }
     p.print(str);
   }
 }

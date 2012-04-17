@@ -1,3 +1,5 @@
+import java.util.*;
+
 // **********************************************************************
 // The Sym class defines a symbol-table entry;
 // an object that contains a "type" (a string)
@@ -19,17 +21,13 @@
 // toString()        -- prints the values associated with this Sym
 
 class Sym {
-  // private field
-  private String type;
-  private String name;
+  protected String type;
+  protected String name;
 
-  // constructor
   public Sym(String type, String name) {
     this.type = type;
     this.name = name;
   }
-
-  // accessor
 
   public String getType() {
     return this.type;
@@ -39,9 +37,52 @@ class Sym {
     return this.name;
   }
 
-  // other methods
+  public String toString() {
+    return this.name + "(" + this.type + ")";
+  }
+
+  public boolean isFunc() {
+    return false;
+  }
+}
+
+class FnSym extends Sym {
+  private String type;
+  private String name;
+  private LinkedList<Sym> args;
+
+  public FnSym(String type, String name) {
+    super(type, name);
+    this.type = type;
+    this.name = name;
+    this.args = new LinkedList<Sym>();
+  }
+
+  public String getType() {
+    return this.type;
+  }
+
+  public void addArg(Sym arg) {
+    this.args.add(arg);
+  }
+
+  public String getName() {
+    return this.name;
+  }
 
   public String toString() {
-    return "type=" + this.type + ", name=" + this.name;
+    String str = this.name + "(";
+    for (Sym arg : this.args) {
+      str += arg.type;
+      if (arg != this.args.getLast()) {
+        str += ", ";
+      }
+    }
+    str += " -> " + this.type + ")";
+    return str;
+  }
+
+  public boolean isFunc() {
+    return true;
   }
 }

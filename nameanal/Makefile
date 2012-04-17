@@ -26,7 +26,7 @@ parser.java: Little.cup
 Yylex.class: Little.jlex.java sym.class Errors.class
 	$(JC) Little.jlex.java
 
-ASTnode.class: ast.java
+ASTnode.class: ast.java SymTab.java Sym.java
 	$(JC) -g ast.java
 
 Little.jlex.java: Little.jlex sym.class

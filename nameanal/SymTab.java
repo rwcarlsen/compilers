@@ -44,15 +44,24 @@ import java.io.*;
 import java.util.*;
 
 class SymTab {
-  /*** private fields ***/
-  List<HashMap<String,Sym>> myList; // the List of Maps
+  private FnSym front;
+  private List<HashMap<String,Sym>> myList; // the List of Maps
 
-  /*** public methods ***/
+  public FnSym frontFunc() {
+    return this.front;
+  }
+
+  private void setFront(Sym sym) {
+    if (sym.isFunc()) {
+      this.front = (FnSym)sym;
+    }
+  }
 
   // **********************************************************************
   // constructor
   // **********************************************************************
   public SymTab() {
+    this.front = null;
     myList = new LinkedList<HashMap<String,Sym>>();
     addMap();
   }
@@ -67,6 +76,7 @@ class SymTab {
       if (localLookup(name) != null) throw new DuplicateException();
       HashMap<String,Sym> oneMap = myList.get(0);
       oneMap.put(name, sym);
+      setFront(sym);
     }
 
   // **********************************************************************
@@ -84,6 +94,7 @@ class SymTab {
       throw new EmptySymTabException();
     }
     myList.remove(0);
+    this.front = null;
   }
 
   // **********************************************************************
