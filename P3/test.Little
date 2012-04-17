@@ -1,0 +1,170 @@
+
+/* program, declList, varDecl, type, id */
+int foo;
+double bar;
+
+/* fnDecl, formalsList, formals, and returns*/
+void myfunc2() {}
+void foo() {return;}
+int bar(int boo) {return 1;}
+double boo(int boo, double far) {return bar(1);}
+
+int roo;
+int baf;
+
+/* fnBody */
+double myfunc3() {
+  /* varDeclList */
+  int foo;
+  double a;
+  double b;
+  double c;
+
+  /* stmtList, stmt, assign_exp */
+  a = 1;
+  b = a + 1;
+  c = 3; 
+  ++a;
+  --a;
+  a++;
+  a--;
+
+  scanf("%d", &foo);
+  scanf("%f", &a);
+
+  printf("%d", a + b);
+  printf("%f", 24);
+  printf("hello");
+
+  /* if statements */
+  if(1 < 2) {
+    int d;
+    int e;
+  }
+
+  if(1 < 2) {
+    int f;
+    int g;
+
+    /* nested if statements */
+      if(1 < 2) {
+        while(a < b) {
+          int swiss;
+          double havarti;
+
+          if(1 < 2) {
+            int d;
+            int e;
+          }
+
+          swiss = 10;
+          havarti = 0.4 + swiss;
+        }
+      }
+      f = f + a;
+  }
+  else {
+    int h;
+    int i;
+
+    h = h + a;
+  }
+
+  /* while statements */
+  while(1) {}
+  while(a < b) {}
+  while(a < b) {
+    int swiss;
+    double havarti;
+
+    swiss = 10;
+    havarti = 0.4 + swiss;
+  }
+
+  /***********************************/
+  /********** expressions ************/
+  /***********************************/
+
+  /* prec5 expressions */
+  c = a && b;
+  c = a || b;
+  c = a || b && c;
+  c = a && b || c;
+  c = a && b && c;
+  c = a || b || c;
+
+  c = (a && a) && b;
+  c = (a && a) || b;
+
+  /* prec4 expressions */
+  c = a == b;
+  c = a != b;
+  c = a <= b;
+  c = a >= b;
+  c = a < b;
+  c = a > b;
+
+  c = a && b == b;
+  c = a && b != b;
+  c = a && b <= b;
+  c = a && b >= b;
+  c = a && b < b;
+  c = a && b > b;
+
+  /* prec3 expressions */
+  c = a + b;
+  c = a - b;
+  c = a - b + c;
+  c = a + b - c;
+  c = a - b - c;
+  c = a + b + c;
+
+  c = a && b + c;
+  c = a && b - c;
+    
+  /* prec2 expressions */
+  c = a * b;
+  c = a / b;
+  c = a / b * c;
+  c = a * b / c;
+  c = a / b / c;
+  c = a * b * c;
+
+  c = a && b * c;
+  c = a && b / c;
+
+  /* prec1 expressions */
+  c = !b;
+  c = -b;
+
+  /* operator precedence */
+  c = a || a && a == a + a - a * -a / !a / a++;
+  c = a++ / !a / -a * a - a + a == a && a || a;
+  c = a + b * c;
+  c = a - b * c;
+  c = a + b / c;
+  c = a - b / c;
+  c = a == b + c;
+  c = a * -b;
+  c = a * !b;
+  c = !a++;
+  c = -a++;
+
+  /* term */
+  c = b++;
+  c = b--;
+  c = 12;
+  c = 12.3 ;
+  c = "hello";
+  c = (2 + 3);
+  c = bar(1);
+
+  /* fncall */
+  foo();
+  bar(a);
+  boo(a, b);
+  boo(a + b, b && c);
+
+  return a + c;
+}
+
