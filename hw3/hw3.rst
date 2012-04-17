@@ -133,9 +133,6 @@ give all of the following:
 |
 |
 |
-|
-|
-|
 
 3. The CFG rules that the predictive parser can't choose between to continue
    to grow the parse tree::
