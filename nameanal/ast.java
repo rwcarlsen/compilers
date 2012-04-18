@@ -396,6 +396,8 @@ class FormalDeclNode extends DeclNode {
     Sym sym = new Sym(myType.str, myId.str);
     try {
       symtab.insert(myId.str, sym);
+      FnSym fn = symtab.frontFunc();
+      if (fn != null) fn.addArg(sym);
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
     }
