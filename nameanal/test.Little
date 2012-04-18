@@ -76,7 +76,7 @@ void main(int i2, double d2) {
       int i5;
       double d5;
 
-      while(a < b) {
+      while(i0 < i5) {
         int i0;
         double d0;
 
@@ -209,7 +209,7 @@ void main(int i2, double d2) {
   }
 
   /* while statements */
-  while(a < b) {
+  while(i0 < i1) {
     int i0;
     double d0;
 
