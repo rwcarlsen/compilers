@@ -7,7 +7,7 @@
 #
 ###
 
-CP = lib:lib/java_cup.jar:lib/JLex.jar:.
+CP = java_cup.jar:JLex.jar:.
 
 FLAGS = -classpath ${CP}
 
@@ -51,7 +51,7 @@ Errors.class: Errors.java
 # clean
 ###
 clean:
-	rm -f *~ *.class parser.java Little.jlex.java sym.java *.c
+	rm -f *~ *.class parser.java Little.jlex.java sym.java *.out
 
 ###
 # run provided parser
@@ -63,11 +63,8 @@ test:
 # run my parser
 ###
 run: P4.class
-	java -classpath ${CP} P4 test.Little test.c
+	java -classpath ${CP} P4 test.Little test.out
 
 runerr: P4.class
-	java -classpath ${CP} P4 nameErrors.Little test.c
+	java -classpath ${CP} P4 nameErrors.Little test.out
 
-runrun: P4.class
-	java -classpath ${CP} P4 test.Little test.c
-	java -classpath ${CP} P4 test.c testtest.c
