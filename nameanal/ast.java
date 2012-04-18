@@ -139,8 +139,6 @@ class ProgramNode extends ASTnode {
   }
 
   public void nanal() {
-    symtab.addMap();
-
     try {
       myDeclList.nanal(symtab);
     } catch (EmptySymTabException err) {
