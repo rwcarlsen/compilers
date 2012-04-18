@@ -308,8 +308,8 @@ class VarDeclNode extends DeclNode {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
     }
+    Sym sym = new Sym(myType.str, myId.str);
     try {
-      Sym sym = new Sym(myType.str, myId.str);
       symtab.insert(myId.str, sym);
     } catch (DuplicateException err) {
       Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
@@ -469,12 +469,7 @@ class PreIncStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -494,12 +489,7 @@ class PreDecStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -519,12 +509,7 @@ class PostIncStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -544,12 +529,7 @@ class PostDecStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -569,12 +549,7 @@ class ReadIntStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -594,12 +569,7 @@ class ReadDblStmtNode extends StmtNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
   }
 }
 
@@ -899,6 +869,15 @@ class IdNode extends ExpNode {
     }
     p.print(str);
   }
+
+  public void nanal(SymTab symtab) throws EmptySymTabException {
+    Sym mysym = symtab.globalLookup(str);
+    if (mysym == null) {
+      Errors.fatal(ln, ch, "Undeclared identifier");
+    } else {
+      this.sym = mysym;
+    }
+  }
 }
 
 class CallExpNode extends ExpNode {
@@ -919,12 +898,7 @@ class CallExpNode extends ExpNode {
   }
 
   public void nanal(SymTab symtab) throws EmptySymTabException {
-    Sym sym = symtab.globalLookup(myId.str);
-    if (sym == null) {
-      Errors.fatal(myId.ln, myId.ch, "Undeclared identifier");
-    } else {
-      myId.sym = sym;
-    }
+    myId.nanal(symtab);
     myExpList.nanal(symtab);
   }
 }

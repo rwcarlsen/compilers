@@ -107,7 +107,7 @@ void main(int i2, double d2) {
   scanf("%f", &d3);
   printf("%f", d3 + d3);
 
-  if(1 < 2) {
+  if(i0 < poo) {
     int i0;
     double d0;
 

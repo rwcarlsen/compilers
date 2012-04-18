@@ -26,8 +26,14 @@ parser.java: Little.cup
 Yylex.class: Little.jlex.java sym.class Errors.class
 	$(JC) Little.jlex.java
 
-ASTnode.class: ast.java SymTab.java Sym.java
+ASTnode.class: ast.java SymTab.class
 	$(JC) -g ast.java
+
+SymTab.class: SymTab.java Sym.class
+	$(JC) -g SymTab.java
+
+Sym.class: Sym.java
+	$(JC) -g Sym.java
 
 Little.jlex.java: Little.jlex sym.class
 	${JR} JLex.Main Little.jlex
