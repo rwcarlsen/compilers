@@ -1,0 +1,430 @@
+<HTML>
+<HEAD>
+  <TITLE>CS 536, Program 4</title>
+</HEAD>
+<BODY>
+
+<H1>CS 536, Program 4
+<br>
+Name Analysis
+</H1>
+  <H2>
+  <pre>
+       Test code Due: April 16th
+       Not accepted late
+
+       Other Files Due: April 22th
+       Not accepted after midnight on April 25th
+  </pre>
+ </H2>
+
+<BODY>
+
+<hr>
+
+<a name="contents">
+<h2>Contents</h2>
+</a>
+
+<ul>
+  <li> <a href="#news"> Clarifications and Corrections</a>
+  <li> <a href="#introduction">Overview</a>
+  <li> <a href="#name analysis">Name Analysis</a>
+  <li> <a href="#other">Other Tasks</a>
+  <ul>
+      <li> <a href="#class symbol">Extending the <tt>Sym</tt> Class</a>
+      <li> <a href="#idnode">Modifying the <tt>IdNode</tt> Class</a>
+      <li> <a href="#P4">P4.java</a>
+      <li> <a href="#error handling">Modifying the <tt>Errors</tt> Class</a>
+      <li> <a href="#makefile">Updating the Makefile</a>
+      <li> <a href="#testFiles">Writing Test Inputs</a>
+  </ul>
+  <li> <a href="#advice">Some Advice</a>
+  <li> <a href="#turning in">What to Turn In</a>
+</ul>
+
+<hr>
+
+<a name="news">
+<h2>Clarifications and Corrections</h2>
+</a>
+none yet.
+
+<a name="introduction">
+<h2>Overview</h2>
+</a>
+For this assignment you will write a name analyzer
+for <em>Little</em> programs represented as abstract-syntax trees.
+Your main task will be to write <em>name analysis</em>
+methods for the nodes of the AST.
+In addition you will need to:
+<OL>
+  <LI> Modify the <tt>Sym</tt> class from program 1 (by including some
+       new fields and methods and/or by defining some subclasses).
+  <LI> Modify the <tt>IdNode</tt> class in <em>ast.java</em> (by including
+       a new <tt>Sym</tt> field, and by modifying its <tt>unparse</tt> method).
+  <LI> Write a new main program, <em>P4.java</em> (an extension of
+       <em>P3.java</em>).
+  <LI> Modify the <tt>Errors</tt> class.
+  <LI> Update the <em>Makefile</em> used for program 3 to include any
+       new rules needed for program 4.
+  <LI> Write two test inputs: <em>nameErrors.Little</em> and <em>test.Little</em>
+       to test your new code.
+</OL>
+<p>
+Code for you to use can be found in <em>~cs536-1/public/PROG4.</em>
+The files are:
+<UL>
+  <LI> <A HREF="../PROG4/Sym.java"><em>Sym.java</em></a>:
+       Use this code if there were problems with your own version
+       from program 1.
+  <LI> <A HREF="../PROG4/SymTab.java"><em>SymTab.java</em></a>:
+       Use this code if there were problems with your own version
+       from program 1.
+  <LI> <A HREF="../PROG4/DuplicateException.java"><em>DuplicateException.java</em></a>:
+       Use this code if there were problems with your own version
+       from program 1.
+  <LI> <A HREF="../PROG4/EmptySymTabException.java"><em>EmptySymTabException.java</em></a>:
+       Use this code if there were problems with your own version
+       from program 1.
+  <LI> <A HREF="../PROG4/Little.cup"><em>Little.cup</em></a>:
+       Use this code if there were problems with your own version
+       from program 3.
+       (Available after the final due date for program 3.)
+  <LI> <A HREF="../PROG4/ast.java"><em>ast.java</em></a>:
+       Use this code if there were problems with your own version
+       from program 3.
+       You will need to add to this file or to your own version.
+       (Available after the final due date for program 3.)
+</UL>
+<P>
+<a name="name analysis">
+<h2>Name Analysis</h2>
+</a>
+<p>
+The name analyzer will perform the following tasks:
+<OL>
+  <LI> <b>Build symbol tables.</b>
+       You will use the "list of hashtables" approach (using the
+       <tt>SymTab</tt> class from program 1).
+  <LI> <b>Find multiply declared names, uses of undeclared names,
+       and bad declarations.</b>
+       Like C, the Little language allows the same name to be declared
+       in non-overlapping or nested scopes.
+       The formal parameters of a function
+       are considered to be in the same scope as the function body.
+       All names must be declared before they are used.
+       A <em>bad</em> declaration is a declaration of anything other
+       than a function to be of type <tt>void</tt>.
+  <LI> <b>Add <tt>IdNode</tt> links</b>:
+       For each <tt>IdNode</tt> in the abstract-syntax tree that
+       represents a use of a name (not a declaration)
+       add a "link" to the corresponding symbol-table entry.
+       (As stated above, you will need to modify the <tt>IdNode</tt>
+       class in <em>ast.java</em> to have a new field of type <tt>Sym</tt>.
+       That is the field that your name analyzer will fill in with
+       a link to the <tt>Sym</tt> returned by the symbol table's
+       <tt>globalLookup</tt> method.)
+</OL>
+<p>
+You must implement your name analyzer by writing appropriate methods
+for the different subclasses of <tt>ASTnode</tt>.
+Exactly what methods you write is up to you (as long as they do name
+analysis as specified).
+<P>
+It may help to
+start by writing the name analysis method for <tt>ProgramNode</tt>,
+then work "top down", adding a method for <tt>DeclListNode</tt>
+(the child of a <tt>ProgramNode</tt>), then for each kind of
+<tt>DeclNode</tt>, and so on.
+Be sure to think about which nodes' methods need to add a new hashtable
+to the symbol table (i.e., when is a new scope being entered), and
+which methods need to remove a hashtable from the symbol table
+(i.e., when is a scope being exited).
+<P>
+Some of the methods will process the declarations in the program (checking
+for bad declarations, and checking
+whether the names are multiply declared, and if not, adding appropriate
+symbol-table entries), and some will process the statements in the program
+(checking that every name used in a statement has been declared, and
+adding links).
+Note that you should not add a link for an <tt>IdNode</tt> that represents
+a use of an undeclared name.
+<p>
+Your name analyzer should find all of the errors described
+in the table given below;
+it should report the specified position of the error,
+and it should give <em>exactly</em> the specified error message
+(each message should appear on a single line, rather than how it is
+formatted in the following table).
+Error messages should have the same format as in the scanner and parser
+(i.e., they should be issued using a call to <tt>Errors.fatal</tt>).
+<P>
+If a declaration is both "bad" (a non-function declared void)
+and is a declaration of a name that has already been declared
+in the same scope, you should give <em>two</em> error
+messages (first the "bad" declaration error, then the
+"multiply declared" error).
+<P>
+<a name="errorMsgs">
+<CENTER><TABLE BORDER >
+<TR>
+  <TD>
+    <CENTER>Type of Error</CENTER>
+  </TD>
+  <TD>
+    <CENTER>Error Message</CENTER>
+  </TD>
+  <TD>
+    <CENTER>Position to Report</CENTER>
+  </TD>
+</TR>
+<TR>
+  <TD>
+    Bad declaration (variable or parameter of type <tt>void</tt>).
+  </TD>
+  <TD>
+    Non-function declared void
+  </TD>
+  <TD>
+    The first character of the ID in the bad declaration.
+  </TD>
+</TR>
+<TR>
+  <TD>
+    More than one declaration of an identifier in a given scope
+  </TD>
+  <TD>
+    Multiply declared identifier
+  </TD>
+  <TD>
+    The first character of the ID in the duplicate declaration
+  </TD>
+</TR>
+<TR>
+  <TD>
+    Use of an undeclared identifier
+  </TD>
+  <TD>
+    Undeclared identifier
+  </TD>
+  <TD>
+    The first character of the undeclared identifier
+  </TD>
+</TR>
+</TABLE></CENTER>
+<p>
+Note that the names themselves should <em>not</em> be printed as
+part of the error messages.
+
+<P>
+During name analysis, if a function name is multiply declared
+you <em>should</em> still process the formals and the body of the function;
+don't add a new entry to the current symbol table for the function,
+but do add a new
+hashtable to the front of the SymTab's list for the names declared in
+the body (i.e., the parameters and other local variables of the function).
+<P>
+If you find a bad variable declaration (a variable of type <tt>void</tt>),
+give an error message and add nothing to the symbol table.
+
+<p>
+<a name="other">
+<h2>Other Tasks</h2>
+</a>
+<p>
+<a name="class symbol">
+<h3>Extending the <tt>Sym</tt> Class</h3>
+</a>
+It is up to you how you store information in each symbol-table
+entry (each <tt>Sym</tt>).
+To implement the changes to the unparser described below you will need
+to know each name's type.
+For function names, this includes the return type and the number of
+parameters and their types.
+</UL>
+You can modify the <tt>Sym</tt> class by adding
+some new fields (e.g., a <em>type</em> field)
+and/or by declaring some subclasses (e.g.,
+a subclass for functions that has extra fields for the
+return type and the list of parameter types).
+You will probably also want to add new methods that return the values
+of the new fields, and it may be helpful to change the <tt>toString</tt>
+method so that you can print the contents of a <tt>Sym</tt> for
+debugging purposes.
+<p>
+<a name="idnode">
+<h3>Modifying the <tt>IdNode</tt> Class</h3>
+</a>
+Two changes to the <tt>IdNode</tt> class are needed:
+<OL>
+  <LI> Adding a new field of type <tt>Sym</tt> (to link the node with the
+       corresponding symbol-table entry), and
+  <P><LI> Changing the unparse method so that every use of an ID has
+       its type (in parentheses) after its name.
+       (The point of this is to help you to see whether your name
+       analyzer is working correctly; i.e., does it correctly match
+       each use of a name to the corresponding declaration, and does
+       it correctly set the link from the <tt>IdNode</tt> to the
+       information in the symbol table.)
+       For names of functions, the information should be of
+       the form:
+       <tt>param1Type, param2Type, ..., paramNType -> returnType</tt>.
+       For names of global variables, parameters, and local variables, the
+       information should just be <tt>int</tt> or <tt>double</tt>.
+       For example, given a program that contains this code:
+       <pre>
+       int f(int x, double d) { }
+       void g() {
+         int x;
+         double y;
+	 y = x;
+         f(x+y*2);
+	 g();
+       }
+       </pre> 
+       The unparser should print:
+       <pre>
+       int f(int x, double d) {
+       }
+       void g() {
+         int x;
+         double y;
+	 y(double) = x(int);
+         f(int, double -> int)(x(int)+(y(double)*2));
+	 g(->void)();
+       }
+       </pre> 
+</OL>
+
+<p>
+<a name="P4">
+<h3>P4.java</h3>
+</a>
+The main program, <em>P4.java</em>, will be similar to <em>P3.java</em>,
+except that
+<UL>
+  <LI> After parsing, if there are no syntax errors, it will call
+       the name analyzer.
+  <LI> After that, if there are no errors so far (either scanning, parsing, or
+       name-analysis errors), it will call the unparser.
+</UL>
+Calling the name analyzer means calling the
+appropriate method of the <tt>ASTnode</tt> that is the root of the
+tree built by the parser.
+
+<p>
+<a name="error handling">
+<h3>Modifying the Errors Class</h3>
+</a>
+Your compiler should quit after the name analyzer has finished if any
+errors have been detected so far (either by the scanner or
+the name analyzer).
+To accomplish this, you can add a static boolean field to the <tt>Errors</tt>
+class that is initialized to <samp>false</samp> and is set
+to <samp>true</samp> if the <tt>fatal</tt> method is ever called
+(warnings should not change the value of this field).
+Your <samp>main</samp> program can check the value of this field
+and only call the unparser if it is <samp>false</samp>.
+
+<p>
+<a name="makefile">
+<h3>Updating the Makefile</h3>
+</a>
+You will need to update the Makefile you used for program 3
+so that typing "make" creates <em>P4.class</em>.
+
+<P>
+<a name="testFiles">
+<h3>Writing Test Inputs</h3>
+</a>
+You will need to write two input files to test your code:
+<OL>
+  <LI> <em>nameErrors.Little</em> should contain code with errors
+    detected by the name analyzer.
+    This means that it should include bad and multiply declared names
+    for all of the different kinds of names, and in all of the
+    different places that declarations can appear.
+    It should also include uses of undeclared names in all kinds
+    of statements and expressions
+  <P><LI> <em>test.Little</em> should
+    contain code with no errors that exercises all of the name-analysis
+    methods that you wrote for the different AST nodes.
+    This means that it should include (good) declarations of all of the
+    different kinds of names in all of the places that names can be
+    declared,
+    and it should include (good) uses of names in all kinds
+    of statements and expressions.
+</OL>
+<p>
+Note that your <em>nameErrors.Little</em> should cause error
+messages to be output, so to know whether your name analyzer
+behaves correctly, you will need to know what output to expect.
+<p>
+As usual, you will be graded in part
+on how thoroughly your input files test your code.
+
+<a name="advice">
+<h2>Some Advice</h2>
+</a>
+
+Here are few words of advice about various issues that come up
+in the assignment:
+<UL>
+  <LI> For this assignment you are free to make any changes you want
+       to the code in <em>ast.java</em>.
+  <P>
+  <LI> The tree-traversal code you wrote to perform unparsing provides
+       a good model for the traversal that you need to write to handle
+       name analysis.
+       However, you might not want to declare the name-analysis
+       methods to be abstract methods of class
+       <tt>ASTnode</tt> (as we did for <tt>unparse</tt>).
+       This is because you will not need those methods for all nodes; e.g.,
+       you probably won't want a name-analysis method for the
+       <tt>TypeNode</tt> class (or its sub-classes).
+       <p>
+       However, you will need to declare the name-analysis methods
+       to be abstract methods of some of the
+       classes that are lower down in the inheritance hierarchy;
+       for example, you will need to declare an abstract name-analysis
+       method for the <tt>DeclNode</tt> class, because the method for
+       the <tt>DeclListNode</tt> class will call that method for each
+       node in the list.
+
+  <P>
+  <LI> If you are working with a partner, you will have to decide how to
+       divide up the work.  
+       You might want to divide up some of the "incidental tasks"
+       (like modifying the <tt>Errors, Sym</tt>, and <tt>IdNode</tt> classes),
+       then work together to get a small part of the name-analysis
+       phase working (e.g., finding multiply declared global variables).
+       Then you could split up the <tt>ASTnode</tt> subclasses, and each
+       implement the name-analysis methods for your
+       subset of those classes (you might want to start by choosing just a
+       few each, until you have a better idea which ones will require the
+       most work).
+       <P>
+       Don't forget to test your work as you go along, rather than waiting
+       until everything is finished!
+</UL>
+
+<a name="turning in">
+<h2>What To Turn In</h2>
+</a>
+
+By midnight on April 16th, copy your <tt>nameErrors.Little</tt>
+and <code>test.Little</code> files to your handin directory.
+
+To hand in the rest of your code, copy all of the files that are needed to
+create and run <tt>P4.class</tt>, (including your Makefile)
+to your handin directory.
+Please do <em>not</em> create any subdirectories in your handin directory,
+and do <em>not</em> copy any <tt>.class</tt> files.
+<P>
+If you are working with a partner <b>only one</b> of you should hand in files.
+Include a comment at the top of <em>P4.java</em> with the names of both
+partners.
+
+</body>
+</html>

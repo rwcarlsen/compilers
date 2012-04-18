@@ -1,0 +1,260 @@
+
+int i0;
+double d0;
+int func0(int i0) { return i0; }
+
+int i1;
+double d1;
+
+void func1() { }
+int func2() {return 1;}
+double func3() {return 1.0;}
+
+int func4(int foo) { return foo; }
+int func5(int foo, int bar) { return foo + bar; }
+double func6(double foo) { return foo; }
+double func7(double foo, double bar) { return foo + bar; }
+
+void main(int i2, double d2) {
+  int i0;
+  double d0;
+
+  int i3;
+  double d3;
+
+  /********** expressions ************/
+  i1 = i1 || i2 && i3 == i1 + i2 - i3 * -i1 / !i2 / i3++ + i2--;
+  i2 = i2 != i1;
+  i3 = i3 <= i3;
+  i3 = i1 >= i3;
+  i2 = i2 < i3;
+  i1 = i3 > i3;
+  i3 = i3 + func2() + func4(i1) + func5(i2 + i3, i3);
+  scanf("%d", &i3);
+  printf("%d", i3 + i3);
+  d1 = d1 || d2 && d3 == d3 + d3 - d3 * -d3 / !d3 / d3++ + d3--;
+  d2 = d2 != d1;
+  d3 = d3 <= d3;
+  d1 = d2 >= d3;
+  d2 = d1 < d2;
+  d3 = d3 > d1;
+  d3 = d3 + func3() + func6(d1) + func7(d2 + d3, d3);
+  scanf("%f", &d3);
+  printf("%f", d3 + d3);
+
+  if(1 < 2) {
+    int i0;
+    double d0;
+
+    int i4;
+    double d4;
+
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i4 + i1 - i2 * -i3 / !i4 / i1++ + i3--;
+    i2 = i2 != i1;
+    i3 = i3 <= i3;
+    i4 = i4 >= i4;
+    i4 = i4 < i4;
+    i4 = i4 > i4;
+    i4 = i4 + func2() + func4(i1) + func5(i2 + i3, i4);
+    scanf("%d", &i4);
+    printf("%d", i4 + i4);
+    d1 = d1 || d2 && d3 == d4 + d1 - d2 * -d3 / !d4 / d1++ + d3--;
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d4 = d4 >= d4;
+    d4 = d4 < d4;
+    d4 = d4 > d4;
+    d4 = d4 + func3() + func6(d1) + func7(d2 + d3, d4);
+    scanf("%f", &d4);
+    printf("%f", d4 + d4);
+
+    if(1 < 2) {
+      int i0;
+      double d0;
+
+      int i5;
+      double d5;
+
+      while(i0 < i5) {
+        int i0;
+        double d0;
+
+        int i6;
+        double d6;
+
+        if(1 < 2) {
+          int i0;
+          double d0;
+
+          int i7;
+          double d7;
+
+          /********** expressions ************/
+          i7 = i1 || i2 && i3 == i4 + i5 - i6 * -i7 / !i1 / i2++ + i4--;
+          i1 = i2 != i1;
+          i5 = i3 <= i3;
+          i3 = i4 >= i4;
+          i4 = i5 < i5;
+          i6 = i6 > i6;
+          i7 = i1 + func2() + func4(i3) + func5(i5 + i6, i7);
+          scanf("%d", &i7);
+          printf("%d", i7 + i7);
+          d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d7 / !d6 / d5++ + d3--;
+          d4 = d2 != d7;
+          d3 = d3 <= d6;
+          d2 = d4 >= d5;
+          d5 = d5 < d4;
+          d6 = d6 > d3;
+          d3 = d4 + func3() + func6(d5) + func7(d6 + d7, d3);
+          scanf("%f", &d7);
+          printf("%f", d7 + d7);
+        }
+        else {
+          int i0;
+          double d0;
+
+          int i8;
+          double d8;
+
+          /********** expressions ************/
+          i8 = i1 || i2 && i3 == i4 + i5 - i6 * -i8 / !i1 / i2++ + i4--;
+          i1 = i2 != i1;
+          i5 = i3 <= i3;
+          i3 = i4 >= i4;
+          i4 = i5 < i5;
+          i6 = i6 > i6;
+          i8 = i1 + func2() + func4(i3) + func5(i5 + i6, i8);
+          scanf("%d", &i8);
+          printf("%d", i8 + i8);
+          d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d8 / !d6 / d5++ + d3--;
+          d4 = d2 != d8;
+          d3 = d3 <= d6;
+          d2 = d4 >= d5;
+          d5 = d5 < d4;
+          d6 = d6 > d3;
+          d3 = d4 + func3() + func6(d5) + func7(d6 + d8, d3);
+          scanf("%f", &d8);
+          printf("%f", d8 + d8);
+        }
+
+        /********** expressions ************/
+        i1 = i1 || i2 && i3 == i4 + i5 - i6 * -i1 / !i1 / i2++ + i4--;
+        i1 = i2 != i1;
+        i5 = i3 <= i3;
+        i3 = i4 >= i4;
+        i4 = i5 < i5;
+        i6 = i6 > i6;
+        i1 = i1 + func2() + func4(i3) + func5(i5 + i6, i1);
+        scanf("%d", &i1);
+        printf("%d", i1 + i1);
+        d1 = d1 || d2 && d3 == d4 + d5 - d6 * -d1 / !d6 / d5++ + d3--;
+        d4 = d2 != d1;
+        d3 = d3 <= d6;
+        d2 = d4 >= d5;
+        d5 = d5 < d4;
+        d6 = d6 > d3;
+        d3 = d4 + func3() + func6(d5) + func7(d6 + d1, d3);
+        scanf("%f", &d1);
+        printf("%f", d1 + d5);
+      }
+
+      /********** expressions ************/
+      i1 = i1 || i2 && i3 == i4 + i5 - i3 * -i1 / !i1 / i2++ + i4--;
+      i1 = i2 != i1;
+      i5 = i3 <= i3;
+      i3 = i4 >= i4;
+      i4 = i5 < i5;
+      i3 = i3 > i3;
+      i1 = i1 + func2() + func4(i3) + func5(i5 + i3, i1);
+      scanf("%d", &i1);
+      printf("%d", i1 + i1);
+      d1 = d1 || d2 && d3 == d4 + d5 - d3 * -d1 / !d3 / d5++ + d3--;
+      d4 = d2 != d1;
+      d3 = d3 <= d3;
+      d2 = d4 >= d5;
+      d5 = d5 < d4;
+      d3 = d3 > d3;
+      d3 = d4 + func3() + func6(d5) + func7(d3 + d1, d3);
+      scanf("%f", &d1);
+      printf("%f", d1 + d5);
+    }
+  }
+  else {
+    int i0;
+    double d0;
+
+    int i9;
+    double d9;
+
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i9 - i3 * -i1 / !i1 / i2++ + i2--;
+    i1 = i2 != i1;
+    i9 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i9 < i9;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i9 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d9 - d3 * -d1 / !d3 / d9++ + d3--;
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d9;
+    d9 = d9 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d9) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d9);
+  }
+
+  /* while statements */
+  while(i0 < i1) {
+    int i0;
+    double d0;
+
+    int i10;
+    double d10;
+
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i10 - i3 * -i1 / !i1 / i2++ + i2--;
+    i1 = i2 != i1;
+    i10 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i10 < i10;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i10 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d10 - d3 * -d1 / !d3 / d10++ + d3--;
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d10;
+    d10 = d10 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d10) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d10);
+  }
+
+    /********** expressions ************/
+    i1 = i1 || i2 && i3 == i2 + i3 - i3 * -i1 / !i1 / i2++ + i2--;
+    i1 = i2 != i1;
+    i3 = i3 <= i3;
+    i3 = i2 >= i2;
+    i2 = i3 < i3;
+    i3 = i3 > i3;
+    i1 = i1 + func2() + func4(i3) + func5(i3 + i3, i1);
+    scanf("%d", &i1);
+    printf("%d", i1 + i1);
+    d1 = d1 || d2 && d3 == d2 + d3 - d3 * -d1 / !d3 / d3++ + d3--;
+    d2 = d2 != d1;
+    d3 = d3 <= d3;
+    d2 = d2 >= d3;
+    d3 = d3 < d2;
+    d3 = d3 > d3;
+    d3 = d2 + func3() + func6(d3) + func7(d3 + d1, d3);
+    scanf("%f", &d1);
+    printf("%f", d1 + d3);
+}
+
