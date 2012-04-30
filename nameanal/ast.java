@@ -305,7 +305,12 @@ class VarDeclNode extends DeclNode {
   public void nanal(SymTab symtab) throws EmptySymTabException {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
+      if (symtab.localLookup(myId.str) != null) {
+        Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
+      }
+      return;
     }
+
     Sym sym = new Sym(myType.str, myId.str);
     try {
       symtab.insert(myId.str, sym);
@@ -382,7 +387,12 @@ class FormalDeclNode extends DeclNode {
   public void nanal(SymTab symtab) throws EmptySymTabException {
     if (myType.str == "void") {
       Errors.fatal(myId.ln, myId.ch, "Non-function declared void");
+      if (symtab.localLookup(myId.str) != null) {
+        Errors.fatal(myId.ln, myId.ch, "Multiply declared identifier");
+      }
+      return;
     }
+
     Sym sym = new Sym(myType.str, myId.str);
     try {
       symtab.insert(myId.str, sym);
