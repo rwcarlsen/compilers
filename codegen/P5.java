@@ -12,7 +12,7 @@ import java_cup.runtime.*;
 // calls the parser.  If the parse is successful, the AST is unparsed.
 // **********************************************************************
 
-public class P4 {
+public class P5 {
   public static void main(String[] args) throws IOException {
     // check for command-line args
     if (args.length != 2) {

@@ -7,7 +7,7 @@
 #
 ###
 
-CP = lib:lib/java_cup.jar:lib/JLex.jar:.
+CP = java_cup.jar:JLex.jar:.
 
 FLAGS = -classpath ${CP}
 

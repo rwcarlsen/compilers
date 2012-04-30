@@ -178,9 +178,9 @@ class ProgramNode extends ASTnode {
     SymTab S = new SymTab();
     myDeclList.processNames(S);
 
-    Sym main = S.localLookup("main")
+    Sym main = S.localLookup("main");
     if (main == null) {
-      Errors.fatal(0, 0, "No main function")
+      Errors.fatal(0, 0, "No main function");
     }
   }
 

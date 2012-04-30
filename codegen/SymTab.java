@@ -62,6 +62,7 @@ class SymTab {
   // constructor
   // **********************************************************************
   public SymTab() {
+    this.currOffset = 0;
     this.front = null;
     myList = new LinkedList<HashMap<String,Sym>>();
     addMap();
