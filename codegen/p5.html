@@ -1,0 +1,293 @@
+<HTML>
+<HEAD>
+  <TITLE>CS 536, Program 5</title>
+</HEAD>
+<BODY>
+
+<H1>CS 536, Program 5
+<br>
+Code Generation
+</H1>
+  <H2>
+  <pre>
+       Code Due: Friday, May 11 (by 11:59 PM).
+       (No test code is required for this assignment.)
+  </pre>
+ </H2>
+<BODY>
+<hr>
+<a name="contents">
+<h2>Contents</h2></a>
+<ul>
+  <li> <a href="#news"> Clarifications and Corrections</a>
+  <li> <a href="#introduction">Overview</a>
+  <li> <a href="#spim">Spim</a>
+  <li> <a href="#code changes">Changes to Old Code</a>
+  <li> <a href="#Little semantics">Non-Obvious Semantic Issues</a>
+  <li> <a href="#extra">Extra Credit</a>
+  <li> <a href="#suggestions">Suggestions for how to Work on this Assignment</a>
+  <li> <a href="#turning in">What to Turn In</a>
+</ul>
+
+<hr>
+
+<a name="news">
+<h2>Clarifications and Corrections</h2>
+Watch this space for clarifications and corrections!
+</a>
+
+<a name="introduction">
+<H2>Overview</H2>
+<P>
+For this assignment you will write a code generator for Little programs
+that generates MIPS assembly code suitable as input to the Spim interpreter.
+The code generator will be implemented by writing <em>codeGen</em>
+member functions for the various kinds of AST nodes.
+<b>See the on-line Code-Generation notes for lots of useful details.</b>
+<P>
+You will also update the Makefile and the main program
+(and call it <em>P5.java</em>)
+so that, if there are no errors (including type errors),
+the code generator is called after the type checker.
+The code generator should write code to
+the file named by the second command-line argument.
+<P>
+Note that your main program should no longer call the unparser, nor
+should it report that the prgram was parsed successfully.
+<P>
+Our versions of
+<A HREF="http://www.cs.wisc.edu/~cs536-1/PROG5/ast.java"> ast.java</A> and
+<A HREF="http://www.cs.wisc.edu/~cs536-1/PROG5/Sym.java"> Sym.java</A> 
+for the previous assignment will be in
+<tt>~cs536-1/public/html/PROG5</tt>
+You can use this code if there were problems with your own version.
+Since we are supplying you with our own typechecking code, we 
+recommend that you use our versions above.
+<P>
+Some useful code-generation methods can be found in the file
+<A HREF="http://www.cs.wisc.edu/~cs536-1/PROG5/Codegen.java">
+~cs536-1/public/PROG5/Codegen.java</A>.
+Note that to use the methods and constants defined in that file
+you will need to prefix the names with <tt>Codegen.</tt>;
+for example, you would write: <tt>Codegen.genPop(Godegen.T0, 4)</tt>
+rather than <tt>genPop(T0, 4)</tt>.
+(Alternatively, you could put the declarations of the methods and
+constants in your ASTnode class; then you would not need the
+<tt>Codegen</tt> prefix.)
+Also note that a PrintWriter <tt>p</tt> is declared as a static
+public field in the <tt>Codegen</tt> class.
+The code-generation methods in <tt>Codegen</tt>.java all write to
+PrintWriter <tt>p</tt>, so you should use it when you open the output file
+in your main program (in P5.java);
+i.e., you should include:
+<tt>Codegen.p = new PrintWriter(args[1]);</tt>
+in your main program (or <tt>ASTnode.p</tt> if you put the declarations
+in the ASTnode class).
+You should also close that PrintWriter at the end of the program:
+<tt>Codegen.p.close();</tt>
+<P>
+<a name="spim">
+<h2>Spim</h2>
+<P>
+Documentation on Spim is available on-line:
+<UL>
+  <LI> <A HREF="http://www.cs.wisc.edu/~horwitz/spim/spim.pdf">
+            Reference Manual (pdf)</A>
+  <LI> <A HREF="http://www.cs.wisc.edu/~larus/spim.html">
+            Instructions for download and install (html)</A>
+</UL>
+You can run "plain"
+spim by typing: <tt>spim -file xxx</tt>
+where <tt>xxx</tt> is the name of the file produced by your compiler.
+Or you can use the X-windows version:
+<OL>
+  <LI> Type: <tt>xspim</tt>. This will open a new window.
+  <LI> Click on the "load" button.
+       This will open a small window in which you should type the name of
+       the file produced by your compiler;
+       finish with a carriage-return, or click on the
+       "assembly file" button in the small window.
+  <LI> Click on the "run" button. This will open another small window.
+       Click on the "ok" button in that window.
+</OL>
+Syntax and runtime errors will be reported at the bottom of the large
+window opened when you first typed <tt>xspim</tt>.
+If your Little program produces output, yet another window will be opened,
+and the output will be written to that window.
+<P>
+Here is a link to an example
+<A HREF="http://www.cs.wisc.edu/~cs536-1/PROG5/hello.Little">Little program</A> and
+the corresponding <A HREF="http://www.cs.wisc.edu/~cs536-1/PROG5/hello.spim">MIPS code</A>
+produced by our code generator.
+
+<a name="code changes">
+<h2>Changes to Old Code</h2>
+
+Required changes:
+<OL>
+  <LI> Add to the name analyzer or type checker (your choice), a check
+       whether the program contains a function named <tt>main</tt>.
+       If there is no such function, print the error message:
+       "No main function".
+       Use 0,0 as the line and character numbers.
+  <P><LI> Add a new "offset" field to the Sym class (or to the appropriate
+       subclass(es) of Sym).
+       Change the name analyzer to compute offsets for each function's
+       parameters and local variables (i.e., where in the function's
+       Activation Record they will be stored at runtime) and to fill
+       in the new offset field.
+       Note that each int variable requires 4 bytes of storage and
+       each double variable requires 8 bytes of storage.
+       Remember that if the current offset is k when the name
+       analyzer processes an int variable declaration, then the
+       offset for that variable is k, while if the current offset
+       is k when the name analyzer processes a double variable
+       declaration, then the offset for that variable is k-4.
+       You may find it helpful to verify that you have made this
+       change correctly by modifying your unparser to print each local
+       variable's offset.
+</OL>
+Suggested changes:
+<OL>
+  <LI> Modify the name analyzer to compute and save the total size of the
+       local variables declared in each function (e.g., in a new field of the
+       function name's symbol-table entry).
+       This will be useful when you do code generation for function
+       entry (to set the SP correctly).
+  <P><LI> Either write a method to compute and return the total size
+       of the formal parameters declared in a function, or modify the
+       name analyzer to compute and store that value (in the function
+       name's symbol-table entry).  This will also be useful for code
+       generation for function entry.
+</OL>
+
+<a name="optional">
+<a name="Little semantics">
+<h2>Non-Obvious Semantic Issues</h2>
+<OL>
+  <LI> All parameters are passed by value.
+  <P>
+  <LI> In Little conditions (in if statements, while loops, or for loops),
+       the value zero means false, and any other value means true.
+       So for example, the following code would print "true".
+       <UL>
+       <pre>
+       int x = -2;
+       if (x) {
+         printf("true");
+       }
+       </pre>
+       </UL>
+  <P>
+  <LI> The "and" and "or" operators (&& and ||) are short-circuited,
+       as they are in Java. 
+       That means that their right operands are
+       only evaluated if necessary (for all of the other binary operators,
+       both operands are always evaluated).  If the left operand of "&&"
+       evaluates to <em>false</em>, then the right operand is not evaluated
+       (and the value of the whole expression is <em>false</em>);
+       similarly, if the left operand of "||" evaluates to <em>true</em>,
+       then the right operand is not evaluated (and the value of the whole
+       expression is <em>true</em>).
+  <P>
+  <LI> The post-increment or post-decrement operator (++ or --) can
+       be used in expressions like <tt>y = x++;</tt> or
+       <tt>if (x--) { ... }</tt>.
+       In both examples, the value of variable <tt>x</tt> is changed
+       (by adding or subtracting 1), but it is the original value of
+       <tt>x</tt> that is used in the expression.
+       So for example, if <tt>x</tt> is 2 before executing
+       <tt>y = x++;</tt>, it will be 3 afterwards, but variable <tt>y</tt>
+       will be 2.
+       <P>
+       Note that it is implementation-dependent exactly when the value of
+       variable <tt>x</tt> is changed.
+       For example, if we have <tt>y = x++ + x++;</tt>, and <tt>x</tt> is
+       initially 2, then the value of <tt>x</tt> must be 4 after the
+       statement executes, but <tt>y</tt> can be either 4 or 5.
+       It will be 4 if the two increments of <tt>x</tt> are done
+       after the value of the whole right-hand side is computed, and
+       it will be 5 if the first increment of <tt>x</tt> is done
+       after evaluating just one of the two operands of the plus.
+       You can implement the ++ and -- operators either way.
+</OL>
+<a name="extra">
+<h2>Extra-Credit Features</h2>
+</a>
+The following two aspects of double values are <b>not</b> required.
+They are each worth 10 extra-credit points.
+The extra credit is "all or nothing" for each feature;
+i.e., there will be no partial credit for either feature.
+<OL>
+  <LI> Conversion from int to double in the following cases:
+    <UL>
+      <LI> assigning from an int to a double
+      <LI> passing an int value to a function whose corresponding
+           formal is a double
+      <LI> returning an int value from a function whose return type
+	   is double
+      <LI> applying an arithmetic binary operator to one int value
+           and one double value.
+    </UL>
+  <P><LI> Applying a relational or equality operator to two double
+          values.
+	  (The reason this is tricky is because there are no
+	  op codes that implement these operations directly.)
+</OL>
+If you implement both feature 1 and feature 2, you must also
+handle the case of applying a relational or equality
+operator to one int and one double operand.
+<b>Don't try to implement these features until you have the required
+features implemented and tested.</b>
+
+<a name="suggestions">
+<h2>Suggestions for how to Work on this Assignment</h2>
+</a>
+I suggest the following steps:
+<OL>
+  <LI> Modify name analysis or type checking to ensure that a main
+       function is declared.
+  <P><LI> Modify name analysis so that the code generator can answer
+       the following questions:
+       <UL>
+         <LI> Is an Id local or global?
+	 <LI> If local, what is its offset in its function's AR?
+	 <LI> For each function, how many bytes of storage are needed
+	      for its params, and how many are needed for its locals?
+       </UL>
+  <P><LI> Implement code generation for each of the following features;
+          be sure to test each feature as it is implemented!
+    <UL><LI>function entry and exit
+            (test with a single, empty function: <tt>void main() {} </tt>)
+        <LI> int literals (just push the
+	     value onto the stack) and WriteIntStmtNode
+	<LI> double and string literals, WriteDblStmtNode and WriteStrStmtNode
+	<LI> IdNode (code that pushes the value of the id onto the stack,
+	     and code that pushes the address of the id onto the stack)
+	     and assignments of the form <em>id=literal</em> and
+	     <em>id=id</em>
+	     (test by assigning then writing)
+        <LI> expressions other than calls
+	<LI> statements other than calls and returns
+	<LI> call statements and expressions, return statements
+	     (to implement a function call, you will need a third
+	     code-generation method for the IdNode class: one that is
+	     called only for a function name, and that generates
+	     a jump-and-link instruction).
+    </UL>
+</OL>
+
+
+<a name="turning in">
+<h2>What To Turn In</h2>
+</a>
+
+To hand in your code, copy all of the files that are needed to
+create and run <em>P5.class</em>, (including your Makefile)
+to your handin directory.
+Please do <em>not</em> create any subdirectories in your handin directory,
+and do <em>not</em> copy any <em>.class</em> files.
+<P>
+If you are working with a partner <b>only one</b> of you should hand in files.
+Include a comment at the top of <em>P5.java</em> with the names of both
+partners.
