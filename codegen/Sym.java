@@ -77,6 +77,13 @@ class FnSym extends Sym {
       } else {
         myType = oneSym.type() + "," + myType;
       }
+      if (oneSym.type().equals("int")) {
+        this.paramSize += 4;
+        this.locSize -= 4;
+      } else if (oneSym.type().equals("double")) {
+        this.paramSize += 8;
+        this.locSize -= 8;
+      }
     }
   }
 
@@ -96,10 +103,24 @@ class FnSym extends Sym {
     return true;
   }
 
+  public void addLocSize(int size) {
+    this.locSize += size;
+  }
+
+  public int locSize() {
+    return this.locSize;
+  }
+
+  public int paramSize() {
+    return this.paramSize;
+  }
+
   // new fields
   private String myReturnType;
   private int myNumParams;
   private LinkedList<String> myParamTypes;
+  private int locSize;
+  private int paramSize;
 }
 
 

@@ -179,7 +179,7 @@ class ProgramNode extends ASTnode {
     myDeclList.processNames(S);
 
     Sym main = S.localLookup("main");
-    if (main == null) {
+    if (main == null || ! main.type().equals("->void")) {
       Errors.fatal(0, 0, "No main function");
     }
   }

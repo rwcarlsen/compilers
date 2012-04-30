@@ -47,6 +47,7 @@ class SymTab {
   private FnSym front;
   private List<HashMap<String,Sym>> myList; // the List of Maps
   private int currOffset;
+  private FnSym currFunc;
 
   public FnSym frontFunc() {
     return this.front;
@@ -64,6 +65,7 @@ class SymTab {
   public SymTab() {
     this.currOffset = 0;
     this.front = null;
+    this.currFunc = null;
     myList = new LinkedList<HashMap<String,Sym>>();
     addMap();
   }
@@ -78,13 +80,16 @@ class SymTab {
       if (localLookup(name) != null) throw new DuplicateException();
 
       if (sym.isFunc()) {
-        currOffset = 0;
-      } else if (sym.type() == "int") {
-        sym.offset = currOffset;
-        currOffset -= 4;
-      } else if (sym.type() == "double") {
-        sym.offset = currOffset - 4;
-        currOffset -= 8;
+        this.currOffset = 0;
+        this.currFunc = (FnSym)sym;
+      } else if (sym.type().equals("int")) {
+        sym.offset = this.currOffset;
+        this.currOffset -= 4;
+        this.currFunc.addLocSize(4);
+      } else if (sym.type().equals("double")) {
+        sym.offset = this.currOffset - 4;
+        this.currOffset -= 8;
+        this.currFunc.addLocSize(8);
       }
 
       HashMap<String,Sym> oneMap = myList.get(0);
