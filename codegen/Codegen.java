@@ -227,6 +227,24 @@ public class Codegen {
   }
 
   // **********************************************************************
+  // load
+  //    generate code to push the given value onto the stack
+  //    different code for 4 or 8 bytes
+  // **********************************************************************
+  public static void loadWord(String comment, String dst, String src, int offset) {
+    generateWithComment("lw", comment, dst, Integer.toString(offset) + "(" + src + ")");
+  }
+
+  // **********************************************************************
+  // move
+  //    generate code to push the given value onto the stack
+  //    different code for 4 or 8 bytes
+  // **********************************************************************
+  public static void move(String comment, String dst, String src) {
+    generateWithComment("move", comment, dst, src);
+  }
+
+  // **********************************************************************
   // genPush
   //    generate code to push the given value onto the stack
   //    different code for 4 or 8 bytes

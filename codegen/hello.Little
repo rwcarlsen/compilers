@@ -1,5 +1,6 @@
-int x;
-
 void main() {
-  printf("Hello world!\n");
+  printf("%d", 1);
+  printf("\n");
+  printf("%f", 1.23);
+  printf("\nhello!\n");
 }
