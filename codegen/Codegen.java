@@ -234,6 +234,22 @@ public class Codegen {
   public static void loadWord(String comment, String dst, String src, int offset) {
     generateWithComment("lw", comment, dst, Integer.toString(offset) + "(" + src + ")");
   }
+  public static void loadDouble(String comment, String dst, String src, int offset) {
+    generateWithComment("l.d", comment, dst, Integer.toString(offset) + "(" + src + ")");
+  }
+  public static void loadAddress(String comment, String dst, String src, int offset) {
+    generateWithComment("la", comment, dst, Integer.toString(offset) + "(" + src + ")");
+  }
+
+  public static void storeWord(String comment, String src, String dst, int offset) {
+    generateWithComment("sw", comment, src, Integer.toString(offset) + "(" + dst + ")");
+  }
+  public static void storeDouble(String comment, String dst, String src, int offset) {
+    generateWithComment("s.d", comment, src, Integer.toString(offset) + "(" + dst + ")");
+  }
+  public static void storeAddress(String comment, String dst, String src, int offset) {
+    generateWithComment("sa", comment, src, Integer.toString(offset) + "(" + dst + ")");
+  }
 
   // **********************************************************************
   // move

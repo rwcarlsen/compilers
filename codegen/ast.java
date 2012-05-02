@@ -816,6 +816,16 @@ class AssignStmtNode extends StmtNode {
     p.println(";");
   }
 
+  public void codeGen() {
+    myExp.codeGen();
+
+    int size = 4;
+    if (myExp.typeCheck().equals("double")) {
+      size = 8;
+    }
+    Codegen.genPop(Codegen.T0, size);
+  }
+
   // 1 kid
   private AssignNode myExp;
 }
@@ -1036,8 +1046,7 @@ class WriteIntStmtNode extends StmtNode {
     myExp.codeGen();
     Codegen.genPop(Codegen.A0, 4);
     Codegen.generate("li", Codegen.V0, 1);
-    Codegen.generate("nop");
-    Codegen.generate("syscall");
+    Codegen.generateWithComment("syscall", "process WriteInt");
   }
 
   // 1 kid
@@ -1074,8 +1083,7 @@ class WriteDblStmtNode extends StmtNode {
     myExp.codeGen();
     Codegen.genPop(Codegen.F12, 8);
     Codegen.generate("li", Codegen.V0, 3);
-    Codegen.generate("nop");
-    Codegen.generate("syscall");
+    Codegen.generateWithComment("syscall", "process WriteDbl");
   }
 
   // 1 kid
@@ -1108,8 +1116,7 @@ class WriteStrStmtNode extends StmtNode {
     myExp.codeGen();
     Codegen.genPop(Codegen.A0, 4);
     Codegen.generate("li", Codegen.V0, 4);
-    Codegen.generate("nop");
-    Codegen.generate("syscall");
+    Codegen.generateWithComment("syscall", "process WriteStr");
   }
 
   // 1 kid
@@ -1419,8 +1426,7 @@ class IntLitNode extends ExpNode {
   }
 
   public void codeGen() {
-    Codegen.generate("li", Codegen.T0, Integer.toString(myIntVal));
-    Codegen.generate("nop");
+    Codegen.generateWithComment("li", "int lit", Codegen.T0, Integer.toString(myIntVal));
     Codegen.genPush(Codegen.T0, 4);
   }
 
@@ -1447,8 +1453,7 @@ class DblLitNode extends ExpNode {
   }
 
   public void codeGen() {
-    Codegen.generate("li.d", Codegen.F0, Double.toString(myDblVal));
-    Codegen.generate("nop");
+    Codegen.generateWithComment("li.d", "double lit", Codegen.F0, Double.toString(myDblVal));
     Codegen.genPush(Codegen.F0, 8);
   }
 
@@ -1550,6 +1555,39 @@ class IdNode extends ExpNode {
   public void unparse(PrintWriter p, int indent) {
     p.print(myStrVal);
     p.print("(" + mySym.type() + ")");
+  }
+
+  public void genJumpAndLink() {
+    String target = name();
+    if (! myStrVal.equals("main")) {
+      target = "_" + target;
+    }
+    Codegen.generateWithComment("jal", "func call - jump and link");
+  }
+
+  public void codeGen() {
+    if (mySym.global) {
+      if (type().equals("double")) {
+        Codegen.generateWithComment("l.d", "load double global", Codegen.F0, "_" + name());
+      } else {
+        Codegen.generateWithComment("lw", "load int global", Codegen.T0, "_" + name());
+      }
+    } else {
+      int offset = mySym.offset;
+      if (type().equals("double")) {
+        Codegen.loadDouble("load double var", Codegen.F0, Codegen.FP, offset);
+      } else {
+        Codegen.loadWord("load int var", Codegen.T0, Codegen.FP, offset);
+      }
+    }
+  }
+
+  public void genAddr() {
+    if (mySym.global) {
+      Codegen.generateWithComment("la", "load global var addr for assign", Codegen.T0, "_" + name());
+    } else {
+      Codegen.loadAddress("load local var addr for assign", Codegen.T0, Codegen.FP, mySym.offset);
+    }
   }
 
   /** name **/
@@ -1874,6 +1912,18 @@ class AssignNode extends BinaryExpNode {
     myExp1.unparse(p, 0);
     p.print(" = ");
     myExp2.unparse(p,0);
+  }
+
+  public void codeGen() {
+    myExp2.codeGen();
+    Codegen.move("move exp val to t1", Codegen.T1, Codegen.T0);
+    ((IdNode)myExp1).genAddr(); // var addr loaded into t0
+
+    if (myExp2.typeCheck().equals("int")) {
+      Codegen.storeWord("assign int val to var addr", Codegen.T1, Codegen.T0, 0);
+    } else {
+      Codegen.storeDouble("assign dbl val to var addr", Codegen.F0, Codegen.T0, 0);
+    }
   }
 }
 

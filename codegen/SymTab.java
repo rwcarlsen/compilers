@@ -85,7 +85,12 @@ class SymTab {
         sym.global = false;
       }
 
-      if (!sym.global) {
+      if (sym.isFunc()) {
+        // start offset at -8 and shift formal params back to leave
+        // room for control link and return address
+        this.currOffset = -8;
+        this.currFunc = (FnSym)sym;
+      } else if (!sym.global) {
         if (sym.isFunc()) {
           // start offset at -8 and shift formal params back to leave
           // room for control link and return address
