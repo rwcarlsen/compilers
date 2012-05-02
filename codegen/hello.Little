@@ -1,3 +1,5 @@
+int x;
+
 void main() {
   printf("Hello world!\n");
 }

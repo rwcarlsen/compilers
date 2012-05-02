@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 
+enum foo {
 // **********************************************************************
 // The ASTnode class defines the nodes of the abstract-syntax tree that
 // represents a Little program.
@@ -109,6 +110,7 @@ import java.util.*;
 //       LogicalBinExpNode,                 AndNode,          OrNode
 //
 // **********************************************************************
+}
 
 // **********************************************************************
 // ASTnode class (base class for all other kinds of nodes)
@@ -190,7 +192,7 @@ class ProgramNode extends ASTnode {
   }
 
   public void codeGen() {
-
+    myDeclList.codeGen();
   }
 
   public void unparse(PrintWriter p, int indent) {
@@ -251,6 +253,11 @@ class DeclListNode extends ASTnode {
     }
   }
 
+  public void codeGen() {
+    for (DeclNode decl : myDecls) {
+      decl.codeGen();
+    }
+  }
   // list of kids (DeclNodes)
   private List<DeclNode> myDecls;
 }
@@ -464,6 +471,9 @@ abstract class DeclNode extends ASTnode {
   // default version of typeCheck for var and formal decls
   public void typeCheck() {
   }
+
+  public void codeGen() {
+  }
 }
 
 class VarDeclNode extends DeclNode {
@@ -515,6 +525,20 @@ class VarDeclNode extends DeclNode {
     p.print(" ");
     myId.unparse(p, 0);
     p.println(";");
+  }
+
+  public void codeGen() {
+    Sym sym = myId.sym();
+    if (sym.global && !sym.isFunc()) {
+      String size = "4";
+      if (myId.type() == "double") {
+        size = "8";
+      }
+      Codegen.generate(".data");
+      Codegen.generate(".align 2");
+      Codegen.generate("_" + myId.name(), ".space " + size, "global var def");
+    } else {
+    }
   }
 
   // 2 kids

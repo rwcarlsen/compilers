@@ -25,6 +25,8 @@ class Sym {
   public Sym(String T) {
     myType = T;
     myComplete = true;
+    offset = 0;
+    global = false;
   }
 
   public Sym(String T, boolean comp) {
@@ -48,6 +50,7 @@ class Sym {
   protected String myType;
   private boolean myComplete;
   public int offset;
+  public boolean global;
 }
 
 // **********************************************************************
@@ -77,6 +80,10 @@ class FnSym extends Sym {
       } else {
         myType = oneSym.type() + "," + myType;
       }
+
+      // shift formal params back to top of AR
+      oneSym.offset += 8;
+
       if (oneSym.type().equals("int")) {
         this.paramSize += 4;
         this.locSize -= 4;

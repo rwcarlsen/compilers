@@ -79,17 +79,27 @@ class SymTab {
       if (myList.size() == 0) throw new EmptySymTabException();
       if (localLookup(name) != null) throw new DuplicateException();
 
-      if (sym.isFunc()) {
-        this.currOffset = 0;
-        this.currFunc = (FnSym)sym;
-      } else if (sym.type().equals("int")) {
-        sym.offset = this.currOffset;
-        this.currOffset -= 4;
-        this.currFunc.addLocSize(4);
-      } else if (sym.type().equals("double")) {
-        sym.offset = this.currOffset - 4;
-        this.currOffset -= 8;
-        this.currFunc.addLocSize(8);
+      if (myList.size() == 1) {
+        sym.global = true;
+      } else {
+        sym.global = false;
+      }
+
+      if (!sym.global) {
+        if (sym.isFunc()) {
+          // start offset at -8 and shift formal params back to leave
+          // room for control link and return address
+          this.currOffset = -8;
+          this.currFunc = (FnSym)sym;
+        } else if (sym.type().equals("int")) {
+          sym.offset = this.currOffset;
+          this.currOffset -= 4;
+          this.currFunc.addLocSize(4);
+        } else if (sym.type().equals("double")) {
+          sym.offset = this.currOffset - 4;
+          this.currOffset -= 8;
+          this.currFunc.addLocSize(8);
+        }
       }
 
       HashMap<String,Sym> oneMap = myList.get(0);
