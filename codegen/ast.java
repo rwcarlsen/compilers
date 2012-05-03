@@ -2158,6 +2158,20 @@ class TimesNode extends ArithmeticBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
+  public void codeGen() {
+    myExp1.codeGen();
+    myExp2.codeGen();
+
+    if (bytes() == 4) {
+      // get exp value
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("mult", "multiplication", Codegen.T1, Codegen.T2);
+      Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
+      Codegen.genPush(Codegen.T0, bytes());
+    }
+  }
 }
 
 class DivideNode extends ArithmeticBinExpNode {
@@ -2172,6 +2186,20 @@ class DivideNode extends ArithmeticBinExpNode {
     p.print("/");
     myExp2.unparse(p, 0);
     p.print(")");
+  }
+
+  public void codeGen() {
+    myExp1.codeGen();
+    myExp2.codeGen();
+
+    if (bytes() == 4) {
+      // get exp value
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("div", "division", Codegen.T1, Codegen.T2);
+      Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
+      Codegen.genPush(Codegen.T0, bytes());
+    }
   }
 }
 

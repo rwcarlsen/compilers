@@ -87,4 +87,28 @@ void main() {
   printf("%d", z);
   printf("\n");
 
+  z = x++ * (y++ + 1);
+  printf("z = x++ * (y++ + 1);");
+  printf("\n");
+
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf(", z=");
+  printf("%d", z);
+  printf("\n");
+
+  z = x++ / y;
+  printf("z = x++ / y;");
+  printf("\n");
+
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf(", z=");
+  printf("%d", z);
+  printf("\n");
+
 }
