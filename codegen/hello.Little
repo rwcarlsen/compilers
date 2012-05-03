@@ -1,6 +1,24 @@
 void main() {
   int x;
+  int y;
   x = 3;
+  y = x++;
+
+  printf("x=");
+  printf("%d", x);
+  printf("\n");
+
+  printf("x=");
+  printf("%d", x++);
+  printf("\n");
+
+  printf("x=");
+  printf("%d", x);
+  printf("\n");
+
+  printf("x=");
+  printf("%d", x--);
+  printf("\n");
 
   printf("x=");
   printf("%d", x);

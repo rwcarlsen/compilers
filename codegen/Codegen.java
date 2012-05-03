@@ -38,6 +38,7 @@ public class Codegen {
   public static final String T0 = "$t0";
   public static final String T1 = "$t1";
   public static final String T2 = "$t2";
+  public static final String T3 = "$t3";
   public static final String F0 = "$f0";
   public static final String F2 = "$f2";
   public static final String F12 = "$f12";

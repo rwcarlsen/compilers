@@ -653,7 +653,7 @@ class FnDeclNode extends DeclNode {
     Codegen.genPush(Codegen.FP, 4); // push control link
     Codegen.generateWithComment("addu", "set frame ptr", Codegen.FP, Codegen.SP, fpOffset); // set the FP
     if (fn.locSize() > 0) {
-      Codegen.genPush(Codegen.SP, fn.locSize()); // push space for locals
+      Codegen.generateWithComment("subu", "grow stack to fit locals", Codegen.SP, Codegen.SP, Integer.toString(fn.locSize()));
     }
 
     // function body code
@@ -818,12 +818,7 @@ class AssignStmtNode extends StmtNode {
 
   public void codeGen() {
     myExp.codeGen();
-
-    int size = 4;
-    if (myExp.typeCheck().equals("double")) {
-      size = 8;
-    }
-    Codegen.genPop(Codegen.T0, size);
+    Codegen.genPop(Codegen.T0, myExp.bytes());
   }
 
   // 1 kid
@@ -1395,6 +1390,12 @@ abstract class ExpNode extends ASTnode {
   abstract public int linenum();
   abstract public int charnum();
 
+  public int bytes() {
+    if (typeCheck().equals("double")) {
+      return 8;
+    }
+    return 4;
+  }
   public void codeGen() { }
 }
 
@@ -1567,7 +1568,7 @@ class IdNode extends ExpNode {
 
   public void codeGen() {
     if (mySym.global) {
-      if (type().equals("double")) {
+      if (typeCheck().equals("double")) {
         Codegen.generateWithComment("l.d", "load double global", Codegen.F0, "_" + name());
       } else {
         Codegen.generateWithComment("lw", "load int global", Codegen.T0, "_" + name());
@@ -1579,6 +1580,11 @@ class IdNode extends ExpNode {
       } else {
         Codegen.loadWord("load int var", Codegen.T0, Codegen.FP, offset);
       }
+    }
+    if (bytes() == 4) {
+      Codegen.genPush(Codegen.T0, bytes());
+    } else {
+      Codegen.genPush(Codegen.F0, bytes());
     }
   }
 
@@ -1774,6 +1780,22 @@ class PlusPlusNode extends UnaryExpNode {
     p.print("++");
     p.print(")");
   }
+
+  public void codeGen() {
+    myExp.codeGen();
+    ((IdNode)myExp).genAddr();
+
+    if (myExp.bytes() == 4) {
+      // get exp into t2 val but leave original val on stack - not incremented one
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.genPush(Codegen.T1, bytes());
+
+      Codegen.generate("li",Codegen.T2, 1);
+      Codegen.generateWithComment("add", "plusplus", Codegen.T3, Codegen.T1, Codegen.T2);
+
+      Codegen.storeWord("store incremented var val", Codegen.T3, Codegen.T0, 0);
+    }
+  }
 }
 
 class MinusMinusNode extends UnaryExpNode {
@@ -1800,6 +1822,22 @@ class MinusMinusNode extends UnaryExpNode {
     myExp.unparse(p, 0);
     p.print("--");
     p.print(")");
+  }
+
+  public void codeGen() {
+    myExp.codeGen();
+    ((IdNode)myExp).genAddr();
+
+    if (myExp.bytes() == 4) {
+      // get exp into t2 val but leave original val on stack - not incremented one
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.genPush(Codegen.T1, bytes());
+
+      Codegen.generate("li",Codegen.T2, 1);
+      Codegen.generateWithComment("sub", "minusminus", Codegen.T3, Codegen.T1, Codegen.T2);
+
+      Codegen.storeWord("store decremented var val", Codegen.T3, Codegen.T0, 0);
+    }
   }
 }
 
@@ -1916,10 +1954,17 @@ class AssignNode extends BinaryExpNode {
 
   public void codeGen() {
     myExp2.codeGen();
-    Codegen.move("move exp val to t1", Codegen.T1, Codegen.T0);
-    ((IdNode)myExp1).genAddr(); // var addr loaded into t0
 
-    if (myExp2.typeCheck().equals("int")) {
+    // pop exp val into t1 register
+    Codegen.genPop(Codegen.T1, myExp2.bytes());
+
+    // leave exp val on the stack
+    Codegen.genPush(Codegen.T1, myExp2.bytes());
+
+    // var addr loaded into t0
+    ((IdNode)myExp1).genAddr();
+
+    if (myExp2.bytes() == 4) {
       Codegen.storeWord("assign int val to var addr", Codegen.T1, Codegen.T0, 0);
     } else {
       Codegen.storeDouble("assign dbl val to var addr", Codegen.F0, Codegen.T0, 0);
