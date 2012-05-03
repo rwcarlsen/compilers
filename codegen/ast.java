@@ -1870,8 +1870,7 @@ class UnaryMinusNode extends UnaryExpNode {
     if (myExp.bytes() == 4) {
       // get exp into t2 val but leave original val on stack - not incremented one
       Codegen.genPop(Codegen.T1, bytes());
-
-      Codegen.generateWithComment("sub", "unaryminus", Codegen.T0, Codegen.Z, Codegen.T1);
+      Codegen.generateWithComment("neg", "unary minus", Codegen.T0, Codegen.T1);
       Codegen.genPush(Codegen.T0, bytes());
     }
   }
@@ -1904,24 +1903,8 @@ class NotNode extends UnaryExpNode {
     myExp.codeGen();
 
     if (myExp.bytes() == 4) {
-      String isfalse = Codegen.nextLabel();
-      String istrue = Codegen.nextLabel();
-      String done = Codegen.nextLabel();
-
-      // get exp value
-      Codegen.genPop(Codegen.T0, bytes());
-
-      // branch if popped val in t0 is equal to 0
-      Codegen.generateWithComment("beq", "boolean not", Codegen.T0, Codegen.Z, isfalse);
-
-      Codegen.genLabel(istrue, "exp is true");
-      Codegen.generate("li", Codegen.T0, 0);
-      Codegen.generate("b", done);
-
-      Codegen.genLabel(isfalse, "exp is false");
-      Codegen.generate("li", Codegen.T0, 1);
-
-      Codegen.genLabel(done);
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("seq", "boolean not", Codegen.T0, Codegen.T1, Codegen.Z);
       Codegen.genPush(Codegen.T0, bytes());
     }
   }
@@ -2216,6 +2199,18 @@ class EqualsNode extends EqualityBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
+  public void codeGen() {
+    myExp1.codeGen();
+    myExp2.codeGen();
+
+    if (bytes() == 4) {
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("seq", "compare ==", Codegen.T0, Codegen.T1, Codegen.T2);
+      Codegen.genPush(Codegen.T0, bytes());
+    }
+  }
 }
 
 class NotEqualsNode extends EqualityBinExpNode {
@@ -2230,6 +2225,18 @@ class NotEqualsNode extends EqualityBinExpNode {
     p.print("!=");
     myExp2.unparse(p, 0);
     p.print(")");
+  }
+
+  public void codeGen() {
+    myExp1.codeGen();
+    myExp2.codeGen();
+
+    if (bytes() == 4) {
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("sne", "compare !=", Codegen.T0, Codegen.T1, Codegen.T2);
+      Codegen.genPush(Codegen.T0, bytes());
+    }
   }
 }
 

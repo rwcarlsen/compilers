@@ -39,7 +39,7 @@ void main() {
   printf("%d", x);
   printf("\n");
 
-  printf("////////////////////////////////\n");
+  printf("/////// ++, --, and arithmetic ////////\n");
   x = 1;
   y = 2;
   z = 0;
@@ -111,4 +111,31 @@ void main() {
   printf("%d", z);
   printf("\n");
 
+  printf("////// comparison ops //////////\n");
+  x = 1;
+  y = 2;
+  z = 1;
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf(", z=");
+  printf("%d", z);
+  printf("\n");
+
+  printf("x == y: ");
+  printf("%d", x == y);
+  printf("\n");
+
+  printf("x == z: ");
+  printf("%d", x == z);
+  printf("\n");
+
+  printf("x != y: ");
+  printf("%d", x != y);
+  printf("\n");
+
+  printf("x != z: ");
+  printf("%d", x != z);
+  printf("\n");
 }
