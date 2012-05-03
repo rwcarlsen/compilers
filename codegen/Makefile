@@ -51,11 +51,11 @@ Errors.class: Errors.java
 # clean
 ###
 clean:
-	rm -f *~ *.class parser.java Little.jlex.java sym.java *.c
+	rm -f *~ *.class parser.java Little.jlex.java sym.java *.asm
 
 ###
 # run my parser
 ###
 run: P5.class
-	java -classpath ${CP} P5 hello.Little test.c
+	java -classpath ${CP} P5 test.Little test.asm
 

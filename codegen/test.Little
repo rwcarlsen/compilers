@@ -138,4 +138,8 @@ void main() {
   printf("x != z: ");
   printf("%d", x != z);
   printf("\n");
+
+  printf("!(x != z): ");
+  printf("%d", !(x != z));
+  printf("\n");
 }
