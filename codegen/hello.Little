@@ -1,8 +1,18 @@
 void main() {
   int x;
   int y;
-  x = 3;
+  int z;
+  x = -3;
   y = x++;
+  z = !x;
+
+  printf("z=");
+  printf("%d", z);
+  printf("\n");
+
+  printf("z=");
+  printf("%d", !z);
+  printf("\n");
 
   printf("x=");
   printf("%d", x);
