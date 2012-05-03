@@ -142,4 +142,36 @@ void main() {
   printf("!(x != z): ");
   printf("%d", !(x != z));
   printf("\n");
+
+  printf("x < y: ");
+  printf("%d", x < y);
+  printf("\n");
+
+  printf("x < z: ");
+  printf("%d", x < z);
+  printf("\n");
+
+  printf("y > x: ");
+  printf("%d", y > x);
+  printf("\n");
+
+  printf("x > z: ");
+  printf("%d", x > z);
+  printf("\n");
+
+  printf("x <= z: ");
+  printf("%d", x <= z);
+  printf("\n");
+
+  printf("y <= x: ");
+  printf("%d", y <= x);
+  printf("\n");
+
+  printf("z >= x: ");
+  printf("%d", z >= x);
+  printf("\n");
+
+  printf("x >= y: ");
+  printf("%d", x >= y);
+  printf("\n");
 }

@@ -2218,6 +2218,10 @@ class LessNode extends EqualityBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
+  public void intGen() {
+    Codegen.generateWithComment("slt", "compare <", Codegen.T0, Codegen.T1, Codegen.T2);
+  }
 }
 
 class GreaterNode extends EqualityBinExpNode {
@@ -2235,7 +2239,7 @@ class GreaterNode extends EqualityBinExpNode {
   }
 
   public void intGen() {
-    Codegen.generateWithComment("sne", "compare !=", Codegen.T0, Codegen.T1, Codegen.T2);
+    Codegen.generateWithComment("sgt", "compare >", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
@@ -2252,6 +2256,10 @@ class LessEqNode extends EqualityBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
+  public void intGen() {
+    Codegen.generateWithComment("sle", "compare <=", Codegen.T0, Codegen.T1, Codegen.T2);
+  }
 }
 
 class GreaterEqNode extends EqualityBinExpNode {
@@ -2266,6 +2274,10 @@ class GreaterEqNode extends EqualityBinExpNode {
     p.print(">=");
     myExp2.unparse(p, 0);
     p.print(")");
+  }
+
+  public void intGen() {
+    Codegen.generateWithComment("sge", "compare >=", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
