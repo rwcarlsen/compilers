@@ -1746,6 +1746,23 @@ abstract class BinaryExpNode extends ExpNode {
     return myExp1.charnum();
   }
 
+  public void codeGen() {
+    myExp1.codeGen();
+    myExp2.codeGen();
+
+    if (bytes() == 4) {
+      // get exp value
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.genPop(Codegen.T1, bytes());
+      intGen();
+      Codegen.genPush(Codegen.T0, bytes());
+    } else {
+      // dbl gen
+    }
+  }
+
+  public void intGen() { }
+  public void dblGen() { }
   // two kids
   protected ExpNode myExp1;
   protected ExpNode myExp2;
@@ -2086,17 +2103,8 @@ class PlusNode extends ArithmeticBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      // get exp value
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("add", "addition", Codegen.T0, Codegen.T1, Codegen.T2);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("add", "addition", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
@@ -2114,17 +2122,8 @@ class MinusNode extends ArithmeticBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      // get exp value
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("sub", "subtraction", Codegen.T0, Codegen.T1, Codegen.T2);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("sub", "subtraction", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
@@ -2142,18 +2141,9 @@ class TimesNode extends ArithmeticBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      // get exp value
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("mult", "multiplication", Codegen.T1, Codegen.T2);
-      Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("mult", "multiplication", Codegen.T1, Codegen.T2);
+    Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
   }
 }
 
@@ -2171,18 +2161,9 @@ class DivideNode extends ArithmeticBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      // get exp value
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("div", "division", Codegen.T1, Codegen.T2);
-      Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("div", "division", Codegen.T1, Codegen.T2);
+    Codegen.generateWithComment("mflo", "keep lower 32 bits", Codegen.T0);
   }
 }
 
@@ -2200,16 +2181,8 @@ class EqualsNode extends EqualityBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("seq", "compare ==", Codegen.T0, Codegen.T1, Codegen.T2);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("seq", "compare ==", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
@@ -2227,16 +2200,8 @@ class NotEqualsNode extends EqualityBinExpNode {
     p.print(")");
   }
 
-  public void codeGen() {
-    myExp1.codeGen();
-    myExp2.codeGen();
-
-    if (bytes() == 4) {
-      Codegen.genPop(Codegen.T2, bytes());
-      Codegen.genPop(Codegen.T1, bytes());
-      Codegen.generateWithComment("sne", "compare !=", Codegen.T0, Codegen.T1, Codegen.T2);
-      Codegen.genPush(Codegen.T0, bytes());
-    }
+  public void intGen() {
+    Codegen.generateWithComment("sne", "compare !=", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
@@ -2267,6 +2232,10 @@ class GreaterNode extends EqualityBinExpNode {
     p.print(">");
     myExp2.unparse(p, 0);
     p.print(")");
+  }
+
+  public void intGen() {
+    Codegen.generateWithComment("sne", "compare !=", Codegen.T0, Codegen.T1, Codegen.T2);
   }
 }
 
