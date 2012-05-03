@@ -2299,6 +2299,10 @@ class AndNode extends LogicalBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
+  public void codeGen() {
+    // overrides superclass BinExpNode codeGen method
+  }
 }
 
 class OrNode extends LogicalBinExpNode {
@@ -2313,6 +2317,9 @@ class OrNode extends LogicalBinExpNode {
     p.print("||");
     myExp2.unparse(p, 0);
     p.print(")");
+  }
+  public void codeGen() {
+    // overrides superclass BinExpNode codeGen method
   }
 }
 
