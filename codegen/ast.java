@@ -1229,10 +1229,17 @@ class IfStmtNode extends StmtNode {
 
   public void codeGen() {
     String done = Codegen.nextLabel();
+    myExp.codeGen();
 
-    //Codegen.generateWithComment();
-
+    if (myExp.bytes() == 4) {
+      Codegen.genPop(Codegen.T0, myExp.bytes());
+      Codegen.generate("beq", Codegen.T0, Codegen.Z, done);
+      myDeclList.codeGen();
+      myStmtList.codeGen();
+      Codegen.genLabel(done, "end of if stmt");
+    }
   }
+
   // 3 kids
   private ExpNode myExp;
   private DeclListNode myDeclList;
@@ -1305,6 +1312,27 @@ class IfElseStmtNode extends StmtNode {
     if (myElseStmtList != null) myElseStmtList.unparse(p,indent+2);
     doIndent(p, indent);
     p.println("}");
+  }
+
+  public void codeGen() {
+    String done = Codegen.nextLabel();
+    String elseLabel = Codegen.nextLabel();
+    myExp.codeGen();
+
+    if (myExp.bytes() == 4) {
+      Codegen.genPop(Codegen.T0, myExp.bytes());
+      Codegen.generate("beq", Codegen.T0, Codegen.Z, elseLabel);
+
+      myThenDeclList.codeGen();
+      myThenStmtList.codeGen();
+      Codegen.generate("b", done);
+
+      Codegen.genLabel(elseLabel, "begin else block");
+      myElseDeclList.codeGen();
+      myElseStmtList.codeGen();
+
+      Codegen.genLabel(done, "end of if stmt");
+    }
   }
 
   // 5 kids

@@ -266,4 +266,49 @@ void main() {
   printf(", z=");
   printf("%d", z);
   printf("\n");
+
+  printf("////// If statements //////////\n");
+  x = 0;
+  y = 0;
+  z = 1;
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf(", z=");
+  printf("%d", z);
+  printf("\n");
+
+  if (x == y) {
+    printf("yes: x == y");
+    printf("\n");
+  }
+  if (x == z) {
+    printf("this test failed!!!!!!!!!!!");
+    printf("\n");
+  }
+
+  printf("////// If-Else statements //////////\n");
+  x = 0;
+  y = 0;
+  z = 1;
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf(", z=");
+  printf("%d", z);
+  printf("\n");
+
+  if (x == y) {
+    printf("inside if block: x == y\n");
+  } else {
+    printf("this test failed!!!!!!!!!!!\n");
+  }
+
+  if (x == z) {
+    printf("this test failed!!!!!!!!!!!\n");
+  } else {
+    printf("inside else block: x != z\n");
+  }
 }
