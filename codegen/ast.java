@@ -987,7 +987,7 @@ class PostDecStmtNode extends StmtNode {
 
     if (myId.bytes() == 4) {
       Codegen.genPop(Codegen.T1, myId.bytes());
-      Codegen.generate("li",Codegen.T2, 1);
+      Codegen.generate("li", Codegen.T2, 1);
       Codegen.generateWithComment("sub", "foo-- stmt", Codegen.T3, Codegen.T1, Codegen.T2);
       Codegen.storeWord("store decremented var val", Codegen.T3, Codegen.T0, 0);
     }
@@ -1023,6 +1023,14 @@ class ReadIntStmtNode extends StmtNode {
     p.println(");");
   }
 
+  public void codeGen() {
+    myId.genAddr();
+
+    Codegen.generate("li", Codegen.V0, 5);
+    Codegen.generateWithComment("syscall", "loading int from stdin");
+    Codegen.storeWord("store scanf var val", Codegen.V0, Codegen.T0, 0);
+  }
+
   // 1 kid
   private IdNode myId;
 }
@@ -1051,6 +1059,14 @@ class ReadDblStmtNode extends StmtNode {
     p.print("scanf(\"%f\", &");
     myId.unparse(p,0);
     p.println(");");
+  }
+
+  public void codeGen() {
+    myId.genAddr();
+
+    Codegen.generate("li", Codegen.V0, 7);
+    Codegen.generateWithComment("syscall", "loading dbl from stdin");
+    Codegen.storeDouble("store scanf var val", Codegen.F0, Codegen.T0, 0);
   }
 
   // 1 kid

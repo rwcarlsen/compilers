@@ -246,7 +246,7 @@ public class Codegen {
   public static void storeWord(String comment, String src, String dst, int offset) {
     generateWithComment("sw", comment, src, Integer.toString(offset) + "(" + dst + ")");
   }
-  public static void storeDouble(String comment, String dst, String src, int offset) {
+  public static void storeDouble(String comment, String src, String dst, int offset) {
     generateWithComment("s.d", comment, src, Integer.toString(offset) + "(" + dst + ")");
   }
   public static void storeAddress(String comment, String dst, String src, int offset) {
