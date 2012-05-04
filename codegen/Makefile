@@ -26,8 +26,11 @@ all: P5.class
 run: all
 	spim -file test.asm
 
-P5.class: P5.java parser.class Yylex.class ASTnode.class
+P5.class: P5.java parser.class Yylex.class ASTnode.class Codegen.class
 	$(JC) -g P5.java
+
+Codegen.class: Codegen.java
+	$(JC) Codegen.java
 
 parser.class: parser.java ASTnode.class Yylex.class Errors.class
 	$(JC) parser.java
