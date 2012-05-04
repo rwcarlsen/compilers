@@ -14,6 +14,18 @@ FLAGS = -classpath ${CP}
 JC = javac ${FLAGS}
 JR = java ${FLAGS}
 
+###
+# build lexer, parser, lex and parse and generate code
+###
+all: P5.class
+	java -classpath ${CP} P5 test.Little test.asm
+
+###
+# run generated code
+###
+run: all
+	spim -file test.asm
+
 P5.class: P5.java parser.class Yylex.class ASTnode.class
 	$(JC) -g P5.java
 
@@ -52,10 +64,4 @@ Errors.class: Errors.java
 ###
 clean:
 	rm -f *~ *.class parser.java Little.jlex.java sym.java *.asm
-
-###
-# run my parser
-###
-run: P5.class
-	java -classpath ${CP} P5 test.Little test.asm
 
