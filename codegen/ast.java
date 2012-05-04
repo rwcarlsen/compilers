@@ -1227,6 +1227,12 @@ class IfStmtNode extends StmtNode {
     p.println("}");
   }
 
+  public void codeGen() {
+    String done = Codegen.nextLabel();
+
+    //Codegen.generateWithComment();
+
+  }
   // 3 kids
   private ExpNode myExp;
   private DeclListNode myDeclList;
@@ -2360,6 +2366,22 @@ class AndNode extends LogicalBinExpNode {
 
   public void codeGen() {
     // overrides superclass BinExpNode codeGen method
+
+    String done = Codegen.nextLabel();
+    Codegen.generate("li", Codegen.T0, "0");
+
+    if (bytes() == 4) {
+      myExp1.codeGen();
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("beq", "first exp of &&", Codegen.T1, Codegen.Z, done);
+
+      myExp2.codeGen();
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.generateWithComment("sne", "second exp of &&", Codegen.T0, Codegen.T2, Codegen.Z);
+
+      Codegen.genLabel(done, "short circuited && completion");
+      Codegen.genPush(Codegen.T0, bytes());
+    }
   }
 }
 
@@ -2376,12 +2398,25 @@ class OrNode extends LogicalBinExpNode {
     myExp2.unparse(p, 0);
     p.print(")");
   }
+
   public void codeGen() {
     // overrides superclass BinExpNode codeGen method
+
+    String done = Codegen.nextLabel();
+    Codegen.generate("li", Codegen.T0, "1");
+
+    if (bytes() == 4) {
+      myExp1.codeGen();
+      Codegen.genPop(Codegen.T1, bytes());
+      Codegen.generateWithComment("bne", "first exp of ||", Codegen.T1, Codegen.Z, done);
+
+      myExp2.codeGen();
+      Codegen.genPop(Codegen.T2, bytes());
+      Codegen.generateWithComment("sne", "second exp of ||", Codegen.T0, Codegen.T2, Codegen.Z);
+
+      Codegen.genLabel(done, "short circuited || completion");
+      Codegen.genPush(Codegen.T0, bytes());
+    }
   }
 }
-
-
-
-
 
