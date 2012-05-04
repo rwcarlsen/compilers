@@ -853,6 +853,17 @@ class PreIncStmtNode extends StmtNode {
     p.println(";");
   }
 
+  public void codeGen() {
+    myId.codeGen();
+    myId.genAddr();
+
+    if (myId.bytes() == 4) {
+      Codegen.genPop(Codegen.T1, myId.bytes());
+      Codegen.generateWithComment("addi", "++foo stmt", Codegen.T2, Codegen.T1, "1");
+      Codegen.storeWord("store incremented var val", Codegen.T2, Codegen.T0, 0);
+    }
+  }
+
   // 1 kid
   private IdNode myId;
 }
@@ -883,6 +894,18 @@ class PreDecStmtNode extends StmtNode {
     p.print("--");
     myId.unparse(p,0);
     p.println(";");
+  }
+
+  public void codeGen() {
+    myId.codeGen();
+    myId.genAddr();
+
+    if (myId.bytes() == 4) {
+      Codegen.genPop(Codegen.T1, myId.bytes());
+      Codegen.generate("li",Codegen.T2, 1);
+      Codegen.generateWithComment("sub", "--foo stmt", Codegen.T3, Codegen.T1, Codegen.T2);
+      Codegen.storeWord("store decremented var val", Codegen.T3, Codegen.T0, 0);
+    }
   }
 
   // 1 kid
@@ -916,6 +939,17 @@ class PostIncStmtNode extends StmtNode {
     p.println("++;");
   }
 
+  public void codeGen() {
+    myId.codeGen();
+    myId.genAddr();
+
+    if (myId.bytes() == 4) {
+      Codegen.genPop(Codegen.T1, myId.bytes());
+      Codegen.generateWithComment("addi", "foo++ stmt", Codegen.T2, Codegen.T1, "1");
+      Codegen.storeWord("store incremented var val", Codegen.T2, Codegen.T0, 0);
+    }
+  }
+
   // 1 kid
   private IdNode myId;
 }
@@ -945,6 +979,18 @@ class PostDecStmtNode extends StmtNode {
   public void unparse(PrintWriter p, int indent) {
     myId.unparse(p,0);
     p.println("--;");
+  }
+
+  public void codeGen() {
+    myId.codeGen();
+    myId.genAddr();
+
+    if (myId.bytes() == 4) {
+      Codegen.genPop(Codegen.T1, myId.bytes());
+      Codegen.generate("li",Codegen.T2, 1);
+      Codegen.generateWithComment("sub", "foo-- stmt", Codegen.T3, Codegen.T1, Codegen.T2);
+      Codegen.storeWord("store decremented var val", Codegen.T3, Codegen.T0, 0);
+    }
   }
 
   // 1 kid
@@ -1803,14 +1849,10 @@ class PlusPlusNode extends UnaryExpNode {
     ((IdNode)myExp).genAddr();
 
     if (myExp.bytes() == 4) {
-      // get exp into t2 val but leave original val on stack - not incremented one
       Codegen.genPop(Codegen.T1, bytes());
       Codegen.genPush(Codegen.T1, bytes());
-
-      Codegen.generate("li",Codegen.T2, 1);
-      Codegen.generateWithComment("add", "plusplus", Codegen.T3, Codegen.T1, Codegen.T2);
-
-      Codegen.storeWord("store incremented var val", Codegen.T3, Codegen.T0, 0);
+      Codegen.generateWithComment("addi", "foo++ exp", Codegen.T2, Codegen.T1, "1");
+      Codegen.storeWord("store incremented var val", Codegen.T2, Codegen.T0, 0);
     }
   }
 }

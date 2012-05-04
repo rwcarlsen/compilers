@@ -174,4 +174,30 @@ void main() {
   printf("x >= y: ");
   printf("%d", x >= y);
   printf("\n");
+
+  printf("////// stmts other than call/return //////////\n");
+  x = 2;
+  printf("x=");
+  printf("%d", x);
+  printf("\n");
+
+  x++;
+  printf("x++; x=");
+  printf("%d", x);
+  printf("\n");
+
+  x--;
+  printf("x--; x=");
+  printf("%d", x);
+  printf("\n");
+
+  ++x;
+  printf("++x; x=");
+  printf("%d", x);
+  printf("\n");
+
+  --x;
+  printf("--x; x=");
+  printf("%d", x);
+  printf("\n");
 }
