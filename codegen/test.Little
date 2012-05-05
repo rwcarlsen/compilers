@@ -200,16 +200,10 @@ void simpleStatements() {
   printfoo(foo);
 }
 
-void main() {
+void logicalOps() {
   int x;
   int y;
   int z;
-
-  assignAndUnaryOps();
-  arithmeticOps();
-  comparisonOps();
-  simpleStatements();
-  return;
 
   printf("////// And and OR logical operators //////////\n");
   x = 1;
@@ -253,6 +247,12 @@ void main() {
   printf(", z=");
   printf("%d", z);
   newline(1);
+}
+
+void ifStmts() {
+  int x;
+  int y;
+  int z;
 
   printf("////// If statements //////////\n");
   x = 0;
@@ -270,11 +270,6 @@ void main() {
   }
 
   printf("////// If-Else statements //////////\n");
-  x = 0;
-  y = 0;
-  z = 1;
-  printxyz(x, y, z);
-
   if (x == y) {
     printf("inside if block: x == y\n");
   } else {
@@ -286,6 +281,13 @@ void main() {
   } else {
     printf("inside else block: x != z\n");
   }
+  return;
+}
+
+void loops() {
+  int x;
+  int y;
+  int z;
 
   printf("////// While loops /////////\n");
   x = 0;
@@ -299,11 +301,62 @@ void main() {
   printf("while x < 7; x++\n");
   while (x < 7) {
     x++;
-    printf("x=");
-    printf("%d", x);
-    newline(1);
+    printx(x);
   }
+}
+
+int pow(int x, int e) {
+  int i;
+  int result;
+  result = x;
+
+  i = 1;
+  while (i < e) {
+    i++;
+    result = result * x;
+  }
+  return result;
+}
+
+int recurse(int x, int e, int i) {
+  if (i == e) {
+    return x;
+  }
+  printf("recursing... i=");
+  printf("%d", i);
+  newline(1);
+  return x * recurse(x, e, i + 1);
+}
+
+int recursepow(int x, int e) {
+  if (e == 0) {
+    return 1;
+  }
+  return recurse(x, e, 1);
+}
+
+void funcCalls() {
+  int x;
 
   printf("////////// function calls /////////\n");
+
+  x = pow(2, 10);
+  printx(x);
+
+  x = recursepow(2, 10);
+  printx(x);
+}
+
+void main() {
+  assignAndUnaryOps();
+  arithmeticOps();
+  comparisonOps();
+  simpleStatements();
+  logicalOps();
+  ifStmts();
+  loops();
+  funcCalls();
+  funcCalls();
+  return;
 }
 
