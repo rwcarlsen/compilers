@@ -122,6 +122,8 @@ abstract class ASTnode {
   protected static final String ERR_TYPE = "ERR";
   protected static final String VOID_TYPE = "void";
 
+  public static String currFuncName;
+
   // every subclass must provide an unparse operation
   abstract public void unparse(PrintWriter p, int indent);
 
@@ -463,6 +465,11 @@ class ExpListNode extends ASTnode {
     }
   }
 
+  public void codeGen() {
+    for (ExpNode exp : myExps) {
+      exp.codeGen();
+    }
+  }
   // list of kids (ExpNodes)
   private List<ExpNode> myExps;
 }
@@ -641,12 +648,15 @@ class FnDeclNode extends DeclNode {
 
     // generate function preamble code
     Codegen.generateWithComment(".text", "new func preamble");
+    String name = myId.name();
     if (myId.name().equals("main")) {
       Codegen.generateWithComment(".globl main", "func preamble");
-      Codegen.genLabel("main", "func preamble");
+      Codegen.genLabel(name, "func preamble");
     } else {
-      Codegen.genLabel("_" + myId.name(), "func preamble");
+      name = "_" + name;
+      Codegen.genLabel(name, "func preamble");
     }
+    currFuncName = name;
 
     // function entry code
     Codegen.genPush(Codegen.RA, 4); // push return address
@@ -662,6 +672,7 @@ class FnDeclNode extends DeclNode {
     // function exit code
     int retOffset = -fn.paramSize();
     int linkOffset = -(fn.paramSize() + 4);
+    Codegen.genLabel(name + "_return");
     Codegen.loadWord("load return address from stack", Codegen.RA, Codegen.FP, retOffset);
     Codegen.move("save control link", Codegen.T0, Codegen.FP);
     Codegen.loadWord("restore FP from control link", Codegen.FP, Codegen.FP, linkOffset);
@@ -1435,6 +1446,11 @@ class CallStmtNode extends StmtNode {
     p.println(";");
   }
 
+  public void codeGen() {
+    myCall.codeGen();
+    Codegen.genPop(Codegen.T0, myCall.bytes());
+  }
+
   // 1 kid
   private CallExpNode myCall;
 }
@@ -1486,6 +1502,16 @@ class ReturnStmtNode extends StmtNode {
       myExp.unparse(p,0);
     }
     p.println(";");
+  }
+
+  public void codeGen() {
+    myExp.codeGen();
+    if (myExp.bytes() == 4) {
+      Codegen.genPop(Codegen.V0, myExp.bytes());
+    } else if (myExp.bytes() == 8) {
+      Codegen.genPop(Codegen.F0, myExp.bytes());
+    }
+    Codegen.generateWithComment("b", "jump to func's return code", currFuncName + "_return");
   }
 
   // 1 kid
@@ -1677,7 +1703,7 @@ class IdNode extends ExpNode {
     if (! myStrVal.equals("main")) {
       target = "_" + target;
     }
-    Codegen.generateWithComment("jal", "func call - jump and link");
+    Codegen.generateWithComment("jal", "func call - jump and link", target);
   }
 
   public void codeGen() {
@@ -1797,6 +1823,16 @@ class CallExpNode extends ExpNode {
     p.print("(");
     if (myExpList != null) myExpList.unparse(p,0);
     p.print(")");
+  }
+
+  public void codeGen() {
+    myExpList.codeGen();
+    myId.genJumpAndLink();
+    if (bytes() != 8) {
+      Codegen.genPush(Codegen.V0, 4);
+    } else {
+      Codegen.genPush(Codegen.F0, 8);
+    }
   }
 
   /** linenum **/
