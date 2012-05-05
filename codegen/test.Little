@@ -311,4 +311,25 @@ void main() {
   } else {
     printf("inside else block: x != z\n");
   }
+
+  printf("////// While loops /////////\n");
+  x = 0;
+  y = 4;
+  printf("x=");
+  printf("%d", x);
+  printf(", y=");
+  printf("%d", y);
+  printf("\n");
+
+  while (x == y) {
+    printf("this test failed!!!!!!!!!!!\n");
+  }
+
+  printf("while x < 7; x++\n");
+  while (x < 7) {
+    x++;
+    printf("x=");
+    printf("%d", x);
+    printf("\n");
+  }
 }

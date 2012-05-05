@@ -1390,6 +1390,24 @@ class WhileStmtNode extends StmtNode {
     p.println("}");
   }
 
+  public void codeGen() {
+    String start = Codegen.nextLabel();
+    String done = Codegen.nextLabel();
+
+    Codegen.genLabel(start, "start of while loop");
+    myExp.codeGen();
+
+    if (myExp.bytes() == 4) {
+      Codegen.genPop(Codegen.T0, myExp.bytes());
+      Codegen.generate("beq", Codegen.T0, Codegen.Z, done);
+    }
+
+    myDeclList.codeGen();
+    myStmtList.codeGen();
+    Codegen.generate("b", start);
+    Codegen.genLabel(done, "end of while loop");
+  }
+
   // 3 kids
   private ExpNode myExp;
   private DeclListNode myDeclList;
