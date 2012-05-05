@@ -1,5 +1,23 @@
-void foofunc() {
-  printf("inside foofunc\n");
+
+void newline(int num) {
+  int i;
+  i = 0;
+  while (i < num) {
+    i++;
+    printf("\n");
+  }
+}
+
+void printx(int x) {
+  printf("x=");
+  printf("%d", x);
+  newline(1);
+}
+
+void printfoo(double x) {
+  printf("foo=");
+  printf("%f", x);
+  newline(1);
 }
 
 void printxyz(int x, int y, int z) {
@@ -9,50 +27,43 @@ void printxyz(int x, int y, int z) {
   printf("%d", y);
   printf(", z=");
   printf("%d", z);
-  printf("\n");
+  newline(1);
 }
 
-void main() {
+void assignAndUnaryOps() {
   int x;
   int y;
   int z;
-  double foo;
+
+  printf("///////// assignment and unary operations ///////\n");
+
+  x = 0;
+  y = 0;
+  z = 0;
+  printxyz(x, y, z);
 
   x = -3;
+  printxyz(x, y, z);
 
   y = x++;
-  printf("y=");
-  printf("%d", y);
-  printf("\n");
+  printxyz(x, y, z);
 
   z = !x;
-  printf("z=");
-  printf("%d", z);
-  printf("\n");
+  printxyz(x, y, z);
 
-  printf("z=");
-  printf("%d", !z);
-  printf("\n");
+  z = !z;
+  printxyz(x, y, z);
 
-  printf("x=");
-  printf("%d", x);
-  printf("\n");
+  printxyz(x++, y, z);
+  printxyz(x, y, z);
+  printxyz(x--, y, z);
+  printxyz(x, y, z);
+}
 
-  printf("x=");
-  printf("%d", x++);
-  printf("\n");
-
-  printf("x=");
-  printf("%d", x);
-  printf("\n");
-
-  printf("x=");
-  printf("%d", x--);
-  printf("\n");
-
-  printf("x=");
-  printf("%d", x);
-  printf("\n");
+void arithmeticOps() {
+  int x;
+  int y;
+  int z;
 
   printf("/////// ++, --, and arithmetic ////////\n");
   x = 1;
@@ -62,33 +73,39 @@ void main() {
 
   z = x++ + y;
   printf("z = x++ + y;");
-  printf("\n");
+  newline(1);
 
   printxyz(x, y, z);
 
   z = x++ - y;
   printf("z = x++ - y;");
-  printf("\n");
+  newline(1);
 
   printxyz(x, y, z);
 
   z = x++ - y--;
   printf("z = x++ - y--;");
-  printf("\n");
+  newline(1);
 
   printxyz(x, y, z);
 
   z = x++ * (y++ + 1);
   printf("z = x++ * (y++ + 1);");
-  printf("\n");
+  newline(1);
 
   printxyz(x, y, z);
 
   z = x++ / y;
   printf("z = x++ / y;");
-  printf("\n");
+  newline(1);
 
   printxyz(x, y, z);
+}
+
+void comparisonOps() {
+  int x;
+  int y;
+  int z;
 
   printf("////// comparison ops //////////\n");
   x = 1;
@@ -98,91 +115,101 @@ void main() {
 
   printf("x == y: ");
   printf("%d", x == y);
-  printf("\n");
+  newline(1);
 
   printf("x == z: ");
   printf("%d", x == z);
-  printf("\n");
+  newline(1);
 
   printf("x != y: ");
   printf("%d", x != y);
-  printf("\n");
+  newline(1);
 
   printf("x != z: ");
   printf("%d", x != z);
-  printf("\n");
+  newline(1);
 
   printf("!(x != z): ");
   printf("%d", !(x != z));
-  printf("\n");
+  newline(1);
 
   printf("x < y: ");
   printf("%d", x < y);
-  printf("\n");
+  newline(1);
 
   printf("x < z: ");
   printf("%d", x < z);
-  printf("\n");
+  newline(1);
 
   printf("y > x: ");
   printf("%d", y > x);
-  printf("\n");
+  newline(1);
 
   printf("x > z: ");
   printf("%d", x > z);
-  printf("\n");
+  newline(1);
 
   printf("x <= z: ");
   printf("%d", x <= z);
-  printf("\n");
+  newline(1);
 
   printf("y <= x: ");
   printf("%d", y <= x);
-  printf("\n");
+  newline(1);
 
   printf("z >= x: ");
   printf("%d", z >= x);
-  printf("\n");
+  newline(1);
 
   printf("x >= y: ");
   printf("%d", x >= y);
-  printf("\n");
+  newline(1);
+
+}
+
+void simpleStatements() {
+  int x;
+  double foo;
 
   printf("////// stmts other than call/return //////////\n");
   x = 2;
-  printf("x=");
-  printf("%d", x);
-  printf("\n");
+  printx(x);
 
   x++;
-  printf("x++; x=");
-  printf("%d", x);
-  printf("\n");
+  printf("x++; ");
+  printx(x);
 
   x--;
-  printf("x--; x=");
-  printf("%d", x);
-  printf("\n");
+  printf("x--; ");
+  printx(x);
 
   ++x;
-  printf("++x; x=");
-  printf("%d", x);
-  printf("\n");
+  printf("++x; ");
+  printx(x);
 
   --x;
-  printf("--x; x=");
-  printf("%d", x);
-  printf("\n");
+  printf("--x; ");
+  printx(x);
 
   scanf("%d", &x);
-  printf("scanf(\"%d\", &x); x=");
-  printf("%d", x);
-  printf("\n");
+  printf("scanf(\"%d\", &x); ");
+  printx(x);
 
   scanf("%f", &foo);
-  printf("scanf(\"%f\", &foo); foo=");
-  printf("%f", foo);
-  printf("\n");
+  printf("scanf(\"%f\", &foo); ");
+  printfoo(foo);
+}
+
+void main() {
+  int x;
+  int y;
+  int z;
+
+  assignAndUnaryOps();
+  arithmeticOps();
+  comparisonOps();
+  simpleStatements();
+  return;
 
   printf("////// And and OR logical operators //////////\n");
   x = 1;
@@ -192,19 +219,19 @@ void main() {
 
   printf("x && y: ");
   printf("%d", x && y);
-  printf("\n");
+  newline(1);
 
   printf("z && x++: ");
   printf("%d", z && x++);
   printf(", x=");
   printf("%d", x);
-  printf("\n");
+  newline(1);
 
   printf("x && z++: ");
   printf("%d", x && z++);
   printf(", z=");
   printf("%d", z);
-  printf("\n");
+  newline(1);
 
   x = 0;
   y = 0;
@@ -213,19 +240,19 @@ void main() {
 
   printf("x || y: ");
   printf("%d", x || y);
-  printf("\n");
+  newline(1);
 
   printf("z || x++: ");
   printf("%d", z || x++);
   printf(", x=");
   printf("%d", x);
-  printf("\n");
+  newline(1);
 
   printf("x || z++: ");
   printf("%d", x || z++);
   printf(", z=");
   printf("%d", z);
-  printf("\n");
+  newline(1);
 
   printf("////// If statements //////////\n");
   x = 0;
@@ -235,11 +262,11 @@ void main() {
 
   if (x == y) {
     printf("yes: x == y");
-    printf("\n");
+    newline(1);
   }
   if (x == z) {
     printf("this test failed!!!!!!!!!!!");
-    printf("\n");
+    newline(1);
   }
 
   printf("////// If-Else statements //////////\n");
@@ -274,14 +301,9 @@ void main() {
     x++;
     printf("x=");
     printf("%d", x);
-    printf("\n");
+    newline(1);
   }
 
-
   printf("////////// function calls /////////\n");
-  printf("calling foofunc...\n");
-  foofunc();
-  printf("finished calling foofunc.\n");
-  printxyz(x, y, z);
 }
 

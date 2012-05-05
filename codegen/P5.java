@@ -68,6 +68,8 @@ public class P5 {
     top.codeGen();
     Codegen.p.close();
 
+    System.out.println("code generation succeeded.");
+
     return;
   }
 }

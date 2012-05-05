@@ -1505,11 +1505,13 @@ class ReturnStmtNode extends StmtNode {
   }
 
   public void codeGen() {
-    myExp.codeGen();
-    if (myExp.bytes() == 4) {
-      Codegen.genPop(Codegen.V0, myExp.bytes());
-    } else if (myExp.bytes() == 8) {
-      Codegen.genPop(Codegen.F0, myExp.bytes());
+    if (myExp != null) {
+      myExp.codeGen();
+      if (myExp.bytes() == 4) {
+        Codegen.genPop(Codegen.V0, myExp.bytes());
+      } else if (myExp.bytes() == 8) {
+        Codegen.genPop(Codegen.F0, myExp.bytes());
+      }
     }
     Codegen.generateWithComment("b", "jump to func's return code", currFuncName + "_return");
   }
