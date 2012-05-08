@@ -348,6 +348,8 @@ void funcCalls() {
 }
 
 void main() {
+  printf("hello\n");
+  printf("hello\n");
   assignAndUnaryOps();
   arithmeticOps();
   comparisonOps();

@@ -1616,6 +1616,18 @@ class DblLitNode extends ExpNode {
 }
 
 class StringLitNode extends ExpNode {
+  private static HashMap<String, String> stringLits = new HashMap<String, String>();
+
+  public static String labelFor(String lit) {
+    if (!stringLits.containsKey(lit)) {
+      String label = Codegen.nextLabel();
+      Codegen.generate(".data");
+      Codegen.generateLabeled(label, ".asciiz", "string lit", lit);
+      stringLits.put(lit, label);
+    }
+    return stringLits.get(lit);
+  }
+
   public StringLitNode(int lineNum, int charNum, String strVal) {
     myLineNum = lineNum;
     myCharNum = charNum;
@@ -1633,9 +1645,7 @@ class StringLitNode extends ExpNode {
   }
 
   public void codeGen() {
-    String label = Codegen.nextLabel();
-    Codegen.generate(".data");
-    Codegen.generateLabeled(label, ".asciiz", "string lit", myStrVal);
+    String label = labelFor(myStrVal);
     Codegen.generate(".text");
     Codegen.generate("la", Codegen.T0, label);
     Codegen.genPush(Codegen.T0, 4);
